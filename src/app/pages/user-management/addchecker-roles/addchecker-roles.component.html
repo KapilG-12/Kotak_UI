@@ -1,0 +1,218 @@
+<div class=" header bg-danger pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> User Management </a>
+              </li>
+              <li aria-current="page" class=" breadcrumb-item active">
+                Checker Role Review 
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class=" col-lg-6 col-5 text-right">
+          <a class=" btn btn-sm btn-neutral" (click)="OnBack()">Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class=" container-fluid mt--6">
+  <div class=" row">
+    <div class="col-md-12">
+      <div class="card">
+
+        <div class="card-body">
+
+          <form class="needs-validation" novalidate="" [formGroup]="AddRoleForm">
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="form-group">
+                  <label class="form-control-label" for="Role Name">Role Name</label>
+                  <input type="text" class="form-control" [readOnly]="editrole" id="roleName" formControlName="roleName"
+                    placeholder="Role Name" value="Mark" required />
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+
+                <label class="form-control-label" for="remarks">Remarks</label>
+                <input type="text" class="form-control" id="remarks" [readOnly]="editrole" formControlName="remarks" placeholder="Remark"
+                  value="Mark" required />
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+
+                <div style="border-top: 2px solid rgb(131, 131, 241);" class="card card-pricing bg-secondary">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label class="form-control-label" for="remarks">Pages</label>
+
+                      <div class="col-sm-10">
+                        <!-- <button class="btn btn-outline-default btn-round"><input type="checkbox"
+                            formControlName="SelectAll" (change)="OnSelectAll()" [value]=""> Select All</button> -->
+
+                        <ul style="list-style: none;" formArrayName="Roles">
+                          <li *ngFor="let role of roles.controls,let i=index">
+                            <ng-container [formGroupName]="i">
+                              <input type="checkbox" formControlName="isChecked" [value]="role.get('isChecked').value" disabled
+                                (click)="onCheckParent(role)"><span> {{role.get('page_name').value}}</span>
+                              <ul style="list-style: none;" formArrayName="subItems">
+                                <li *ngFor="let subRole of role.get('subItems').controls,let j=index">
+                                  <ng-container [formGroupName]="j">
+                                    <input type="checkbox" formControlName="isChecked" disabled
+                                      [value]="subRole.get('isChecked').value" (click)="onCheckChild(role)"><span>
+                                      {{subRole.get('page_name').value}} </span>
+                                  </ng-container>
+                                </li>
+                              </ul>
+                            </ng-container>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div style="border-top: 2px solid rgb(131, 131, 241);" class="card card-pricing bg-secondary">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label class="form-control-label " for="remarks">Right</label>
+                      <div class="col-sm-10">
+                        <!-- <button class="btn btn-outline-default btn-round">
+                          <input type="checkbox" formControlName="SelectAllRights" (change)="OnSelectRightAll()"
+                            [value]=""> Select All
+                        </button> -->
+                        <ul style="list-style: none;" formArrayName="_PageRight">
+                          <li *ngFor="let right of _PageRight.controls,let i=index">
+                            <ng-container [formGroupName]="i">
+                              <input type="checkbox" formControlName="isChecked" disabled
+                                [value]="right.get('isChecked').value"><span> {{right.get('page_right').value}}</span>
+                            </ng-container>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary" (click)="editEmployee(approveFormPopup)">Approve</button>
+              <button class="btn btn-warning" (click)="editEmployee(rejectFormPopup)">Reject</button>
+              <button class="btn btn-primary" style="background-color: #f3c110;border-color: #f3c110;"
+                (click)="editEmployee(reconsiderFormPopup)">Re-consider</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #approveFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddRoleForm" (ngSubmit)="onSubmit('Approved')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="approveremarks">
+                Add Approve Remarks*
+              </label>
+              <textarea class="form-control" name="approveremarks" id="approveremarks" formControlName="approveremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="rf.approveremarks.touched && rf.approveremarks.invalid && rf.approveremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="rf.approveremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #rejectFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddRoleForm" (ngSubmit)="onSubmit('Rejected')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="rejectremarks">
+                Add Reject Remarks*
+              </label>
+              <textarea class="form-control" name="rejectremarks" id="rejectremarks" formControlName="rejectremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="rf.rejectremarks.touched && rf.rejectremarks.invalid && rf.rejectremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.rejectremarks.invalid" style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #reconsiderFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddRoleForm" (ngSubmit)="onSubmit('Re-considered')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="reconsiderremarks">
+                Add Re-consider Remarks*
+              </label>
+              <textarea class="form-control" name="reconsiderremarks" id="reconsiderremarks"
+                formControlName="reconsiderremarks" placeholder="Add the reason here">
+                  </textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="rf.reconsiderremarks.touched && rf.reconsiderremarks.invalid && rf.reconsiderremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="rf.reconsiderremarks.invalid" style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

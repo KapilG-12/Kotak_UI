@@ -1,0 +1,267 @@
+.DataEntryMainContainer .card{
+    width : 100%;
+}
+.DataEntryMainContainer .card .paddingclass {
+    padding: 0px;
+}
+.DataEntryMainContainer .card .card-header {
+    border-radius: 0;
+}
+.DataEntryMainContainer .card .card-body {
+    padding: 15px;
+}
+.DataEntryMainContainer .card .card-body .row {
+    margin: 0;
+}
+.DataEntryMainContainer .card .form-control{
+    float: right;
+    width: 65%;
+    height: 35px;
+    padding: 0px 15px;
+}
+.DataEntryMainContainer .card .form-control-label{
+    width: 35%;
+    padding: 0 1px;
+    margin-bottom: 0px;
+}
+.DataEntryMainContainer .card .serchInput {
+    float: right;
+    width: 65%;
+    height: 35px;
+   
+}
+
+.card-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+.btndiv .btn{
+    padding:  0 15px;
+}
+
+.resetsave{
+    float: right;
+    width: 65%;
+    height: 35px;
+}
+
+.resetsave  .resetsavebts{
+    float: right;
+}
+.modal-content-full-width  {
+    height: auto !important;
+    min-height: 100% !important;
+    border-radius: 0 !important;
+    background-color: #ececec !important 
+}
+
+.modal-header-full-width  {
+    border-bottom: 1px solid #9ea2a2 !important;
+}
+
+.modal-footer-full-width  {
+    border-top: 1px solid #9ea2a2 !important;
+}
+::ng-deep .data-entry .modal-dialog {
+    max-width: 1400px !important;
+}
+
+::ng-deep .data-entry .modal .modal-content .card {
+    margin: 0;
+    padding: 1rem 0;
+}
+
+/* ::ng-deep .data-entry .modal .modal-content .zoom {
+    height: 75vh !important
+} */
+
+.table {
+    font-weight: 700;
+   font-family: arial, sans-serif;
+   border-collapse: collapse;
+   width: 100%;
+ }
+ 
+ td, th {
+   border: none;
+   text-align: left;
+   padding: 0 5px;
+ }
+ .para{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width:200px;
+    font-size: 13px;
+    font-weight: 800;
+ }
+ .para_field{
+     height: calc( 0.5em + 1.25rem + 5px );
+     padding: 0 5px;
+ }
+ .file_no{
+     display: flex;
+     width: 100%;
+ }
+ .file_no input{
+     margin-left: 20px;
+     width:85%;
+ }
+ .v_search input{
+    width: 100% !important;
+}
+.v_search{
+    width: 100% !important;
+}
+.v_search label{
+    width: 100% !important;
+}
+.companyid{
+    width:80% !important;
+}
+
+.table {
+    font-weight: 700;
+   font-family: arial, sans-serif;
+   border-collapse: collapse;
+   width: 100%;
+ }
+ 
+ td, th {
+   border: none;
+   text-align: left;
+   padding: 0 5px;
+ }
+ .para{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width:200px;
+    font-size: 13px;
+    font-weight: 800;
+ }
+ .para_field{
+     height: calc( 0.5em + 1.25rem + 5px );
+     padding: 0 5px;
+     
+ }
+ .para_field1{
+    height: calc( 0.5em + 1.25rem + 5px );   
+    width: 90px;
+}
+.para_field2{
+    height: calc( 0.5em + 1.25rem + 5px );   
+    width: 200px;
+    margin-left: 130px;
+}
+ .file_no{
+     display: flex;
+     width: 100%;
+ }
+ .file_no2{
+    display: flex;
+    width: 100%;
+    
+}
+ .file_no input{
+     margin-left: 20px;
+     width:85%;
+ }
+
+ ::ng-deep .checklist-table .datatable-header-cell:first-child {
+     padding: 10px !important;
+ }
+
+ ::ng-deep .checklist-table .datatable-header-cell:first-child .sort-btn {
+     display: none !important;
+ }
+
+ ::ng-deep .checklist-table input[type='checkbox'] {
+     height: 20px;
+     width: 20px;
+ }
+.vsearch{
+    width: 100% !important;
+}
+.v_search input{
+    width: 100% !important;
+}
+.v_search{
+    width: 100% !important;
+}
+.v_search label{
+    width: 100% !important;
+}
+
+.DataEntryMainContainer .card{
+    width : 100%;
+}
+.DataEntryMainContainer .card .paddingclass {
+    padding: 0px;
+}
+.DataEntryMainContainer .card .card-header {
+    border-radius: 0;
+}
+.DataEntryMainContainer .card .card-body {
+    padding: 15px;
+}
+.DataEntryMainContainer .card .card-body .row {
+    margin: 0;
+}
+.DataEntryMainContainer .card .form-control{
+    float: right;
+    width: 65%;
+    height: 35px;
+    padding: 0px 15px;
+}
+.DataEntryMainContainer .card .form-control-label{
+    width: 35%;
+    padding: 0 1px;
+    margin-bottom: 0px;
+}
+.DataEntryMainContainer .card .serchInput {
+    float: right;
+    width: 65%;
+    height: 35px;
+   
+}
+
+.card-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+.btndiv .btn{
+    padding:  0 15px;
+}
+
+.resetsave{
+    float: right;
+    width: 65%;
+    height: 35px;
+}
+
+.resetsave  .resetsavebts{
+    float: right;
+}
+.modal-content-full-width  {
+    height: auto !important;
+    min-height: 100% !important;
+    border-radius: 0 !important;
+    background-color: #ececec !important 
+}
+
+.modal-header-full-width  {
+    border-bottom: 1px solid #9ea2a2 !important;
+}
+
+.modal-footer-full-width  {
+    border-top: 1px solid #9ea2a2 !important;
+}
+::ng-deep .data-entry .modal-dialog {
+    max-width: 500px !important;
+}
+
+::ng-deep .data-entry .modal .modal-content .card {
+    margin: 0;
+    padding: 1rem 0;
+}

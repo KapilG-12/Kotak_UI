@@ -1,0 +1,212 @@
+<div>
+  <div class=" header bg-danger pb-6">
+    <div class=" container-fluid">
+      <div class=" header-body">
+        <div class=" row align-items-center py-4">
+          <div class=" col-lg-6 col-7">
+            <h6 class=" h2 text-white d-inline-block mb-0">Klap Audit</h6>
+           
+          </div>
+
+          <!-- <div class=" col-lg-6 col-5 text-right">
+            <a class=" btn btn-sm btn-neutral" (click)="addUser(userFormPopup)"> Create New User</a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class=" container-fluid mt--6">
+    <div class=" row">
+      <div class=" col">
+        <div class=" card">
+          <div class="retrieval_add_form">
+
+            <form class="needs-validation p-4" [formGroup]="AddKlapAuditForm">
+              <div class="form-row">
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="File_No">File No</label>
+                  <input  readonly name="File_No" style="border-color: green;" type="text"
+                    formControlName="File_No" type="text" class="form-control " />
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="appl">Apac</label>
+                  <input readonly name="appl" type="text" formControlName="apac" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="appl">Appl</label>
+                  <input readonly name="appl" type="text" formControlName="appl" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="appl">Document Type</label>
+                  <input readonly name="document_type" type="text" formControlName="document_type" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="product">Product</label>
+                  <input readonly name="product" formControlName="product" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="location">Location</label>
+                  <input readonly name="location" formControlName="location" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="sub_lcoation">Sub Location</label>
+                  <input readonly name="sub_lcoation" formControlName="sub_lcoation" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="maln_party_id">Main Party Id</label>
+                  <input readonly name="maln_party_id" formControlName="maln_party_id" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="party_name">Party Name</label>
+                  <input readonly name="party_name" formControlName="party_name" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="agr_value">Agr Value</label>
+                  <input readonly name="agr_value" id="agr_value" formControlName="agr_value" type="text"
+                    class="form-control form-control-sm" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="pdc_type">Pdc Type</label>
+                  <input readonly name="pdc_type" formControlName="pdc_type" type="text"
+                    class="form-control form-control-sm" />
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="apac_effective_date">Appl Effective Date</label>
+                  <input readonly name="apac_effective_date" formControlName="apac_effective_date" type="text"
+                    class="form-control form-control-sm" />
+                </div>
+
+                <hr style="height:2px;border-width:0;color:rgb(207, 17, 17);background-color:rgb(215, 18, 18)">
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="pdc_type"> List Document</label>
+                  <select class="form-select form-control-lg" style="border-color: green;"
+                    formControlName="document_Id" data-toggle="select">
+                    <option value="0"> Select Document</option>
+                    <option *ngFor="let _doc of documentsL" [value]="_doc.id">
+                      {{_doc.documents}}
+                    </option>
+                  </select>
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="document_type">Copy Type</label>
+                  <select class=" form-control form-control-lg" style="border-color: green;" type="text"
+                    formControlName="copy_type" data-toggle="select">
+                    <option value=0>Select Copy Type</option>
+                    <option value="Original Copy">Original Copy</option>
+                    <option value="Photo Copy">Photo Copy</option>
+                  </select>
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="document_type">Query Status</label>
+                  <select class=" form-select form-control-lg" style="border-color: green;" type="text"
+                    formControlName="query_status" data-toggle="select">
+                    <option value=0>Select Query Status</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="document_type">Highlight To Branch</label>
+                  <select class=" form-select form-control-lg" style="border-color: green;" type="text"
+                    formControlName="highlight_to_branch" data-toggle="select">
+                    <option value=0>Select Highlight To Branch</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                <div class=" col-md-9 mb-10">
+                  <label class=" form-control-label" for="apac_effective_date">CPU Query Remark</label>
+                  <input name="cpu_query_remark" formControlName="cpu_query_remark" style="border-color: green;"
+                    type="text" class="form-control" />
+                </div>
+              </div>
+
+              <div class="float-right pb-3">
+
+                <button class="btn btn-primary" type="submit" (click)="onAdd()">Add</button>
+                <button class="btn btn-primary" style="background-color: #f3c110;border-color: #f3c110;"
+                  (click)="onBack()">Back</button>
+                <button class="btn btn-primary" type="submit" (click)="OnSave('Klap Branch Pending')">Save</button>
+                <button class="btn btn-warning" type="submit" (click)="OnSave('Hold')">Hold</button>
+                <!-- <button type="button" class="btn btn-warning" (click)="closeBatch(BatchCloseFormPopup)">Close Batch</button>
+                   -->
+              </div>
+
+            </form>
+          </div>
+
+          <div class="dataTables_wrapper checklist-table w-100">
+
+
+            <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+              [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+              (onPage)="paginate($event)" [loading]="loading"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+              <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                  class="global-search">
+
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+
+                  <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                    {{col.header}}
+                    <!-- <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon> -->
+                  </th>
+                  <th style="width: 10%;">
+                    ACTION
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+
+                  <td *ngFor="let col of headerList">
+                    {{car[col.field]}}
+                  </td>
+                  <td>
+
+                    <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-icon-only"
+                      (click)="DeleteFile(car)">
+                      <span class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

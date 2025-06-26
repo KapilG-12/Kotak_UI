@@ -1,0 +1,553 @@
+<div class="DataEntryMainContainer">
+  <div class="header bg-danger pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Audit Pending </h6>
+            
+
+          </div>
+
+          <div class="col-lg-6 col-5 text-right">
+            <!-- <a
+              class="btn btn-sm btn-neutral"
+              (click)="addDepartment(DepartmentFormPopup)"
+            >
+              Create New Department</a
+            > -->
+
+            <!-- <div class=" col-lg-6 col-12 text-right"> -->
+            <!-- <a class=" btn btn-sm btn-neutral" (click)="AddInward(InwardFormPopup)">Add POD</a> -->
+
+
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- <div class="container-fluid mt--6">
+  <form [formGroup]="DataUploadForm">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Data Entry</h3>
+            <p class="text-sm mb-0"></p>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12" style="margin: 0 10px 0 0;">
+                <div class="form-group">
+                  <label class="form-control-label" for="TemplateID">
+                    Select Template :
+                  </label>
+                  <select
+                    name="TemplateID"
+                    id="TemplateID"
+                    class="form-control"
+                    formControlName="TemplateID"
+                    (change)="onChangeTemplate()"
+                  >
+                    <option value="0">Select Template Type</option>
+                    <option
+                      *ngFor="let TempL of _TemplateList"
+                      [value]="TempL.id"
+                    >
+                      {{ TempL.TemplateName }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-control-label" for="BranchID">
+                    Select Branch :
+                  </label>
+                  <select
+                    name="BranchID"
+                    id="BranchID"
+                    class="form-control"
+                    formControlName="BranchID"
+                  >
+                    <option value="0">Select Branch</option>
+                    <option
+                      *ngFor="let _Branch of _BranchList"
+                      [value]="_Branch.id"
+                    >
+                      {{ _Branch.BranchName }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-control-label" for="DeptID">
+                    Select Department :
+                  </label>
+                  <select
+                    name="DeptID"
+                    id="DeptID"
+                    class="form-control"
+                    formControlName="DeptID"
+                  >
+                    <option value="0">Select Department</option>
+                    <option
+                      *ngFor="let _Department of _DepartmentList"
+                      [value]="_Department.id"
+                    >
+                      {{ _Department.DepartmentName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="FileNo">
+                    Search File :
+                  </label>
+                  <div class="input-group input-group-merge">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="FileNo"
+                        id="FileNo"
+                        placeholder="Search by File No"
+                        formControlName="FileNo"
+                        [readonly]="isReadonly"
+                        aria-describedby="search-addon"
+                      />
+                    <div class="input-group-append" id="search-addon">
+                        <button
+                        class="btn btn-outline-primary"
+                        (click)="GetNextFile()"
+                        type="button"
+                      >
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12" formGroupName="_ColNameList">
+                <div
+                class="position-relative row form-group"
+                *ngFor="let form_elem of _ColNameList; let i = index"
+                >
+                  <ng-container *ngIf="i > 1">
+                    <ng-container [ngSwitch]="form_elem.FieldType">
+                      <ng-container *ngSwitchCase="'1'">
+                        <label class="form-control-label" for="{{ form_elem.DisplayName }}">
+                          {{ form_elem.DisplayName }}:
+                        </label>
+                        <input
+                        [placeholder]="form_elem.DisplayName"
+                        [name]="form_elem.DisplayName"
+                        [formControlName]="form_elem.IndexField"
+                        [id]="form_elem.IndexField"
+                        type="text"
+                        class="form-control"
+                        minlength="{{ form_elem.MinLenght }}"
+                        maxlength="{{ form_elem.MaxLenght }}"
+                        />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'2'">
+                        <label class="form-control-label" for="{{ form_elem.DisplayName }}">
+                          {{ form_elem.DisplayName }}:
+                        </label>
+                        <input
+                        [placeholder]="form_elem.DisplayName"
+                        [name]="form_elem.DisplayName"
+                        [formControlName]="form_elem.IndexField"
+                        [id]="form_elem.IndexField"
+                        type="number"
+                        class="form-control"
+                        minlength="{{ form_elem.MinLenght }}"
+                        maxlength="{{ form_elem.MaxLenght }}"
+                        />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'3'">
+                        <label class="form-control-label" for="{{ form_elem.DisplayName }}">
+                          {{ form_elem.DisplayName }}:
+                        </label>
+                        <input
+                            [name]="form_elem.DisplayName"
+                            [formControlName]="form_elem.IndexField"
+                            [id]="form_elem.IndexField"
+                            [placeholder]="form_elem.DisplayName"
+                            class="form-control"
+                            bsDatepicker
+                            [bsValue]="bsValue"
+                            [bsConfig]="{
+                              isAnimated: true,
+                              containerClass: 'theme-red'
+                            }"
+                          />
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'4'">
+                        <label class="form-control-label" for="{{ form_elem.DisplayName }}">
+                          {{ form_elem.DisplayName }}:
+                        </label>
+                        <select
+                        [name]="form_elem.DisplayName"
+                        [formControlName]="form_elem.IndexField"
+                        [id]="form_elem.IndexField"
+                        class="form-control"
+                        >
+                        <option [value]="0">Select A Value</option>
+                        <option
+                          [value]="opt"
+                          *ngFor="
+                            let opt of form_elem.selectValues;
+                            let i = index
+                          "
+                          >{{ opt }}</option>
+                        </select>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="text-right">
+                  <button class='btn btn-warning' (click)="OnReset()">
+                    Reset</button
+                  >
+                  <button class='btn btn-success' (click)="onSubmit()">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Document View</h3>
+            <p class="text-sm mb-0"></p>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="row">
+              <div class="col-md-12">
+                <ngx-extended-pdf-viewer  id="Viewer"
+                [page] ="_PageNo"
+                [useBrowserLocale]="true"
+                [textLayer]="true"
+                [showHandToolButton]="true"
+                [height]="'90vh'"
+  
+                *ngIf="FilePath" [src]="FilePath"
+                > by default, most CSS framework set the height to 0
+  
+                </ngx-extended-pdf-viewer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div> -->
+
+  <!-- for process body -->
+
+  <div class=" container-fluid mt--6">
+    <div class=" row">
+      <div class=" col">
+        <div class=" card">
+          <div class=" card-header">
+            <h3 class=" mb-0">Audit Pending</h3>
+            <p class=" text-sm mb-0"></p>
+          </div>
+
+          <div class="dataTables_wrapper py-4 checklist-table">
+
+
+            <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+              [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+              (onPage)="paginate($event)" [loading]="loading"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+              <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                  class="global-search">
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+
+                  <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                    {{col.header}}
+
+                  </th>
+                  <th style="width: 10%;">
+                    ACTION
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+
+                  <td *ngFor="let col of headerList">
+                    {{car[col.field]}}
+                  </td>
+                  <td>
+
+                    <button type="button" style="padding:0 0 5px 4px"
+                      class="btn btn-icon btn-success btn-icon-only rounded-circle"
+                      (click)="SendToKlap(car)">
+                      <span class="btn-inner--icon"><i class="fa fa-plus"></i></span>
+                    </button>
+
+
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+
+<ng-template #InwardFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">
+
+      <div>
+        <form [formGroup]="PODAckForm">
+          <div class="row">
+            <div class="card w-100">
+
+              <div>
+                <div class="position-relative row form-group">
+
+                  <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card-header">
+                      <h3 class="mb-0">Audit Pending</h3>
+                      <p class="text-sm mb-0"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
+
+                        <div class="">
+                          <div class="">
+
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="request_no"> Batch No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input readonly style="border-color: green;" type="text" class="form-control"
+                                        name="batch_no" formControlName="batch_no" />
+
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">POD No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input readonly type="text" class="form-control" name="pod_no"
+                                        formControlName="pod_no" />
+
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">New POD No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input type="text" class="form-control" name="new_pod_no"
+                                        formControlName="new_pod_no" />
+
+                                    </div>
+                                  </div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="courier_name">
+                                      Courier Name
+                                    </label>
+                                    <select name="Courier" class="form-control" formControlName="courier_name">
+                                      <option value=0>Courier</option>
+                                      <option value="1">DTDC</option>
+                                      <option value="2">Blue Dart</option>
+                                      <option value="3">FedEx Express</option>
+                                      <option value="4">Professional Couriers</option>
+                                      <option value="5">Aramex India</option>
+                                      <option value="6">Delhivery</option>
+                                      <option value="7">Ecom Express</option>
+                                      <option value="8">Gati</option>
+                                      <option value="9">Safe Express</option>
+                                      <option value="10">InExpress</option>
+                                      <option value="11">Day express Courier and cargo Services</option>
+                                      <option value="12">Super Fast Llogistics</option>
+                                      <option value="13">BLAZEFLASH COURIER</option>
+                                      <option value="14">APEX INTERNATIONAL</option>
+                                      <option value="15">BLUE EXPRESS COURIER</option>
+                                      <option value="16">BOMBINO EXPRESS COURIER</option>
+
+                                      <option value="17">DECAN DART EXPRESS</option>
+                                      <option value="18">ELBEX COURIERS</option>
+                                      <option value="19">FASTWAY EXPRESS</option>
+                                      <option value="20">FIRST FLIGHT</option>
+
+                                      <option value="21">FLYKING COURIER</option>
+                                      <option value="22">FREIGHT NET PVT LTD</option>
+                                      <option value="23">ICS INTERNATIONAL COURIER</option>
+                                      <option value="24">INDIAN POSTAL SERVICE</option>
+
+                                      <option value="25">KABLOOM COURIER</option>
+                                      <option value="26">METRO MARUTI EXPRESS COURIER</option>
+
+                                      <option value="27">ON TIME COURIER</option>
+                                      <option value="28">OVERNITE EXPRESS</option>
+
+                                      <option value="29">RAJDHANI AIR EXPRESS</option>
+                                      <option value="30">RED EXPRESS</option>
+
+                                      <option value="31">RELIABLE LOGISTICS</option>
+                                      <option value="32">ROYALE INTERNATIONAL</option>
+
+                                      <option value="33">SM LOGISTICS</option>
+                                      <option value="34">SAFELINE LOGISTICS</option>
+
+                                      <option value="35">SAFEXPRESS COURIER</option>
+                                      <option value="36">SAR WORLDWIDE</option>
+
+                                      <option value="37">SHREE BALAJI COURIER</option>
+                                      <option value="38">SHREE MARUTI COURIER</option>
+                                      <option value="39">SHREE TIRUPATI COURIER</option>
+                                      <option value="40">SKYPACK COURIER</option>
+                                      <option value="41">SPEEDWAY CARGO</option>
+                                      <option value="42">ST COURIER</option>
+                                      <option value="43">TARGET COURIERS</option>
+                                      <option value="44">TCI XPS</option>
+                                      <option value="45">TNT EXPRESS</option>
+                                      <option value="46">UNIQUE EXPRESS</option>
+                                      <option value="47">UNITED BUSINESS XPRESS (UBX)</option>
+                                      <option value="48">UNITED FREIGHT SERVICE</option>
+                                      <option value="49">UNITED PARCEL SERVICE</option>
+                                      <option value="50">WORLDWIDE EXPRESS COURIERS</option>
+
+                                      <option value="51">Other</option>
+                                      <option value="52">By Hand</option>
+
+
+                                    </select>
+                                  </div>
+                                </div>
+
+
+                                <!-- <div class="col-md-6">
+                                <div class=" form-group">
+                                  <label class=" form-control-label" for="DespatchedDate">
+                                    DespatchedDate
+                                  </label>
+                                  <input
+                                    type="text"
+                                    formControlName="DespatchedDate"
+                                    placeholder="Datepicker"
+                                    class="form-control"
+                                    bsDatepicker
+                                    [bsValue]="bsValue"
+                                    [bsConfig]="{
+                                      isAnimated: true,
+                                      containerClass: 'theme-red'
+                                    }"
+                                  />
+                                </div>
+                              </div> -->
+
+
+                              </div>
+
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div class="resetsave">
+                                <div class="resetsavebts">
+
+                                  <button class='btn btn-success' (click)="onSubmit()">
+                                    Save
+                                  </button>
+                                  <button class='btn btn-warning' (click)="hidepopup()">
+                                    Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="dataTables_wrapper py-4 checklist-table">
+                            <p-table [paginator]="true" [rows]="10" [value]="formattedFileData" [autoLayout]="true"
+                              [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+                              (onPage)="paginate($event)" [loading]="loading"
+                              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                              <ng-template pTemplate="caption">
+                                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                <input type="text" pInputText size="50" placeholder="Search records"
+                                  (input)="searchTable($event)" class="global-search">
+                              </ng-template>
+                              <ng-template pTemplate="header">
+                                <tr>
+
+                                  <th *ngFor="let col of headerListFile; let i = index;"
+                                    [ngStyle]="i==0 && {'width': '5%'}">
+                                    {{col.header}}
+
+                                  </th>
+
+                                </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                                <tr>
+
+                                  <td *ngFor="let col of headerListFile">
+                                    {{car[col.field]}}
+                                  </td>
+
+                                </tr>
+                              </ng-template>
+                            </p-table>
+
+                          </div>
+
+
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

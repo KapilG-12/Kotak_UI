@@ -1,0 +1,491 @@
+<!-- <div class=" header bg-danger pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <h6 class=" h2 text-white d-inline-block mb-0">Default</h6>
+
+          <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> User Dashboards </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Default
+              </li>
+            </ol>
+          </nav>
+
+          <!-- <div class=" col-lg-6 col-5 text-right">
+            <select class="form-control form-control-sm" formControlName="UserID" data-toggle="select" id="UserID"
+            (change)="getBranchForUser($event.target.value)">
+              <option value="0"> Select User</option>
+              <option *ngFor="let _User of _UserL" [value]="_User.id"  >
+                {{_User.userid}}
+                </option>
+            </select>
+          </div> --
+
+</div>
+
+
+</div>
+
+<div class=" row">
+
+    <div class=" col-xl-3 col-md-6">
+        <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+                <div class=" row">
+                    <div class=" col">
+                        <h5 class=" card-title text-uppercase text-muted mb-0">
+                            Data Upload
+                        </h5>
+
+                        <span class=" h2 font-weight-bold mb-0">  {{DatauploadCount}}  </span>
+                    </div>
+
+                    <div class=" col-auto">
+                        <div class=" icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                            <i class="fa fa-database"> </i>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-xl-3 col-md-6">
+        <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+                <div class=" row">
+                    <div class=" col">
+                        <h5 class=" card-title text-uppercase text-muted mb-0">
+                            File Upload
+                        </h5>
+
+                        <span class=" h2 font-weight-bold mb-0"> {{FileUploadCount}} </span>
+                    </div>
+
+                    <div class=" col-auto">
+                        <div class=" icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                            <i class="fa fa-file"> </i>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-xl-3 col-md-6">
+        <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+                <div class=" row">
+                    <div class=" col">
+                        <h5 class=" card-title text-uppercase text-muted mb-0">
+                            Total Tags
+                        </h5>
+
+                        <span class=" h2 font-weight-bold mb-0">{{TaggingCount}}</span>
+                    </div>
+
+                    <div class=" col-auto">
+                        <div class=" icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                            <i class="fa fa-tag"> </i>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-xl-3 col-md-4">
+        <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+                <div class=" row">
+                    <div class=" col">
+                        <h5 class=" card-title text-uppercase text-muted mb-0">
+                            Total users
+                        </h5>
+
+                        <span class=" h2 font-weight-bold mb-0"> {{UserCount}}  </span>
+                    </div>
+
+                    <div class=" col-auto">
+                        <div class=" icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                            <i class="fa fa-user"> </i>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class=" col-xl-2 col-md-6">
+          <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+              <div class=" row">
+                <div class=" col">
+                  <h5 class=" card-title text-uppercase text-muted mb-0">
+                    Space Used
+                  </h5>
+
+                  <span class=" h2 font-weight-bold mb-0"> 10MB  </span>
+                </div>
+
+                <div class=" col-auto">
+                  <div class=" icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                    <i class="fa fa-user"> </i>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div> -->
+<!-- 
+        <div class=" col-xl-2 col-md-6">
+          <div class=" card card-stats">
+            <div id="dashboardCardbody" class=" card-body">
+              <div class=" row">
+                <div class=" col">
+                  <h5 class=" card-title text-uppercase text-muted mb-0">
+                    Space Available
+                  </h5>
+
+                  <span class=" h2 font-weight-bold mb-0"> 50GB  </span>
+                </div>
+
+                <div class=" col-auto">
+                  <div class=" icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                    <i class="fa fa-user"> </i>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div> --
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div class=" container-fluid mt--6">
+    <div class=" row">
+        <div class=" col-xl-6">
+            <div class=" card bg-default">
+                <div class=" card-header bg-white">
+                    <div class=" row align-items-center">
+                        <div class=" col">
+                            <h6 class=" text-dark text-uppercase ls-1 mb-1">Overview</h6>
+
+                            <h5 class=" h3 text-dark mb-0">Data Upload Analysis</h5>
+                        </div>
+
+                        <div class="col">
+                            <ul class="nav nav-pills justify-content-end">
+                                <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" (click)="updateOptions('M')">
+                                    <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked === true }" data-toggle="tab" (click)="clicked = true; clicked1 = false">
+                                        <span class="d-none d-md-block">Month</span>
+                                        <span class="d-md-none">M</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" data-toggle="chart" data-target="#chart-sales" (click)="updateOptions('W')">
+                                    <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked1 === true }" data-toggle="tab" (click)="clicked = false; clicked1 = true">
+                                        <span class="d-none d-md-block">Week</span>
+                                        <span class="d-md-none">W</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body bg-white">
+                    <div class=" chart">
+                        <div style="height:100%;width: 100%;" id="chart-sales-dark" class="chart-canvas"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class=" col-xl-6">
+            <div class=" card bg-default">
+                <div class=" card-header bg-white">
+                    <div class=" row align-items-center">
+                        <div class=" col">
+                            <h6 class=" text-dark text-uppercase ls-1 mb-1">Overview</h6>
+
+                            <h5 class=" h3 text-dark mb-0">File Upload Analysis</h5>
+                        </div>
+
+                        <div class="col">
+                            <ul class="nav nav-pills justify-content-end">
+                                <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" (click)="updateOptions('M')">
+                                    <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked === true }" data-toggle="tab" (click)="clicked = true; clicked1 = false">
+                                        <span class="d-none d-md-block">Month</span>
+                                        <span class="d-md-none">M</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" data-toggle="chart" data-target="#chart-sales" (click)="updateOptions('W')">
+                                    <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{ active: clicked1 === true }" data-toggle="tab" (click)="clicked = false; clicked1 = true">
+                                        <span class="d-none d-md-block">Week</span>
+                                        <span class="d-md-none">W</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body bg-white">
+                    <div class=" chart">
+                        <div style="height:100%;width: 100%;" id="chart-fileupload" class="chart-canvas"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" row">
+        <div class=" col-xl-6">
+            <div class=" card">
+                <div class=" card-header bg-transparent">
+                    <div class=" row align-items-center">
+                        <div class=" col">
+                            <h6 class=" text-uppercase text-dark ls-1 mb-1">Activity Analysis</h6>
+
+                            <h5 class="text-dark h3 mb-0">Total Activities</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" card-body">
+                    <div class=" chart">
+                        <div class="chart-canvas" style="height:100%;width: 100%;" id="chart-bars"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" col-xl-6">
+            <div class=" card">
+                <div class=" card-header bg-transparent">
+                    <div class=" row align-items-center">
+                        <div class=" col">
+                            <h6 class=" text-uppercase text-dark ls-1 mb-1">Log Analysis </h6>
+
+                            <h5 class="text-dark h3 mb-0">Total Log</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" card-body">
+                    <div class=" chart">
+                        <div class="chart-canvas" style="height:100%;width: 100%;" id="chart-bars_UserLog"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> -->
+<!-- <div class=" header pb-6">
+    <div class=" header-body">
+        <div class="align-items-center py-4">
+            <div class="dashboard">
+                <div class="well">
+                    <div class="user_dashboard">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card card_box task">
+                                    <img src="assets/img/task1.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer" (click)="downloadData('Maker Pending')">{{MakerUploaded}}</h3>
+                                   
+                                        <p>Task Overdue</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card_box task_dur">
+                                    <img src="assets/img/task2.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer" (click)="DLoadData('TastDueThisWeek')">35 </h3>
+                                        <p>Tasks Due This Week</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card card_box tasks_blue">
+                                    <img src="assets/img/task3.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer" (click)="DLoadData('TastDueDate')">65</h3>
+                                        <p>Tasks Due Today</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card card_box">
+                                    <img src="assets/img/folder.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer" (click)="DLoadData('Folder')">{{Folder}} <i class="fa fa-caret-down" aria-hidden="true"></i></h3>
+                                        <p>Total Folder</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card_box">
+                                    <img src="assets/img/metadata.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer" (click)="DLoadData('Metadata')">{{Metadata}}<i class="fa fa-caret-down" aria-hidden="true"></i></h3>
+                                        <p>Metadata Charts</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card_box">
+                                    <img src="assets/img/favorite.png">
+                                    <div class="card_box_txt">
+                                        <h3 class="cursor-pointer"  (click)="DLoadData('Favourite')">{{Favourite}} <i class="fa fa-caret-down" aria-hidden="true"></i></h3>
+                                        <p>Favorite File</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card_box" style="height: 101px;">
+                                    <img src="assets/img/help.png">
+                                    <div class="card_box_txt">
+                                        <h4>Help</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <h3>Recent Activities </h3>
+                                    <p>From Last Week</p>
+                                    <div id="activityChart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="text_dropdown">
+                                        <h3>Ms Files, Images & ect </h3>
+                                        <div class="dropdown">
+                                            <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                              <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">HTML</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="total-count">
+                                        <div class="linear-gradient"></div>
+                                        <img src="assets/img/icons/dashboard/Union.png" />
+                                        <span class="label">Total Files</span><br />
+                                        <span class="count cursor-pointer" (click)="downloadData('total files')">{{TotalFiles}}</span>
+                                    </div>
+                                    <div id="filesChart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card missing_documents">
+                                    <img src="assets/img/missing_document.png">
+                                    <h3>Missing Documents</h3>
+                                    <h1 class="cursor-pointer" (click)="downloadData('missing_document')">0</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">{{type}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="card-body">
+                <div class="row">
+               
+                  
+                    <div class="dataTables_wrapper checklist-table w-100">
+         
+                        <p-table #dt [columns]="headerList" [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                          <ng-template pTemplate="caption">
+                              <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                              <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+                              <button (click)="dt.exportCSV()" class="btn btn-sm btn-primary download-data">Download</button>
+                            </ng-template>
+                          <ng-template pTemplate="header">
+                              <tr>
+                                 
+                                  <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '5%'}">
+                                      {{col.header}}
+                                      <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon>
+                                  </th>
+                           
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                              <tr>
+                              
+                                  <td *ngFor="let col of headerList">
+                                    {{car[col.field]}}
+                                  </td>
+
+                                
+                              
+                              </tr>
+                          </ng-template>
+                      </p-table>
+                                       
+              
+                      </div>
+
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" 
+                    (click)="closePopup()">
+            Close
+            </button>
+        </div>
+        </div>
+    </div>
+</div> -->

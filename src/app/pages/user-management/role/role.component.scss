@@ -1,0 +1,77 @@
+  .Approved {
+    color: white;
+    background-color: green;
+    font-size: 12px;
+    font-family: din-2014, Arial, sans-serif;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .WFA {
+    color: white;
+    background-color: rgb(40, 121, 228);
+    font-size: 12px;
+    font-family: din-2014, Arial, sans-serif;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .Rejected {
+    color: white;
+    background-color: red;
+    font-size: 12px;
+    font-family: din-2014, Arial, sans-serif;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+.Active {
+    color: white;
+    background-color: green;
+    font-size: 12px;
+    font-family: din-2014, Arial, sans-serif;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.In-Active {
+    color: white;
+    background-color: red;
+    font-size: 12px;
+    font-family: din-2014, Arial, sans-serif;
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+p {
+    margin: 0px;
+}
+
+::ng-deep .ui-togglebutton {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ui-togglebutton:hover,
+::ng-deep .ui-togglebutton:focus,
+::ng-deep .ui-togglebutton:active {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .ui-togglebutton .fa-lock,
+::ng-deep .ui-togglebutton .fa-lock-open {
+  color: #666666 !important; /* or any color you want */
+}

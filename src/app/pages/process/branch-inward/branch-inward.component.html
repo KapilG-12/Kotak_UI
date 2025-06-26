@@ -1,0 +1,320 @@
+<div >
+  <div class=" header bg-danger pb-6">
+    <div class=" container-fluid">
+      <div class=" header-body">
+        <div class=" row align-items-center py-4">
+          <div class=" col-lg-6 col-7">
+            <h6 class=" h2 text-white d-inline-block mb-0">Branch Inward</h6>
+            <nav
+            aria-label="breadcrumb"
+            class=" d-none d-md-inline-block ml-md-4">
+            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/quick-search"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> Process </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Branch Inward
+              </li>
+            </ol>
+          </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+          <div class=" container-fluid mt--6">
+            <div class=" row">
+              <div class=" col">
+                <div class=" card"> 
+                  <div class="retrieval_add_form">
+                    
+                    <form  class="needs-validation p-4" [formGroup]="AddBranchInwardForm">
+                      <div class="form-row">
+                        <!-- <div class="col-md-3 mb-3">
+                          <label class="form-control-label" for="BatchID">Batch ID</label>
+                          <input class="form-control" name="BatchID" formControlName="BatchID" type="text"/>
+                        </div> -->
+                        <div class="col-md-3 mb-3">
+                          <label class="form-control-label" for="BatchID">Batch ID</label>                     
+                          <div class="input-group input-group-merge serchInput">
+                            <input readonly  style="border-color: green;" type="text"  class="form-control" name="BatchNo" formControlName="BatchNo"  />                      
+                            <button  style="border-color: #006ba1;" (click)="GetBatchDetails()" ><i  style="color: #006ba1;" class="fa fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <!-- <div class="col-md-3 mb-3">
+                          <label class="form-control-label" for="apac">Apac</label>
+                          <input  class="form-control"  style="border-color: green;" type="text"   name="apac"  formControlName="apac" type="text"/>
+                       </div> -->
+                      
+                       <div class=" col-md-3 mb-3">
+                        <label class=" form-control-label" for="document_type">Select Appl </label>
+                        <select class=" form-select form-control"  style="border-color: #8898aa;" type="text" formControlName="appl" data-toggle="select" (change)="OnreadonlyAppc()" >
+                          <option value=0>Select Appl</option>
+                          <option value="CF">CF</option>
+                          <option value="CLF">CLF</option>
+                            <option value="TWF">TWF</option>
+                            <option value="KLAP">KLAP</option>
+                        </select>
+                      </div>
+
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="appl">Apac</label>
+                          <input  [readonly]="!Isreadonly" name="appl"   style="border-color: green;" type="text"   (change)="getAppackDetails()"  formControlName="apac" type="text" class="form-control"/>
+                     
+                        </div>
+
+                        <!-- <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="document_type">Document Type</label>
+                          <select class=" form-control"  style="border-color: green;" type="text"   formControlName="document_type"   (change)="getDocumentdetails()" data-toggle="select" >
+                            <option value=0>Select Document Type</option>
+                            <option value="Docket">Docket</option>
+                            <option value="Repayment">Repayment</option>
+                            <option value="Original KLAP">Original KLAP</option>
+                            <option value="Repayment Insert">Repayment Insert</option>
+                            <option value="Docket Insert">Docket Insert</option>                        
+                            <option value="Original Insert">Original Insert</option>
+
+                          </select>                      
+                        </div> -->
+
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="product">Document Type</label>
+                          <select nam="Port" class="form-control" formControlName="document_type">
+                            <option value=0>Document Type </option>   
+                            <option *ngFor="let _DT of  document_typeList" [value]="_DT.document_type"  >  
+                            {{_DT.document_type}}  
+                            </option>
+                          </select>
+                        </div>  
+
+
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="product">Product</label>
+                          <input readonly name="product" formControlName="product" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="location">Location</label>
+                          <input readonly name="location" formControlName="location" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="sub_lcoation">Sub Location</label>
+                          <input readonly name="sub_lcoation"  formControlName="sub_lcoation" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="maln_party_id">Main Party Id</label>
+                          <input readonly name="maln_party_id"  formControlName="maln_party_id"  type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="party_name">Party Name</label>
+                          <input readonly name="party_name"   formControlName="party_name" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="agr_value">Agr Value</label>
+                          <input readonly name="agr_value" id="agr_value" formControlName="agr_value" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="pdc_type">Pdc Type</label>
+                          <input readonly name="pdc_type"  formControlName="pdc_type" type="text" class="form-control"/>
+                     
+                        </div>
+                        <div class=" col-md-3 mb-3">
+                          <label class=" form-control-label" for="apac_effective_date">Appl Effective Date</label>
+                          <input readonly name="apac_effective_date"  formControlName="apac_effective_date" type="text" class="form-control"/>
+                     
+                        </div>
+
+                        
+                      </div>
+          
+                     <div class="float-right pb-3">
+                    
+                      <button  class="btn btn-primary" type="submit" (click)="onSubmit()">Submit</button>
+                      <button  class="btn btn-primary" style="background-color: #f3c110;border-color: #f3c110;"  (click)="OnReset()">Reset</button>
+                    
+                      <button type="button" class="btn btn-warning" (click)="closeBatch(BatchCloseFormPopup)">Close Batch</button>
+                     </div>
+                     
+                    </form>
+                  </div>
+
+                  <div class="dataTables_wrapper checklist-table w-100">
+                    <!--             
+                                <div class="col-md-1">    
+                                  <button type="button" class="btn btn-primary" (click)="downloadFile()" style="float: right;text-align: right;    padding: 5px 15px;">Download
+                                  
+                                  </button>
+                                                  
+                                </div> -->
+                    
+                                <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                                
+                                  <ng-template pTemplate="caption">
+                                      <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                      <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+                               
+                                    </ng-template>
+                                  <ng-template pTemplate="header">
+                                      <tr>
+                                         
+                                          <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '5%'}">
+                                              {{col.header}}
+                                              <!-- <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon> -->
+                                          </th>
+                                          <th style="width: 10%;">
+                                            ACTION
+                                          </th>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                                      <tr>
+                                         
+                                          <td *ngFor="let col of headerList">
+                                            {{car[col.field]}}
+                                          </td>
+                                            <td>
+                                            
+                                              <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-icon-only" (click)="DeleteFile(car)" >
+                                                <span class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
+                                              </button>
+                                            </td> 
+                                      </tr>
+                                  </ng-template>
+                              </p-table> 
+                              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  </div>
+
+  <ng-template #BatchCloseFormPopup let-c="close" let-d="dismiss" let-modal>
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class=" card">
+          <div class=" card-header"><h3 class=" mb-0">Batch Close
+            <!-- <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-icon-only float-right" >
+              <span class="btn-inner--icon"><i class="fa fa-download"></i></span>
+            </button> -->
+          </h3>
+        </div>
+          <div class="card-body">
+            <form  class="needs-validation" novalidate="" [formGroup]="BatchCloseForm">
+              <div class="row pb-3">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="request_no"> Batch No</label>
+                    <div class="input-group input-group-merge serchInput">
+                      <input  readonly type="text"  class="form-control" name="BatchNo" formControlName="BatchNo" />
+                    </div>
+                  </div>
+                </div>  
+  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="request_no">POD No</label>
+                    <div class="input-group input-group-merge serchInput">
+                      <input    type="text"  class="form-control" name="pod_no" formControlName="pod_no" />
+                    </div>
+                  </div>
+                </div>  
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="courier_name">
+                      Courier Name  
+                    </label>
+                    <select name="Courier" id="Courier" class="form-control" formControlName="courier_name" >
+                      <option value=0>Courier</option>
+                      <option value="1">DTDC</option>
+                      <option value="2">Blue Dart</option>
+                      <option value="3">FedEx Express</option>
+                      <option value="4">Professional Couriers</option>
+                      <option value="5">Aramex India</option> 
+                      <option value="6">Delhivery</option>
+                      <option value="7">Ecom Express</option>                             
+                      <option value="8">Gati</option>   
+                      <option value="9">Safe Express</option>   
+                      <option value="10">InExpress</option>   
+                      <option value="11">Day express Courier and cargo Services</option>                            
+                      <option value="12">Super Fast Llogistics</option>   
+                      <option value="13">BLAZEFLASH COURIER</option>   
+                      <option value="14">APEX INTERNATIONAL</option>            
+                      <option value="15">BLUE EXPRESS COURIER</option>   
+                      <option value="16">BOMBINO EXPRESS COURIER</option>  
+
+                      <option value="17">DECAN DART EXPRESS</option>   
+                      <option value="18">ELBEX COURIERS</option>   
+                      <option value="19">FASTWAY EXPRESS</option>  
+                      <option value="20">FIRST FLIGHT</option>  
+
+                      <option value="21">FLYKING COURIER</option>  
+                      <option value="22">FREIGHT NET PVT LTD</option>  
+                      <option value="23">ICS INTERNATIONAL COURIER</option>   
+                      <option value="24">INDIAN POSTAL SERVICE</option>   
+
+                      <option value="25">KABLOOM COURIER</option>   
+                      <option value="26">METRO MARUTI EXPRESS COURIER</option>  
+                      
+                      <option value="27">ON TIME COURIER</option>   
+                      <option value="28">OVERNITE EXPRESS</option>  
+
+                      <option value="29">RAJDHANI AIR EXPRESS</option>   
+                      <option value="30">RED EXPRESS</option>  
+
+                      <option value="31">RELIABLE LOGISTICS</option>   
+                      <option value="32">ROYALE INTERNATIONAL</option>
+                      
+                      <option value="33">SM LOGISTICS</option>   
+                      <option value="34">SAFELINE LOGISTICS</option>
+
+                      <option value="35">SAFEXPRESS COURIER</option>   
+                      <option value="36">SAR WORLDWIDE</option>
+
+                      <option value="37">SHREE BALAJI COURIER</option>   
+                      <option value="38">SHREE MARUTI COURIER</option>
+                      <option value="39">SHREE TIRUPATI COURIER</option>   
+                      <option value="40">SKYPACK COURIER</option>
+                      <option value="41">SPEEDWAY CARGO</option>   
+                      <option value="42">ST COURIER</option>
+                      <option value="43">TARGET COURIERS</option>   
+                      <option value="44">TCI XPS</option>
+                      <option value="45">TNT EXPRESS</option>                          
+                      <option value="46">UNIQUE EXPRESS</option>   
+                      <option value="47">UNITED BUSINESS XPRESS (UBX)</option>
+                      <option value="48">UNITED FREIGHT SERVICE</option>   
+                      <option value="49">UNITED PARCEL SERVICE</option>
+                      <option value="50">WORLDWIDE EXPRESS COURIERS</option> 
+                      
+                      <option value="51">Other</option>
+                      <option value="52">By Hand</option>                      
+                            
+                    
+                      </select>
+                  </div>
+                </div>
+   
+                
+              </div>
+              <button  class="btn btn-primary" type="submit" (click)="onUpdateBatchNo()"  >
+                Submit
+              </button>
+              <button type="button" class="btn btn-warning" (click)="OnClose()">Close</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  

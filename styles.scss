@@ -1,0 +1,207 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@swimlane/ngx-datatable/index.css';
+@import '~@swimlane/ngx-datatable/themes/material.scss';
+@import '~@swimlane/ngx-datatable/assets/icons.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+#example_filter input {
+    border-radius: 5px;
+  }
+
+.errorMsg-feedback {
+    font-size: 80%;
+    width: 100%;
+    margin-top: .25rem;
+    color: #fb6340;
+}
+
+control:invalid {
+  border-color: #fb6340;
+}
+  
+
+.dataTables_length label select {
+    width: auto;
+    margin:3px;
+    border-radius: 5px;
+  }
+
+  #example {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important;
+    }
+
+ 
+
+  /*.datatable-body-row.datatable-body-row.datatable-row-odd{
+      background-color: #f2f2f2;
+  }*/
+
+  
+
+.datatable-body-row.datatable-body-row{
+  border: 0.5px solid #ddd;
+  border-bottom: 0px;
+}
+
+.ngx-datatable {
+  border-collapse: collapse;
+ 
+}
+
+
+.ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+    background: #FFD86F;
+    border: 0.5px solid #ddd;
+  border-bottom: 0px;
+  border-collapse: collapse;
+    
+  }
+
+  .ngx-datatable .datatable-body-cell{
+    border: 0.5px solid #ddd;
+    border-collapse: collapse;
+border-bottom: 0px;
+border-right: 0px;
+  }
+
+  .ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+    background: #f4f4f4;
+    font-weight: bold;
+    //background-color: #FFD86F;
+  }
+
+  .errorMsg-feedback {
+    font-size: 80%;
+    width: 100%;
+    margin-top: .25rem;
+    color: #fb6340;
+  }
+
+  
+  .datatable-body-row.datatable-body-row.datatable-row-odd{
+    background-color: #f2f2f2;
+}
+
+ 
+/*
+  /*
+  .datatable-scroll {
+    display: inherit !important;
+  }
+  .ngx-datatable-scroll {
+    display: inherit !important;
+  } */
+/*
+  .ngx-datatable-scroller{
+    width:100% !important;
+  }  */
+
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+  padding: .25em .5em !important;
+}
+  
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell.error {
+  background: #ff3838;
+  color: #fff;
+}
+  
+.ui-tree {
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+
+  .pi-file:before, .pi-caret-right:before, .pi-caret-down:before{
+    color: #5f9ea0;
+  }
+  
+  .fa-folder-open:before, .fa-folder:before {
+    color: #FFD86F
+  }
+
+  .ui-tree-container .ui-treenode .ui-treenode-content:focus,
+  .ui-tree-container .ui-treenode .ui-treenode-content:hover {
+    background: #c8f5f7;
+  }
+}
+
+// Override tab view styles
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
+  background-color: #f4f4f4 !important;
+  border-top: 4px solid #000 !important;
+  color: #000 !important;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a {
+  color: #000 !important;
+}
+
+body .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-thead>tr>th {
+  padding: .25em .5em !important;
+}
+body .ui-table .ui-table-tbody > tr:hover {
+  background-color: #FFD86F;
+}
+
+.ngx-datatable.ui-table-tbody > tr:hover {
+  //background: #f4f4f4;
+  //font-weight: bold;
+  background-color: #FFD86F;
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-nav .nav-link:hover {
+  //background-color:red;
+  background-color:  #eee;
+ 
+}
+.datatable-header-inner, .datatable-row-center {
+  width: 100% !important;
+}
+.header.bg-danger {
+  background: #a55154 !important;
+}
+
+.mat-menu-trigger:hover {
+  background-color: #FFD86F;
+}
+
+.mat-menu-item:hover:not([disabled]), .mat-menu-item.cdk-program-focused:not([disabled]), .mat-menu-item.cdk-keyboard-focused:not([disabled]), .mat-menu-item-highlighted:not([disabled]) {
+  background: #FFD86F;
+}
+
+.ui-table .ui-table-thead > tr > th {
+  background-color: #C7E3EF !important;
+}
+.ui-table input[type='text'] {
+  background-color: #C7E3EF;
+}
+
+.ui-table .ui-table-tbody > tr:nth-child(even) {
+  background-color: #e5eff3 !important;
+}
+.ui-paginator {
+  background-color: #C7E3EF !important;
+}
+.ui-table .ui-table-tbody > tr:hover {
+  background-color: #ffe4de !important;
+}
+
+.mat-menu-content {
+  width: 200px;
+}
+
+.mat-menu-content span {
+  position: absolute;
+  bottom: 8px;
+  margin-left: 4px;
+}
+
+.mat-menu-trigger[aria-expanded="true"] {
+  background-color: #FFD86F;
+}

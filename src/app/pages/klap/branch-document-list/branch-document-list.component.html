@@ -1,0 +1,704 @@
+<div class="DataEntryMainContainer">
+  <div class="header bg-danger pb-6">
+      <div class="container-fluid">
+          <div class="header-body">
+              <div class="row align-items-center py-4">
+                  <div class="col-lg-6 col-7">
+                      <h6 class="h2 text-white d-inline-block mb-0">Branch Query Pending </h6>
+                      
+
+                  </div>
+
+                  <div class="col-lg-6 col-5 text-right">                        
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div> 
+
+  <div class=" container-fluid mt--6">
+      <div class=" row">
+          <div class=" col">
+              <div class=" card">
+                  <div class=" card-header">
+                      <h3 class=" mb-0">Branch Query Pending</h3>
+                      <p class=" text-sm mb-0"></p>
+                  </div>
+
+                  <div class="retrieval_add_form">
+
+                      <form class="needs-validation p-4" [formGroup]="AddKlapAuditForm">
+                        <div class="form-row">
+          
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="File_No">File No</label>
+                            <input  readonly name="File_No" style="border-color: green;" type="text"
+                              formControlName="File_No" type="text" class="form-control form-control-sm" />
+                          </div>
+          
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="appl">Apac</label>
+                            <input readonly name="appl" type="text" formControlName="apac" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+          
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="appl">Appl</label>
+                            <input readonly name="appl" type="text" formControlName="appl" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+          
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="appl">Document Type</label>
+                            <input readonly name="document_type" type="text" formControlName="document_type" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+          
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="product">Product</label>
+                            <input readonly name="product" formControlName="product" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="location">Location</label>
+                            <input readonly name="location" formControlName="location" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="sub_lcoation">Sub Location</label>
+                            <input readonly name="sub_lcoation" formControlName="sub_lcoation" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="maln_party_id">Main Party Id</label>
+                            <input readonly name="maln_party_id" formControlName="maln_party_id" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="party_name">Party Name</label>
+                            <input readonly name="party_name" formControlName="party_name" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="agr_value">Agr Value</label>
+                            <input readonly name="agr_value" id="agr_value" formControlName="agr_value" type="text"
+                              class="form-control form-control-sm" />
+          
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="pdc_type">Pdc Type</label>
+                            <input readonly name="pdc_type" formControlName="pdc_type" type="text"
+                              class="form-control form-control-sm" />
+                          </div>
+                          <div class=" col-md-3 mb-3">
+                            <label class=" form-control-label" for="apac_effective_date">Appl Effective Date</label>
+                            <input readonly name="apac_effective_date" formControlName="apac_effective_date" type="text"
+                              class="form-control form-control-sm" />
+                          </div>
+
+                        </div> 
+          
+                      </form>
+                    </div>
+
+                  <div class="dataTables_wrapper py-4 checklist-table">
+ 
+                      <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+                          [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+                          (onPage)="paginate($event)" [loading]="loading"
+                          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                          <ng-template pTemplate="caption">
+                              <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                              <input type="text" pInputText size="50" placeholder="Search records"
+                                  (input)="searchTable($event)" class="global-search">
+                          </ng-template>
+                          <ng-template pTemplate="header">
+                              <tr>
+
+                                  <th *ngFor="let col of headerList; let i = index;"
+                                      [ngStyle]="i==0 && {'width': '5%'}">
+                                      {{col.header}}
+
+                                  </th>
+                                  <th style="width: 5%;">
+                                      ACTION
+                                  </th>
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                              <tr>
+                                  <td *ngFor="let col of headerList">
+                                      {{car[col.field]}}
+                                  </td>
+                                  <td>
+                                      <!-- <button type="button"  class="btn btn-success m-1 p-1"  (click)="OnSTAAdd(SendToAuditorFormPopup,car)">
+                                          Send To Auditr
+                                      </button> -->
+
+                                      <button type="button" style="padding:0 0 5px 4px"
+                                      class="btn btn-icon btn-success btn-icon-only rounded-circle"
+                                      (click)="OnSTAAdd(SendToAuditorFormPopup,car)">
+                                      <span class="btn-inner--icon"><i class="fa fa-plus"></i></span>
+                                    </button>
+                
+                                  </td>
+                              </tr>
+                          </ng-template>
+                      </p-table>                       
+                      <button class="btn btn-primary float-right mt-3 mr-4"  (click)="OnSoftCopyUdpate(UdpateSoftCopyFormPopup)">
+                        Update Soft copy 
+                      </button>
+                      <button class="btn btn-primary float-right mt-3 mr-4" (click)="OnPODAdd(PODEntryFormPopup)">
+                        Update Physical copy 
+                      </button>
+                      <button class="btn btn-danger float-right mt-3 mr-4"  (click)="onBack('Branch Query Status Updated')">
+                        Close 
+                    </button>
+
+                    <button class="btn btn-danger float-right mt-3 mr-4"  (click)="back()">
+                      Back 
+                  </button>
+
+                  </div>
+                  <!-- [disabled]="!softCopy"
+                  [disabled]="!physicalCopy" -->
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+</div>
+
+<ng-template #PODEntryFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">  
+      <div>
+        <form [formGroup]="PODEntryForm">
+          <div class="row">
+            <div class="card w-100">  
+              <div>
+                <div class="position-relative row form-group">
+
+                  <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card-header">
+                      <h3 class="mb-0">POD Entry</h3>
+                      <p class="text-sm mb-0"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">                     
+                        <div class="">
+                          <div class="">  
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">  
+                              <div class="row">  
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="File_No">File No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input  readonly type="text" class="form-control" name="File_No" formControlName="File_No" class="form-control form-control-sm"  />  
+                                    </div>
+                                  </div>
+                                </div>                                
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">Physical copy remark</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input type="text" class="form-control" name="physical_copy_remark"
+                                        formControlName="physical_copy_remark"  class="form-control form-control-sm" />  
+                                    </div>
+                                  </div>
+                                </div>   
+                              
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">POD No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input  type="text" class="form-control" name="pod_no"
+                                        formControlName="pod_no" class="form-control form-control-sm"  />  
+                                    </div>
+                                  </div>
+                                </div>  
+                         
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="courier_name">
+                                      Courier Name
+                                    </label>
+                                    <select name="Courier" class="form-control form-control-sm"  formControlName="courier_name">
+                                      <option value=0>Courier</option>
+                                      <option value="1">DTDC</option>
+                                      <option value="2">Blue Dart</option>
+                                      <option value="3">FedEx Express</option>
+                                      <option value="4">Professional Couriers</option>
+                                      <option value="5">Aramex India</option>
+                                      <option value="6">Delhivery</option>
+                                      <option value="7">Ecom Express</option>
+                                      <option value="8">Gati</option>
+                                      <option value="9">Safe Express</option>
+                                      <option value="10">InExpress</option>
+                                      <option value="11">Day express Courier and cargo Services</option>
+                                      <option value="12">Super Fast Llogistics</option>
+                                      <option value="13">BLAZEFLASH COURIER</option>
+                                      <option value="14">APEX INTERNATIONAL</option>
+                                      <option value="15">BLUE EXPRESS COURIER</option>
+                                      <option value="16">BOMBINO EXPRESS COURIER</option>
+
+                                      <option value="17">DECAN DART EXPRESS</option>
+                                      <option value="18">ELBEX COURIERS</option>
+                                      <option value="19">FASTWAY EXPRESS</option>
+                                      <option value="20">FIRST FLIGHT</option>
+
+                                      <option value="21">FLYKING COURIER</option>
+                                      <option value="22">FREIGHT NET PVT LTD</option>
+                                      <option value="23">ICS INTERNATIONAL COURIER</option>
+                                      <option value="24">INDIAN POSTAL SERVICE</option>
+
+                                      <option value="25">KABLOOM COURIER</option>
+                                      <option value="26">METRO MARUTI EXPRESS COURIER</option>
+
+                                      <option value="27">ON TIME COURIER</option>
+                                      <option value="28">OVERNITE EXPRESS</option>
+
+                                      <option value="29">RAJDHANI AIR EXPRESS</option>
+                                      <option value="30">RED EXPRESS</option>
+
+                                      <option value="31">RELIABLE LOGISTICS</option>
+                                      <option value="32">ROYALE INTERNATIONAL</option>
+
+                                      <option value="33">SM LOGISTICS</option>
+                                      <option value="34">SAFELINE LOGISTICS</option>
+
+                                      <option value="35">SAFEXPRESS COURIER</option>
+                                      <option value="36">SAR WORLDWIDE</option>
+
+                                      <option value="37">SHREE BALAJI COURIER</option>
+                                      <option value="38">SHREE MARUTI COURIER</option>
+                                      <option value="39">SHREE TIRUPATI COURIER</option>
+                                      <option value="40">SKYPACK COURIER</option>
+                                      <option value="41">SPEEDWAY CARGO</option>
+                                      <option value="42">ST COURIER</option>
+                                      <option value="43">TARGET COURIERS</option>
+                                      <option value="44">TCI XPS</option>
+                                      <option value="45">TNT EXPRESS</option>
+                                      <option value="46">UNIQUE EXPRESS</option>
+                                      <option value="47">UNITED BUSINESS XPRESS (UBX)</option>
+                                      <option value="48">UNITED FREIGHT SERVICE</option>
+                                      <option value="49">UNITED PARCEL SERVICE</option>
+                                      <option value="50">WORLDWIDE EXPRESS COURIERS</option>  
+                                      <option value="51">Other</option>
+                                      <option value="52">By Hand</option>  
+
+                                    </select>
+                                  </div>
+                                </div>
+                              
+
+                              </div>
+
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div class="resetsave">
+                                <div class="resetsavebts"> 
+                                  <button class='btn btn-success' (click)="onSubmit()">
+                                    Save 
+                                  </button> 
+                                  <button class='btn btn-warning' (click)="hidepopup()">
+                                    Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>   
+
+                          <div class="dataTables_wrapper py-4 checklist-table"> 
+                            <p-table [paginator]="true" [rows]="10" [value]="formattedFileData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                              <ng-template pTemplate="caption">
+                                  <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                  <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+                              </ng-template>
+                              <ng-template pTemplate="header">
+                                  <tr>
+                                   
+                                      <th *ngFor="let col of headerListFile; let i = index;"  [ngStyle]="i==0 && {'width': '7%'}">
+                                          {{col.header}}                                  
+                                        </th>
+                                   
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                                  <tr>                                  
+                                      <td *ngFor="let col of headerListFile">
+                                        {{car[col.field]}}
+                                      </td>
+                                     
+                                  </tr>
+                              </ng-template>
+                          </p-table> 
+                  
+                          </div>
+                        </div>   
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #SendToAuditorFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">  
+      <div>
+        <form [formGroup]="STAEntryForm">
+          <div class="row">
+            <div class="card w-100">  
+              <div>
+                <div class="position-relative row form-group">
+
+                  <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card-header">
+                      <h3 class="mb-0"></h3>
+                      <p class="text-sm mb-0"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">                     
+                        <div class="">
+                          <div class="">  
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">  
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label class=" form-control-label" for="document_type">Copy Type</label>
+                                  <select class=" form-control form-control-sm" style="border-color: green;" type="text"
+                                    formControlName="send_physical_dcoument" data-toggle="select">
+                                    <option value=0>Select </option>
+                                    <option value="Soft Copy">Soft Copy</option>
+                                    <option value="Physical Copy">Physical Copy</option>
+                                  </select>
+                                </div> 
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">Branch Remark</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input type="text" class="form-control" name="branch_remark"
+                                        formControlName="branch_remark"  class="form-control form-control-sm" />  
+                                    </div>
+                                  </div>
+                                </div>  
+                              </div> 
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div class="resetsave">
+                                <div class="resetsavebts">
+
+                                  <button class='btn btn-success' (click)="UdpateStatus()">
+                                    Save
+                                  </button>
+                                  <button class='btn btn-warning' (click)="hidepopup()">
+                                    Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+ 
+                        </div>
+ 
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #UdpateSoftCopyFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">  
+      <div>
+        <form [formGroup]="STASoftCopyEntryForm">
+          <div class="row">
+            <div class="card w-100">  
+              <div>
+                <div class="position-relative row form-group">
+
+                  <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card-header">
+                      <h3 class="mb-0">Update Remark</h3>
+                      <p class="text-sm mb-0"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">                     
+                        <div class="">
+                          <div class="">  
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">  
+                              <div class="row">
+                               
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="File_No">File No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input  readonly type="text" class="form-control" name="File_No" formControlName="File_No" class="form-control form-control-sm"  />  
+                                    </div>
+                                  </div>
+                                </div>  
+
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">Remark</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input type="text" class="form-control" name="soft_copy_remark"
+                                        formControlName="soft_copy_remark"  class="form-control form-control-sm" />  
+                                    </div>
+                                  </div>
+                                </div>   
+
+                              </div>
+
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div class="resetsave">
+                                <div class="resetsavebts">
+
+                                  <button class='btn btn-success' (click)="onUpdateSoftCopy()">
+                                    Save
+                                  </button>
+                                  <button class='btn btn-warning' (click)="hidepopup()">
+                                    Close</button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+
+                    <div class="dataTables_wrapper py-4 checklist-table"> 
+                        <p-table [paginator]="true" [rows]="10" [value]="formattedFileData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                          <ng-template pTemplate="caption">
+                              <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                              <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+                          </ng-template>
+                          <ng-template pTemplate="header">
+                              <tr>
+                               
+                                  <th *ngFor="let col of headerListFile; let i = index;"  [ngStyle]="i==0 && {'width': '7%'}">
+                                      {{col.header}}                                  
+                                    </th>
+                               
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                              <tr>                                  
+                                  <td *ngFor="let col of headerListFile">
+                                    {{car[col.field]}}
+                                  </td>
+                                 
+                              </tr>
+                          </ng-template>
+                      </p-table> 
+              
+                      </div>
+ 
+                        </div>
+ 
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<!-- <ng-template #SendToAuditFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">  
+      <div>
+        <form [formGroup]="PODEntryForm">
+          <div class="row">
+            <div class="card w-100">  
+              <div>
+                <div class="position-relative row form-group">
+
+                  <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card-header">
+                      <h3 class="mb-0">POD Entry</h3>
+                      <p class="text-sm mb-0"></p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">                     
+                        <div class="">
+                          <div class="">  
+                            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">  
+                              <div class="row">
+                              
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">POD No</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input  type="text" class="form-control" name="pod_no"
+                                        formControlName="pod_no" class="form-control form-control-sm"  />  
+                                    </div>
+                                  </div>
+                                </div>  
+                         
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="courier_name">
+                                      Courier Name
+                                    </label>
+                                    <select name="Courier" class="form-control form-control-sm"  formControlName="courier_name">
+                                      <option value=0>Courier</option>
+                                      <option value="1">DTDC</option>
+                                      <option value="2">Blue Dart</option>
+                                      <option value="3">FedEx Express</option>
+                                      <option value="4">Professional Couriers</option>
+                                      <option value="5">Aramex India</option>
+                                      <option value="6">Delhivery</option>
+                                      <option value="7">Ecom Express</option>
+                                      <option value="8">Gati</option>
+                                      <option value="9">Safe Express</option>
+                                      <option value="10">InExpress</option>
+                                      <option value="11">Day express Courier and cargo Services</option>
+                                      <option value="12">Super Fast Llogistics</option>
+                                      <option value="13">BLAZEFLASH COURIER</option>
+                                      <option value="14">APEX INTERNATIONAL</option>
+                                      <option value="15">BLUE EXPRESS COURIER</option>
+                                      <option value="16">BOMBINO EXPRESS COURIER</option>
+
+                                      <option value="17">DECAN DART EXPRESS</option>
+                                      <option value="18">ELBEX COURIERS</option>
+                                      <option value="19">FASTWAY EXPRESS</option>
+                                      <option value="20">FIRST FLIGHT</option>
+
+                                      <option value="21">FLYKING COURIER</option>
+                                      <option value="22">FREIGHT NET PVT LTD</option>
+                                      <option value="23">ICS INTERNATIONAL COURIER</option>
+                                      <option value="24">INDIAN POSTAL SERVICE</option>
+
+                                      <option value="25">KABLOOM COURIER</option>
+                                      <option value="26">METRO MARUTI EXPRESS COURIER</option>
+
+                                      <option value="27">ON TIME COURIER</option>
+                                      <option value="28">OVERNITE EXPRESS</option>
+
+                                      <option value="29">RAJDHANI AIR EXPRESS</option>
+                                      <option value="30">RED EXPRESS</option>
+
+                                      <option value="31">RELIABLE LOGISTICS</option>
+                                      <option value="32">ROYALE INTERNATIONAL</option>
+
+                                      <option value="33">SM LOGISTICS</option>
+                                      <option value="34">SAFELINE LOGISTICS</option>
+
+                                      <option value="35">SAFEXPRESS COURIER</option>
+                                      <option value="36">SAR WORLDWIDE</option>
+
+                                      <option value="37">SHREE BALAJI COURIER</option>
+                                      <option value="38">SHREE MARUTI COURIER</option>
+                                      <option value="39">SHREE TIRUPATI COURIER</option>
+                                      <option value="40">SKYPACK COURIER</option>
+                                      <option value="41">SPEEDWAY CARGO</option>
+                                      <option value="42">ST COURIER</option>
+                                      <option value="43">TARGET COURIERS</option>
+                                      <option value="44">TCI XPS</option>
+                                      <option value="45">TNT EXPRESS</option>
+                                      <option value="46">UNIQUE EXPRESS</option>
+                                      <option value="47">UNITED BUSINESS XPRESS (UBX)</option>
+                                      <option value="48">UNITED FREIGHT SERVICE</option>
+                                      <option value="49">UNITED PARCEL SERVICE</option>
+                                      <option value="50">WORLDWIDE EXPRESS COURIERS</option>  
+                                      <option value="51">Other</option>
+                                      <option value="52">By Hand</option>  
+
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label class="form-control-label" for="PODNo">Branch Remark</label>
+                                    <div class="input-group input-group-merge serchInput">
+                                      <input type="text" class="form-control" name="branch_remark"
+                                        formControlName="branch_remark"  class="form-control form-control-sm" />  
+                                    </div>
+                                  </div>
+                                </div>   
+                              </div>
+
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <div class="resetsave">
+                                <div class="resetsavebts">
+
+                                  <button class='btn btn-success' (click)="onSubmit()">
+                                    Save
+                                  </button>
+                                  <button class='btn btn-warning' (click)="hidepopup()">
+                                    Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+ 
+                        </div>
+ 
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template> -->

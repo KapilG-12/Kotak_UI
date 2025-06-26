@@ -1,0 +1,446 @@
+<div class=" header bg-danger pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> User Management </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Create User
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class=" container-fluid mt--6">
+  <div class=" row">
+    <div class=" col">
+      <div class=" card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">User details</h3>
+          <a class="btn btn-sm btn-neutral" (click)="addUser(userFormPopup)">Create New User</a>
+        </div>
+        <div class="dataTables_wrapper checklist-table w-100">
+          <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+            [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+            (onPage)="paginate($event)" [loading]="loading" style="text-wrap: nowrap;"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            <ng-template pTemplate="caption">
+              <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                class="global-search">
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                  {{col.header}}
+                </th>
+
+                <th>
+                  Approval Status
+                </th>
+
+                <th>Status</th>
+
+                <th style="width: 8%;">
+                  Action
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+              <tr>
+                <td *ngFor="let col of headerList">
+                  {{car[col.field]}}
+                </td>
+
+                <td>
+                  <p [ngClass]="{
+                    'WFA': car['Status'] == 'Waiting For Approval' || car['Status'] == 'Re-considered',
+                    'Approved': car['Status'] == 'Approved',
+                    'Rejected': car['Status'] == 'Rejected'
+                    }">
+                    {{ car["Status"] }}
+                  </p>
+                </td>
+
+                <td>
+                  <p [ngClass]="car['ISACTIVE'] == 'Active' ? 'Active' : 'In-Active'">{{ car["ISACTIVE"] }}</p>
+                </td>
+
+                <td>
+                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Edit User"
+                    class="btn btn-icon btn-icon-only" (click)="editEmployee(userFormPopup,car)"
+                    [disabled]="car['Status'] == 'Rejected' || car['Status'] == 'Waiting For Approval'">
+                    <span class="btn-inner--icon"><i class="fa fa-pen"></i></span>
+                  </button>
+
+                  <button type="button" style="padding:0 0 5px" class="btn btn-icon btn-icon-only"
+                    tooltip="User Details" (click)="ViewNACH(ViewFormPopup,car)">
+                    <span class="btn-inner--icon"><i class="fa fa-eye"
+                        style="font-size:11px;color:rgb(78, 99, 10)"></i></span>
+                  </button>
+
+                  <p-toggleButton [(ngModel)]="car.checked" onIcon="fa fa-lock" offIcon="fa fa-lock-open"
+                    styleClass="rounded-circle"onLabel="" offLabel="" [disabled]="car['Status'] == 'Rejected'"
+                    [tooltip]="car.checked ? 'Active User' : 'In-Active User'" (onChange)="ActiveInactiveProject(car)">
+                  </p-toggleButton>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Old UserPopup -->
+<!-- <ng-template #userFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class=" card-header">
+        <h3 class=" mb-0"> {{User}}</h3>
+      </div>
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="firstname">
+                First name*
+              </label>
+              <input class="form-control" name="firstname" id="firstname" formControlName="firstname"
+                placeholder="First name" type="text" />
+              <div class="errorMsg-feedback"
+                *ngIf="f.firstname.touched && f.firstname.invalid && f.firstname.errors.required">
+                First name is required</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="lastname">
+                Last name*
+              </label>
+              <input class="form-control" name="lastname" id="lastname" formControlName="lastname"
+                placeholder="Last name" type="text" />
+              <div class="errorMsg-feedback"
+                *ngIf="f.lastname.touched && f.lastname.invalid && f.lastname.errors.required">
+                Last name is required</div>
+            </div>
+
+          </div>
+          <div class="form-row">
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="userid">
+                User Id*
+              </label>
+              <input name="userid" id="userid" formControlName="userid" placeholder="User Id" type="text"
+                class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">User Id Required
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="empid">Employee Id*</label>
+              <input name="empid" id="empid" formControlName="empid" placeholder="Employee Id" type="text"
+                class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('required')">
+                Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('pattern')">
+                Only alphanumeric characters are allowed
+              </div>
+            </div>
+          </div>
+
+          <div class=" form-row">
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="email">
+                Email Id*
+              </label>
+              <input id="email" formControlName="email" placeholder="Email" type="email" class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.hasError('required')">Email Id Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.errors?.pattern">Please Enter Valid
+                Email Id</div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="mobile">
+                Mobile
+              </label>
+              <input name="mobile" id="mobile" maxlength="10" formControlName="mobile" placeholder="Mobile" type="text"
+                class="form-control" />
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="location">
+                Location*
+              </label>
+              <input name="location" id="location" maxlength="10" formControlName="location" placeholder="Location"
+                type="text" class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.location.touched && f.location.hasError('required')">
+                Location is Required
+              </div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="branchcode">
+                Branch code*
+              </label>
+              <input name="branchcode" id="branchcode" maxlength="10" formControlName="branchcode"
+                placeholder="Branch Code" type="text" class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.branchcode.touched && f.branchcode.hasError('required')">
+                Branch code is Required
+              </div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="sysRoleID">
+                Role*
+              </label>
+              <select class=" form-control" formControlName="sysRoleID" data-toggle="select" id="sysRoleID">
+                <option value="0"> Select Role Name </option>
+                <option *ngFor="let _Role of _RoleList" [value]="_Role.id">
+                  {{_Role.roleName}}
+                </option>
+              </select>
+              <div class="errorMsg-feedback" *ngIf="f.sysRoleID.touched && f.sysRoleID.hasError('required')">Role
+                Required</div>
+            </div>
+          </div>
+          <div class="form-row" style="text-align: right;">
+            <div class="col-md-12 mb-3">
+              <button type="button" class="btn btn-warning" (click)="OnClose()">Close</button>
+              <button class="btn btn-primary" [disabled]="!AddUserForm.valid" type="submit">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- New UserPopup -->
+<ng-template #userFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class=" card-header">
+        <h3 class=" mb-0"> {{User}}</h3>
+      </div>
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="firstname">
+                First name*
+              </label>
+              <input class="form-control" name="firstname" id="firstname" formControlName="firstname"
+                placeholder="First name" type="text" (input)="filter()" />
+              <div class="errorMsg-feedback"
+                *ngIf="f.firstname.touched && f.firstname.invalid && f.firstname.errors.required">
+                First name is required</div>
+            </div>
+             <div class="errorMsg-feedback"
+                   *ngIf="f.firstname.touched && f.firstname.errors?.pattern">
+                First name should contain only letters and spaces
+             </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="lastname">
+                Last name*
+              </label>
+              <input class="form-control" name="lastname" id="lastname" formControlName="lastname"
+                placeholder="Last name" type="text" (input)="filter()"/>
+              <div class="errorMsg-feedback"
+                *ngIf="f.lastname.touched && f.lastname.invalid && f.lastname.errors.required">
+                Last name is required</div>
+            </div>
+
+          </div>
+          <div class="form-row">
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="userid">
+                User Id*
+              </label>
+              <input name="userid" id="userid" formControlName="userid" placeholder="User Id" type="text"
+                class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">User Id Required
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="empid">Employee Id*</label>
+              <input name="empid" id="empid" formControlName="empid" placeholder="Employee Id" type="text"
+                class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('required')">
+                Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('pattern')">
+                Only alphanumeric characters are allowed
+              </div>
+            </div>
+          </div>
+
+          <div class=" form-row">
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="email">
+                Email Id*
+              </label>
+              <input id="email" formControlName="email" placeholder="Email" type="email" class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.hasError('required')">Email Id Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.errors?.pattern">Please Enter Valid
+                Email Id</div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="mobile">
+                Mobile
+              </label>
+              <input name="mobile" id="mobile" maxlength="10" formControlName="mobile" placeholder="Mobile" type="text"
+                class="form-control" (input)="filter()" />
+                <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.hasError('required')">Mobile no Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.errors?.pattern">Please Enter Valid 10 digit
+                mobile number</div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="location">
+                Location*
+              </label>
+              <input name="location" id="location" maxlength="10" formControlName="location" placeholder="Location"
+                type="text" class="form-control" (input)="filter()" />
+              <div class="errorMsg-feedback" *ngIf="f.location.touched && f.location.hasError('required')">
+                Location is Required
+              </div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="branchcode">
+                Branch code*
+              </label>
+              <input name="branchcode" id="branchcode" maxlength="10" formControlName="branchcode"
+                placeholder="Branch Code" type="text" class="form-control" />
+              <div class="errorMsg-feedback" *ngIf="f.branchcode.touched && f.branchcode.hasError('required')">
+                Branch code is Required
+              </div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="sysRoleID">
+                Role*
+              </label>
+              <select class=" form-control" formControlName="sysRoleID" data-toggle="select" id="sysRoleID">
+                <option value=""> Select Role Name </option>
+                <option *ngFor="let _Role of _RoleList" [value]="_Role.id">
+                  {{_Role.roleName}}
+                </option>
+              </select>
+              <div class="errorMsg-feedback" *ngIf="f.sysRoleID.touched && f.sysRoleID.hasError('required')">Role
+                Required</div>
+            </div>
+          </div>
+          <div class="form-row" style="text-align: right;">
+            <div class="col-md-12 mb-3">
+              <button type="button" class="btn btn-warning" (click)="OnClose()">Close</button>
+              <button class="btn btn-primary" [disabled]="!AddUserForm.valid" type="submit">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #ViewFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="popup-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; 
+    height: 45vh; max-width: 1200px; overflow-y: auto; background-color: white; padding: 20px; 
+    border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; margin-top: -8%;">
+    <div class="p-0">
+      <form [formGroup]="AddUserForm">
+        <!-- <div class="card" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); background-color: #f9f9f9; height: auto"> -->
+        <div class="card-header"
+          style="display: flex; justify-content: space-between; align-items: center; box-shadow: none;">
+          <h3 class="mb-0">Additional User Details</h3>
+          <i class="fa fa-times" (click)="hidepopup()"></i>
+          <!-- style="color: #a1a1a1; cursor: pointer; font-size: 24px;"  -->
+        </div>
+        <!-- Project Details Section -->
+        <div class="card-body" style="background-color: #ffffff;">
+        
+          <div class="row">
+          
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdBy" style="color: black;">Created By:</label>
+                <span> {{AddUserForm.get('UserCreatedBy').value}} </span>
+              </div>
+            </div>
+         
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdDate" style="color: black;">Created Date:</label>
+                <span> {{AddUserForm.get('createdDate').value}} </span>
+              </div>
+            </div>
+
+             <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdTime" style="color: black;">Created Time:</label>
+                <span> {{AddUserForm.get('createdTime').value}} </span>
+              </div>
+            </div>
+
+           
+          </div>
+          <div class="row">
+             <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="CheckerReviewBy" style="color: black;">Reviewed by:</label>
+                <span> {{AddUserForm.get('CheckerReviewBy').value}} </span>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="checkerReviewDate" style="color: black;">Reviewed date:</label>
+                <span> {{AddUserForm.get('checkerReviewDate').value}} </span>
+              </div>
+            </div>
+
+             <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="checkerReviewTime" style="color: black;">Reviewed time:</label>
+                <span> {{AddUserForm.get('checkerReviewTime').value}} </span>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="Status" style="color: black;">Status:</label>
+                <span> {{AddUserForm.get('Status').value}} </span>
+              </div>
+            </div>
+             <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="noOfBeneficiary" style="color: black;">Reviewer Remarks:</label>
+                <span> {{AddUserForm.get('ReviewerRemark').value}} </span>
+              </div>
+            </div>
+             <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="noOfBeneficiary" style="color: black;">Active/In-Active Remarks:</label>
+                <span> {{AddUserForm.get('activeInactiveViewRemark').value}} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- </div> -->
+      </form>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,67 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0;  font-family: din-2014,Arial,sans-serif; }
+// body { margin: 0; font-family: din-2014,Aria,sans-serif; }
+
+#example_filter input {
+    border-radius: 5px;
+  }
+  
+
+.dataTables_length label select {
+    width: auto;
+    margin:3px;
+    border-radius: 5px;
+  }
+
+  #example {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important;
+    }
+
+ 
+
+  .datatable-body-row.datatable-body-row.datatable-row-odd{
+      background-color: #f2f2f2;
+  }
+
+  .datatable-body-row.datatable-body-row:hover{
+    background:linear-gradient(40deg, #FFD86F, #FC6262);
+}
+/*
+.datatable-body-row.datatable-body-row{
+  border: 0.5px solid #ddd;
+  border-bottom: 0px;
+}
+
+.ngx-datatable {
+  border-collapse: collapse;
+ 
+} */
+
+.errorMsg-feedback {
+  font-size: 80%;
+  width: 100%;
+  margin-top: .25rem;
+  color: #fb6340;
+}
+
+
+.ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+    background: #FFD86F;
+   // border: 0.5px solid #ddd;
+ // border-bottom: 0px;
+  // border-collapse: collapse;
+    
+  }
+/*
+  .ngx-datatable .datatable-body-cell{
+    border: 0.5px solid #ddd;
+    border-collapse: collapse;
+border-bottom: 0px;
+border-right: 0px;
+  } */
+

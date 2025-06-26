@@ -1,0 +1,419 @@
+
+<div class="DataEntryMainContainer">
+  <div class="header bg-danger pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Legacy Search</h6>
+
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item">
+                  <a href="javascript:void(0)"> <i class="fas fa-home" routerLink="/search/Quicksearch"> </i> </a>
+                </li>
+
+                <li class="breadcrumb-item">
+                  <a href="javascript:void(0)"> Search </a>
+                </li>
+
+                <li aria-current="page" class="breadcrumb-item active">
+                  Legacy Search
+                </li>
+              </ol>
+            </nav>
+ 
+          </div>
+
+          <div class="col-lg-6 col-5 text-right">
+            <!-- <a
+              class="btn btn-sm btn-neutral"
+              (click)="addDepartment(DepartmentFormPopup)"
+            >
+              Create New Department</a
+            > -->
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+<div class=" container-fluid mt--6">
+
+  <form [formGroup]="ContentSearchForm">
+  <div class=" row">
+    <div class=" col">
+      <div class=" card">
+        <!-- <div class=" card-header">
+          <h3 class=" mb-0"></h3>
+          <p class=" text-sm mb-0"></p>
+        </div> -->
+        <div class="dataTables_wrapper py-4 checklist-table">
+          <div class="row">
+
+            <div class="col-sm-4 col-md-4">
+              <div class="form-group">
+                <label class="form-control-label text-right pr-4" for="Search By">
+                  Search By  
+                </label>
+                <select  name="SearchBy" class="form-control" formControlName="SearchBy" >
+                  <option value="0">Search By</option>                  
+                  <option value="1">POD NO</option>
+                  <option value="2">LAN NO</option>
+                  <option value="3">REQUEST NO</option>
+                  <option value="4">REQUEST TYPE</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-sm-4 col-md-4">          
+              <div class="vsearch input-group input-group-merge serchInput">
+               <input    type="text" class="form-control" name="FileNo" formControlName="FileNo" placeholder="Enter values to search"  aria-describedby="search-addon" />
+               <div class="input-group-append btndiv" id="search-addon">
+                   <button
+                   class="btn btn-outline-primary"
+                   (click)="GetFilterSearch()"
+                   type="button"
+                 >
+                   <i class="fa fa-search"></i>
+                 </button>                    
+               </div>                  
+             </div>
+           </div>
+            
+<!-- 
+            <div class="col-sm-2 col-md-2">
+              <div id="datatable_filter" class="v_search dataTables_filter">
+                <label>
+                  <input
+                    type="search"
+                    class="form-control form-control-sm"
+                    placeholder="Search records"
+                    aria-controls="datatable"
+                    (keyup)="filterTable($event)"
+                  />
+                </label>
+              </div>
+            </div> -->
+
+            <div class="col-md-1">    
+              <button type="button" class="btn btn-primary" (click)="GetDumpdata()" style="margin-right:10px;float: right;text-align: right;    padding: 5px 15px;">Refresh
+                <!-- <i class="fa fa-refresh"></i> -->
+              </button>
+                              
+            </div>
+
+            <div class="col-md-1">    
+              <button type="button" class="btn btn-primary" (click)="downloadFile()" style="float: right;text-align: right;    padding: 5px 15px;">Download
+                <!-- <i class="fa fa-refresh"></i> -->
+              </button>
+                              
+            </div>
+ 
+
+          </div>
+
+
+          <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" class="quik_search_table">
+            <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <!-- <th [style.width]="'35px'">
+                      <p-checkbox (onChange)="selectAllRow($event, doc)" #e></p-checkbox>
+                    </th>
+                     -->
+                    <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '7%'}">
+                        {{col.header}}
+                        <!-- <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon> -->
+                    </th>
+                    <th style="width: 11%;">
+                      ACTION
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+                    <!-- <td [style.width]="'35px'">
+                   
+                   
+                    <p-checkbox [(ngModel)]="car.selected" [binary]="true" [ngModelOptions]="{standalone: true}" (onChange)="selectRow($event, car)" #e></p-checkbox>
+                 
+                    </td>
+                     -->
+                    <td *ngFor="let col of headerList">
+                      {{car[col.field]}}
+                    </td>
+
+                    <td>        
+                      <button  type="button" style="padding:0 0 3px" class="btn btn-icon btn-icon-only mr-0" data-toggle="tooltip" data-placement="bottom" title="POD" (click)="ViewPODDetails(InwardFormPopup,car)">
+                        <span class="btn-inner--icon"><i class="fa fa-pen"></i></span>
+                      </button>            
+                      <button type="button"  *ngIf="car.request_reason=='Loan Closure'"  style="padding:0 0 3px" class="btn btn-icon btn-icon-only" data-toggle="tooltip" data-placement="bottom" title="LC Download" (click)="downloadLC(car)">
+                        <span class="btn-inner--icon"><i class="fa fa-download"></i></span>
+                      </button> 
+                      <button type="button"   *ngIf="car.request_type=='Scan Copy'"   style="padding:0 0 5px 4px" class="btn btn-icon btn-icon-only" data-toggle="tooltip" data-placement="bottom" title="Scan copy Download " (click)="downloadSoftCopy(car)">
+                        <span class="btn-inner--icon"><i class="fa fa-download" style="font-size:11px;color:rgb(156, 37, 37)"></i></span>
+                      </button> 
+                      <button type="button" style="padding:0 0 5px" class="btn btn-icon btn-icon-only" data-toggle="tooltip" data-placement="bottom" title="Mail Attachment Download" (click)="downloadAttachment(car)">
+                        <span class="btn-inner--icon"><i class="fa fa-download" style="font-size:11px;color:rgb(78, 99, 10)"></i></span>
+                      </button> 
+
+                      <!-- <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon bg-gradient-green btn-icon-only rounded-circle" (click)="ViewPODDetails(InwardFormPopup,car)">
+                        <span class="btn-inner--icon"><i class="fa fa-pen"></i></span>
+                      </button>  -->
+
+                    </td>  
+               
+                  </tr>
+            </ng-template>
+        </p-table>
+
+          <!-- <ngx-datatable
+            *ngIf="_FilteredList"
+            class="material"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [limit]="entries != -1 ? entries : undefined"
+            [rows]="_FilteredList"
+            (activate)="onActivate($event)" >
+  
+
+            <ngx-datatable-column name="SrNo">
+              <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex+1}}</ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="PODNo">
+            
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.PODNO}}</ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="BarcodeNo">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BarcodeNo}}</ng-template>
+            </ngx-datatable-column>
+
+
+            <ngx-datatable-column name="InvoiceNo">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.InvoiceNo}}</ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="VendorName">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.VendorName}}</ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Branch">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.BranchName}}</ng-template>
+            </ngx-datatable-column>
+           
+           
+            <ngx-datatable-column name="Status">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.Status}}</ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="POD Date">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.PODReceivedDate}}</ng-template>
+            </ngx-datatable-column>
+ 
+         
+            <ngx-datatable-column name="Action" sortable="false" prop="id">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                
+
+                <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-warning btn-icon-only rounded-circle" (click)="Editinward(InwardFormPopup,row)">
+                  <span class="btn-inner--icon"><i class="fa fa-edit"></i></span>
+                </button> 
+ 
+
+
+          </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable> -->
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+
+
+
+</div>
+
+<ng-template #InwardFormPopup let-c="close" let-d="dismiss" let-modal>
+
+  <div class="modal-content">
+    <div class="modal-body p-0">
+
+  <div >
+    <form [formGroup]="PODForm">
+      <div class="">    
+          <div class="card w-70">
+          
+            <div  >
+              <div class="position-relative row form-group">
+  
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card-header">
+                  <h3 class="mb-0">POD Details</h3>
+                  <p class="text-sm mb-0"></p>
+                </div>
+                <!-- <div class="card-body">
+                  <div class="row"> -->
+                    <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
+                    
+                      <div class="card-body">
+                        <div class="row">
+                       
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  
+                            <div class="row">     
+                              
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="form-control-label" for="Registers">Request No</label>
+                                  <div class="input-group input-group-merge serchInput">
+                                      <input  type="text" readonly class="form-control" name="request_no" formControlName="request_no"/>                      
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="form-control-label" for="lanno">Lan No</label>
+                                  <div class="input-group input-group-merge serchInput">
+                                      <input  type="text" readonly class="form-control" name="lanno" formControlName="lanno" />                      
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                                         
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="form-control-label" for="Vouchers">POD Number</label>
+                                  <div class="input-group input-group-merge serchInput">
+                                      <input  type="text"   class="form-control" name="pod_number" formControlName="pod_number" />    
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label class="form-control-label" for="CourierName">
+                                    Courier Name  
+                                  </label>
+                                  <select name="Courier" id="Courier_id" class="form-control" formControlName="Courier_id" >
+                                    <option value=0>Courier</option>
+                                    <option value="1">DTDC</option>
+                                    <option value="2">Blue Dart</option>
+                                    <option value="3">FedEx Express</option>
+                                    <option value="4">Professional Couriers</option>
+                                    <option value="5">Aramex India</option> 
+                                    <option value="6">Delhivery</option>
+                                    <option value="7">Ecom Express</option>                             
+                                    <option value="8">Gati</option>   
+                                    <option value="9">Safe Express</option>   
+                                    <option value="10">InExpress</option>   
+                                    <option value="11">Day express Courier and cargo Services</option>                            
+                                    <option value="12">Super Fast Llogistics</option>   
+                                    <option value="13">BLAZEFLASH COURIER</option>   
+                                    <option value="14">APEX INTERNATIONAL</option>            
+                                    <option value="15">BLUE EXPRESS COURIER</option>   
+                                    <option value="16">BOMBINO EXPRESS COURIER</option>  
+          
+                                    <option value="17">DECAN DART EXPRESS</option>   
+                                    <option value="18">ELBEX COURIERS</option>   
+                                    <option value="19">FASTWAY EXPRESS</option>  
+                                    <option value="20">FIRST FLIGHT</option>  
+          
+                                    <option value="21">FLYKING COURIER</option>  
+                                    <option value="22">FREIGHT NET PVT LTD</option>  
+                                    <option value="23">ICS INTERNATIONAL COURIER</option>   
+                                    <option value="24">INDIAN POSTAL SERVICE</option>   
+          
+                                    <option value="25">KABLOOM COURIER</option>   
+                                    <option value="26">METRO MARUTI EXPRESS COURIER</option>  
+                                    
+                                    <option value="27">ON TIME COURIER</option>   
+                                    <option value="28">OVERNITE EXPRESS</option>  
+          
+                                    <option value="29">RAJDHANI AIR EXPRESS</option>   
+                                    <option value="30">RED EXPRESS</option>  
+          
+                                    <option value="31">RELIABLE LOGISTICS</option>   
+                                    <option value="32">ROYALE INTERNATIONAL</option>
+                                    
+                                    <option value="33">SM LOGISTICS</option>   
+                                    <option value="34">SAFELINE LOGISTICS</option>
+          
+                                    <option value="35">SAFEXPRESS COURIER</option>   
+                                    <option value="36">SAR WORLDWIDE</option>
+          
+                                    <option value="37">SHREE BALAJI COURIER</option>   
+                                    <option value="38">SHREE MARUTI COURIER</option>
+                                    <option value="39">SHREE TIRUPATI COURIER</option>   
+                                    <option value="40">SKYPACK COURIER</option>
+                                    <option value="41">SPEEDWAY CARGO</option>   
+                                    <option value="42">ST COURIER</option>
+                                    <option value="43">TARGET COURIERS</option>   
+                                    <option value="44">TCI XPS</option>
+                                    <option value="45">TNT EXPRESS</option>                          
+                                    <option value="46">UNIQUE EXPRESS</option>   
+                                    <option value="47">UNITED BUSINESS XPRESS (UBX)</option>
+                                    <option value="48">UNITED FREIGHT SERVICE</option>   
+                                    <option value="49">UNITED PARCEL SERVICE</option>
+                                    <option value="50">WORLDWIDE EXPRESS COURIERS</option> 
+                                    
+                                    <option value="51">Other</option>
+                                    <option value="52">By Hand</option>                      
+                                          
+                                  
+                                    </select>
+                                </div>
+                              </div>
+                         
+ 
+             
+                            </div>
+                       
+                             
+        
+                          </div> 
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">        
+                            <button class=" btn submit_btn" (click)="onUpdate()">Update</button>
+                            <button class=" btn close_btn"  (click)="closmodel()">Close</button>
+                        </div>
+
+                        </div>
+                      </div>
+                  
+<!--                     
+ 
+                  </div>
+                </div> -->
+                </div>
+   
+               
+              </div>
+            </div>
+          
+           
+        </div>
+      </div>
+      
+    </form>
+  </div>
+</div>
+</div>
+</ng-template>
+ 
+
+
+
+

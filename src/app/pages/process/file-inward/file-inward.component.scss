@@ -1,0 +1,36 @@
+.master {
+    padding: 20px 0px 0;
+    position: relative;
+  }
+  
+  .master ul {
+    border-bottom: none;
+    padding-top: 8rem;
+    position: absolute;
+    z-index: 1;
+    top: 35px;
+  }
+  
+  .master ul li a {
+    font-size: 18px;
+    color: #c1cce2;
+    font-weight: bold;
+    border-bottom: 3px solid#c1cce2;
+    padding: 0 50px 15px;
+  }
+  
+  .master ul li .active {
+    color: #57859b !important;
+    border-bottom: 3px solid#57859b !important;
+  }
+  .master .tab_header{
+    position: absolute;
+    top: 84px;
+    width: 100%;
+  }
+  .master .card {
+    margin-top: 12rem;
+  }
+  input, select{
+    width: 90%;
+  }

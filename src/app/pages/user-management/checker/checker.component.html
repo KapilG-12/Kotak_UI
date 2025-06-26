@@ -1,0 +1,291 @@
+<div class=" header bg-danger pb-6">
+  <div class=" container-fluid">
+    <div class=" header-body">
+      <div class=" row align-items-center py-4">
+        <div class=" col-lg-6 col-7">
+          <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> <i class=" fas fa-home"> </i> </a>
+              </li>
+
+              <li class=" breadcrumb-item">
+                <a href="javascript:void(0)"> User Management </a>
+              </li>
+
+              <li aria-current="page" class=" breadcrumb-item active">
+                Verify User
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class=" container-fluid mt--6">
+  <div class=" row">
+    <div class=" col">
+      <div class=" card">
+        <div class=" card-header">
+          <h3 class=" mb-0">Checker Users details</h3>
+          <p class=" text-sm mb-0"></p>
+        </div>
+        <div class="dataTables_wrapper checklist-table w-100">
+          <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+            [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+            (onPage)="paginate($event)" [loading]="loading"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            <ng-template pTemplate="caption">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 py-1">
+                <div class="d-flex align-items-center gap-2">
+                  <label for="filterType" style="font-size: 14px;" class="mb-0 text-nowrap">Bulk Action:</label>
+                  <select [(ngModel)]="selectedAction" (change)="onSelectedAction(selectedAction)"
+                    class="form-select form-select-sm" style="height: 30px; font-size: 0.85rem;">
+                    <option value="0">-- Select Bulk Action --</option>
+                    <option value="Approve">Approve</option>
+                    <option value="Reject">Reject</option>
+                  </select>
+
+                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Approve" class="btn btn-icon btn-icon-only"
+                    (click)="BulkAction(bulkApproveFormPopup)" [hidden]="ApproveBtn">
+                    <span class="btn-inner--icon">
+                      <img src="assets/img/Approve.png">
+                    </span>
+                  </button>
+
+                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Reject" class="btn btn-icon btn-icon-only"
+                    (click)="BulkAction(bulkRejectFormPopup)" [hidden]="RejectBtn">
+                    <span class="btn-inner--icon">
+                      <img src="assets/img/Reject.png">
+                    </span>
+                  </button>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <i class="pi pi-search" style="margin-top: 2px; font-size: 0.9rem;"></i>
+                  <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                    class="form-control form-control-sm" style="height: 30px; font-size: 0.85rem;">
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th [style.width]="'35px'">
+                  <p-checkbox (onChange)="selectAllRow($event, doc)" #e></p-checkbox>
+                </th>
+
+                <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                  {{col.header}}
+                  <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 10%;">
+                  Action
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+              <tr>
+                <td [style.width]="'35px'">
+                  <p-checkbox [(ngModel)]="car.selected" [binary]="true" [ngModelOptions]="{standalone: true}"
+                    (onChange)="selectRow($event, car)" [disabled]="car['CreatedBy'] == UserCreatedBy" #e></p-checkbox>
+                </td>
+
+                <td *ngFor="let col of headerList">
+                  {{car[col.field]}}
+                </td>
+
+                <td>
+                  <button type="button" style="padding:0 0 5px 4px" tooltip="Approve" class="btn btn-icon btn-icon-only"
+                    (click)="editEmployee(approveFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    <span class="btn-inner--icon">
+                      <img src="assets/img/Approve.png">
+                    </span>
+                  </button>
+
+                  <button type="button" style="padding:0 0 5px 4px" tooltip="Reject" class="btn btn-icon btn-icon-only"
+                    (click)="editEmployee(rejectFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    <span class="btn-inner--icon">
+                      <img src="assets/img/Reject.png">
+                    </span>
+                  </button>
+
+                  <button type="button" style="padding:0 0 5px 4px" tooltip="Re-consider"
+                    class="btn btn-icon btn-icon-only" (click)="editEmployee(reconsiderFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    <span class="btn-inner--icon">
+                      <img src="assets/img/Re-consider.png">
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #approveFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit('Approved')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="approveremarks">
+                Add Approve Remarks*
+              </label>
+              <textarea class="form-control" name="approveremarks" id="approveremarks" formControlName="approveremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.approveremarks.touched && f.approveremarks.invalid && f.approveremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.approveremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #rejectFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit('Rejected')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="rejectremarks">
+                Add Reject Remarks*
+              </label>
+              <textarea class="form-control" name="rejectremarks" id="rejectremarks" formControlName="rejectremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.rejectremarks.touched && f.rejectremarks.invalid && f.rejectremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.rejectremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #reconsiderFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit('Re-considered')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="reconsiderremarks">
+                Add Re-consider Remarks*
+              </label>
+              <textarea class="form-control" name="reconsiderremarks" id="reconsiderremarks"
+                formControlName="reconsiderremarks" placeholder="Add the reason here">
+                  </textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.reconsiderremarks.touched && f.reconsiderremarks.invalid && f.reconsiderremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.reconsiderremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #bulkApproveFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onBulkSubmit('Approved')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="bulkapproveremarks">
+                Add Bulk Approve Remarks*
+              </label>
+              <textarea class="form-control" name="bulkapproveremarks" id="bulkapproveremarks" formControlName="bulkapproveremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.bulkapproveremarks.touched && f.bulkapproveremarks.invalid && f.bulkapproveremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.bulkapproveremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #bulkRejectFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onBulkSubmit('Rejected')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="bulkrejectremarks">
+                Add Bulk Reject Remarks*
+              </label>
+              <textarea class="form-control" name="bulkrejectremarks" id="bulkrejectremarks" formControlName="bulkrejectremarks"
+                placeholder="Add the reason here"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.bulkrejectremarks.touched && f.bulkrejectremarks.invalid && f.bulkrejectremarks.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.bulkrejectremarks.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

@@ -1,0 +1,14 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 19" width="17" height="19">
+	<title>Login</title>
+	<defs>
+		<image  width="17" height="19" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAATCAMAAABBexbDAAAAAXNSR0IB2cksfwAAAHVQTFRF////8fP0zNTYsL3CrbrAxc7S5urs3eLkqLa8ytPX+vv72eDixM3Sw8zQrLq/yNHUr7zC4eboy9TXtMDF8PLz6e3u3OHk4OXnx9DUwszQ2d/i+fr7+vr79Pb3w83RrbvAvsjN3uTmydHVztbZuMTJuMPI09rdiwV/LgAAAHNJREFUeJxdzlkSAiEMRdHn2HEe44Bgi63uf4mWQCLp+5dTCQXwazAcjSdT/GsoNVOYU0m3FiJLkZXIWmQjshXZiez16UORowpnOlUfwvlydbca4JlDNYZ7m64eXCCS9uxDpkCmCHRWXsDbCgX0gBjuY/Nf7CQK0NWV7h8AAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Login">
+		<g id="user">
+			<use id="Group 565" href="#img1" x="0" y="0" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,161 @@
+<div class=" header bg-danger pb-6">
+    <div class=" container-fluid">
+      <div class=" header-body">
+        <div class=" row align-items-center py-4">
+          <div class=" col-lg-10 col-10">
+            <h6 class=" h2 text-white d-inline-block mb-0">Dispatch To Vendor</h6>
+            <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+              <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/content-search"> </i> </a>
+                </li>
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)">Repayment</a>
+                </li>
+                <li aria-current="page" class=" breadcrumb-item active">
+                    Dispatch To Vendor
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class=" col-lg-2 col-2">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="isChecked" (change)="toggleChange()">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=" container-fluid mt--6">
+    <div *ngIf="isChecked" class=" row">
+      <div class=" col">
+        <form [formGroup]="DataUploadForm">
+          <div class=" card">
+            <div class="card-header">
+              <div class="checkbox-group row mb-4 ml-4">
+                <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                  <input class="form-check-input" type="radio" formControlName="saveredio" value="Save" id="checkBox1">
+                  <label class="form-check-label ml-2 mt-1" for="checkBox1">Save</label>
+                </div>
+                <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                  <input class="form-check-input" type="radio" formControlName="saveredio" value="SendBack"
+                    id="checkBox2">
+                  <label class="form-check-label ml-2 mt-1" for="checkBox2">Send Back</label>
+                </div>
+                <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                  <input class="form-check-input" type="radio" formControlName="saveredio" value="Reject" id="checkBox3">
+                  <label class="form-check-label ml-2 mt-1" for="checkBox3">Reject</label>
+                </div>
+              </div>
+              <div class="position-relative row form-group">
+                <div class="col-sm-3">
+                  <div class="custom-file">
+                    <input type="file" name="csvReader" id="csvReader" (change)="uploadListener($event)" accept=".csv" />
+                    <label style="width: 97%;" class=" custom-file-label" for="csvReader">
+                      <span class="selected-file-name"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-success" style="font-size: 15px" [disabled]="DataUploadForm.invalid" (click)="onSubmit()">
+                    Upload CSV <i class=" fas fa-file-upload"></i>
+                  </button>
+                  <button type="button" class="btn btn-warning" style="font-size: 15px" (click)="downloadFile()">
+                    Download CSV <i class=" fas fa-file-download"></i>
+                  </button>
+                  <label style="color:red; font-size: 14px;">
+                    Note : File should be
+                    <span style="color:red; font-size: 20px;"> , </span>
+                    seperator
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="dataTables_wrapper checklist-table w-100">
+              <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+                (onPage)="paginate($event)" [loading]="loading"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                <ng-template pTemplate="caption">
+                  <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                    class="global-search">
+                </ng-template>
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                      {{col.header}}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                  <tr>
+                    <td *ngFor="let col of headerList">
+                      {{car[col.field]}}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class=" container-fluid mt--6">
+    <div *ngIf="!isChecked" class="row">
+      <div class=" col">
+        <form [formGroup]="pymentForm">
+          <div class="card">
+            <div class="card-header">
+              <div class="position-relative  form-group">
+                <div class="custom-file mx-5">
+                  <div class="checkbox-group row mb-4 ml-2">
+                    <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                      <input class="form-check-input" type="radio" formControlName="saveredio" value="Save"
+                        id="checkBox1">
+                      <label class="form-check-label ml-2 mt-1" for="checkBox1">Save</label>
+                    </div>
+                    <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                      <input class="form-check-input" type="radio" formControlName="saveredio" value="Send Back"
+                        id="checkBox2">
+                      <label class="form-check-label ml-2 mt-1" for="checkBox2">Send Back</label>
+                    </div>
+                    <div class="form-check form-checkbox-item col-2 col-lg-2 col-mb-2">
+                      <input class="form-check-input" type="radio" formControlName="saveredio" value="Reject"
+                        id="checkBox3">
+                      <label class="form-check-label ml-2 mt-1" for="checkBox3">Reject</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4 col-lg-4 col-mb-4">
+                      <label class=" form-control-label" for="party_name">File Barcode</label>
+                      <input type="text" class="form-control" formControlName="filebarcode" name="filebarcode"
+                        [(ngModel)]="filebarcode" />
+                    </div>
+                    <div class="col-4 col-lg-4 col-mb-4">
+                      <label class=" form-control-label" for="party_name">Remark</label>
+                      <textarea type="text" rows="5" col="15" class="form-control" formControlName="remark" name="remark"
+                        [(ngModel)]="remark"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-10 col-lg-10 col-mb-10 text-right">
+                    <button type="button" class="btn btn-success" [disabled]="pymentForm.invalid" (click)="save()"
+                      style="font-size: 15px">
+                      Save
+                    </button>
+                    <button type="button" class="btn btn-warning" (click)="reset()" style="font-size: 15px">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

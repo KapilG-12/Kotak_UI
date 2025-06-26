@@ -1,0 +1,14 @@
+::ng-deep .modal-dialog {
+    max-width: 1300px !important; 
+}
+.card{
+   margin-bottom: 0;
+}
+input[type=checkbox] {
+   width: 25px;
+   height: 25px;
+}
+.close > span:not(.sr-only){
+   color: #000 !important;
+   font-size: 25px !important;
+}

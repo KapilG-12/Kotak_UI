@@ -1,0 +1,287 @@
+#dashboardCardbody {
+    padding: 2rem 1.5rem;
+}
+
+@font-face {
+    font-family: "Gill Sans Nova Bold";
+    src: url("/src/assets/fonts/gill-sans-nova/gill-sans-nova-bold.ttf") format('truetype');
+}
+
+.dashboard {
+    width: 100%;
+}
+
+.dashboard h2 {
+    font-size: 35px;
+    color: #005984;
+    font-weight: bold;
+    border-bottom: 1px solid#e7e9ee;
+    padding: 20px 40px;
+}
+
+.well {
+    padding: 20px 40px 0;
+}
+
+.well ul {
+    border-bottom: none;
+}
+
+.well ul li a {
+    font-size: 22px;
+    color: #c1cce2;
+    font-weight: bold;
+    border-bottom: 1px solid#c1cce2;
+    padding: 0 50px 20px;
+}
+
+.well ul li .active {
+    color: #005984 !important;
+    border-bottom: 1px solid#005984;
+}
+
+#chartdiv {
+    width: 100%;
+    height: 400px;
+}
+
+.tab-content {
+    padding-top: 50px;
+}
+
+.card {
+    padding: 20px 25px;
+    display: unset;
+    width: 100%;
+    float: left;
+    border-radius: 10px;
+}
+
+.card_box img {
+    width: 20%;
+    border-radius: 50%;
+    float: left;
+}
+
+.card_box_txt {
+    width: 100%;
+    padding-left: 75px;
+}
+
+.card_box_txt h4 {
+    font-size: 30px;
+    color: #005984;
+    font-weight: bold;
+    font-family: "Gill Sans Nova";
+}
+
+.card_box_txt h3 {
+    font-size: 25px !important;
+    color: #005984 !important;
+    font-weight: bold !important;
+    margin-bottom: 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card_box_txt h3 i {
+    margin-top: -30px;
+}
+
+.card_box_txt p {
+    font-size: 14px !important;
+    color: #141c20 !important;
+    margin-bottom: 0;
+}
+
+.card h3 {
+    font-size: 23px;
+    color: #005984;
+    font-weight: bold;
+    font-family: "Gill Sans Nova";
+    margin-bottom: 0;
+}
+
+.card p {
+    font-size: 13px;
+    color: #c1cce2;
+    font-weight: 500;
+}
+
+.send_card_box {
+    background-color: #fff7e1;
+}
+
+.license_card {
+    filter: drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.04));
+    background-image: radial-gradient(circle at center, #005984 0%, #1878a7 100%);
+}
+
+.license_card h4 {
+    font-size: 25px;
+    color: #ffffff;
+    font-weight: bold;
+    font-family: "Gill Sans Nova";
+}
+
+.license_card h4 span {
+    font-size: 22px;
+    float: right;
+}
+
+.task {
+    position: relative;
+}
+
+.task::before {
+    content: "";
+    background-color: #ffe5e5;
+    right: -24px;
+    top: -28px;
+    position: absolute;
+    transform: translate(-35%, 40%);
+    height: 67px;
+    width: 70px;
+    border-radius: 0px 10px 0px 67px;
+    box-shadow: -8px 8px 5px 10px #ffefef;
+}
+
+.task_dur {
+    position: relative;
+}
+
+.task_dur::before {
+    content: "";
+    background-color: #ffeae4;
+    right: -24px;
+    top: -28px;
+    position: absolute;
+    transform: translate(-35%, 40%);
+    height: 67px;
+    width: 70px;
+    border-radius: 0px 10px 0px 67px;
+    box-shadow: -8px 8px 5px 10px #fff4f1;
+}
+
+.tasks_blue {
+    position: relative;
+}
+
+.tasks_blue::before {
+    content: "";
+    background-color: #e5e3ff;
+    right: -24px;
+    top: -28px;
+    position: absolute;
+    transform: translate(-35%, 40%);
+    height: 67px;
+    width: 70px;
+    border-radius: 0px 10px 0px 67px;
+    box-shadow: -8px 8px 5px 10px #f0efff;
+}
+
+.missing_documents {
+    background-color: #fff7e1;
+}
+
+.missing_documents h1 {
+    font-size: 80px;
+    color: #005984;
+    font-weight: bold;
+    font-family: "Gill Sans Nova";
+}
+
+.task img {
+    width: 15%;
+}
+
+.task_dur img {
+    width: 15%;
+}
+
+.tasks_blue img {
+    width: 15%;
+}
+
+.text_dropdown {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text_dropdown .dropdown-toggle {
+    color: rgb(0 0 0 / 13%);
+    background: #fff;
+    border: none;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+#activityChart {
+    height: 300px;
+}
+
+#filesChart {
+    height: 225px;
+}
+
+.last-week-login .label, .total-count .label {
+    font-size: 13px;
+    color: #005984;
+    font-family: 'Gill Sans Nova';
+    font-style: normal;
+    margin: 0;
+  }
+
+  .last-week-login .count, .total-count .count {
+    font-size: 18px;
+    color: #005984;
+    font-family: 'Gill Sans Nova';
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  .main-count {
+    font-size: 60px;
+    color: #005984;
+    font-family: 'Gill Sans Nova';
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  .linear-gradient {
+    background: linear-gradient(180deg, #F6A01A 0%, rgba(246, 160, 26, 0) 100%);
+    width: 48px;
+    height: 48px;
+    float: left;
+  }
+
+  .total-count {
+    position: relative;
+    margin: 1em 0 3em 0;
+  }
+
+  .total-count span {
+      margin-left: 8px !important;
+  }
+
+  .total-count img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 15px;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .modal-dialog{
+    max-width: 1200px !important;
+  }
+
+  .download-data{
+    float: right;
+  }

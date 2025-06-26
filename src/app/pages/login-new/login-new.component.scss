@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400&display=swap');
+
+
+@font-face {
+  font-family: 'Gill-Sans-MT';
+  src: url('../../../assets/fonts/Gill Sans MT Book Italic.ttf') format('ttf'),
+      url('../../../assets/fonts/Gill Sans MT Book Italic.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Arialn';
+  src: url('../../../assets/fonts/Arialn.ttf') format('ttf'),
+      url('../../../assets/fonts/Arialn.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+::placeholder{
+  color: #005984;
+  font-weight: 500;
+}
+.login{
+width: 100%;
+float: left;
+}
+.login_logo{
+background: #005984;
+height: 100%;
+border-right: 4px solid #ffcc00;
+align-items: center;
+display: flex;
+justify-content: center;
+}
+.login_img img{
+width: 80%;
+}
+.login_logo p{
+color: #ffc000;
+font-size: 28px;
+padding-top: 20px;
+font-weight: 500;
+font-family: 'Gill Sans MT';
+font-style: italic;
+}
+// .login_form{
+//   height:calc(100vh - 190px);
+// }
+.client_logo{
+  display: flex;
+  width: 25%;
+  margin: 50px auto 0;
+}
+.login_field{
+width: 80%;
+margin: 0 auto;
+padding: 20px;
+background-color: #ECF4FD;
+border-radius: 8px;
+}
+.login_heading{
+  align-items: center;
+}
+.login_heading h5{
+  color: #005984;
+  font-size: 28px;
+  font-weight: 800;
+}
+.login_heading a{
+  color: #ffcc00;
+  font-size: 16px;
+  font-weight: 800;
+  font-family:"Gill Sans Nova Light" !important;
+}
+.input_bg{
+  background-color: #005984;
+  padding: 50px 10px 20px;
+  margin: 0 0 20px !important;
+}
+.input-icon img{
+  width: 15px;
+}
+.sign_btn{
+  float: right;
+  background: #cf1919;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 25px;
+}
+input,
+input[type="radio"] + label,
+input[type="checkbox"] + label:before,
+select option,
+select {
+width: 100%;
+padding: 1em;
+line-height: 1.4;
+background-color: #f9f9f9;
+border: 1px solid #e5e5e5;
+border-radius: 3px;
+-webkit-transition: 0.35s ease-in-out;
+-moz-transition: 0.35s ease-in-out;
+-o-transition: 0.35s ease-in-out;
+transition: 0.35s ease-in-out;
+transition: all 0.35s ease-in-out;
+font-family:"Gill Sans Nova Light" !important;
+}
+input:focus {
+outline: 0;
+border-color: #64ac15;
+}
+input:focus + .input-icon i {
+color: #7ed321;
+}
+input:focus + .input-icon:after {
+border-right-color: #7ed321;
+}
+input[type="radio"] {
+display: none;
+}
+input[type="radio"] + label,
+select {
+display: inline-block;
+width: 50%;
+text-align: center;
+//float: left;
+border-radius: 0;
+}
+input[type="radio"] + label:first-of-type {
+border-top-left-radius: 3px;
+border-bottom-left-radius: 3px;
+}
+input[type="radio"] + label:last-of-type {
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+}
+input[type="radio"] + label i {
+padding-right: 0.4em;
+}
+input[type="radio"]:checked + label,
+input:checked + label:before,
+select:focus,
+select:active {
+background-color: #7ed321;
+color: #fff;
+border-color: #64ac15;
+}
+input[type="checkbox"] {
+display: none;
+}
+input[type="checkbox"] + label {
+position: relative;
+display: block;
+padding-left: 1.6em;
+}
+input[type="checkbox"] + label:before {
+position: absolute;
+top: 0.2em;
+left: 0;
+display: block;
+width: 1em;
+height: 1em;
+padding: 0;
+content: "";
+}
+input[type="checkbox"] + label:after {
+position: absolute;
+top: 0.45em;
+left: 0.2em;
+font-size: 0.8em;
+color: #fff;
+opacity: 0;
+font-family: FontAwesome;
+content: "\f00c";
+}
+input:checked + label:after {
+opacity: 1;
+}
+select {
+height: 3.4em;
+line-height: 2;
+}
+select:first-of-type {
+border-top-left-radius: 3px;
+border-bottom-left-radius: 3px;
+}
+select:last-of-type {
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+}
+select:focus,
+select:active {
+outline: 0;
+}
+select option {
+background-color: #7ed321;
+color: #fff;
+}
+.input-group {
+margin-bottom: 1.5em;
+zoom: 1;
+}
+.input-group:before,
+.input-group:after {
+content: "";
+display: table;
+}
+.input-group:after {
+clear: both;
+}
+.input-group-icon {
+position: relative;
+}
+.input-group-icon input {
+  border-radius: 0px;
+  background-color: #ffffff;
+  padding: 10px 0 10px 65px;
+  border: 2px solid #ffcc00;
+  color: #005984;
+  font-weight: 600;
+}
+.input-group-icon .input-icon {
+position: absolute;
+top: 0px;
+left:0;
+border-right: 1.5px solid #ffcc00;
+width: 3.4em;
+height: 2.8em;
+line-height: 2.4em;
+text-align: center;
+pointer-events:all;
+}
+.white_bg button{
+  border-radius: 5px;
+filter: drop-shadow(0px 3px 3.5px rgba(0,0,0,0.16));
+background-image: linear-gradient(95deg, #ff004b 0%, #ff4126 100%);
+font-size: 20px;
+letter-spacing: 0px;
+line-height: 28px;
+color: #ffffff;
+font-weight: 500;
+font-family: "Poppins";
+border: none;
+outline: none;
+padding: 10px 25px;
+margin-bottom: 10px;
+}
+.about{
+width: 100%;
+float: left;
+padding: 0 20px 20px;
+}
+.about p{
+color: #bab6b6;
+}
+.about a{
+color: #CC0000;
+}
+.about ul li::marker {
+color:#CC0000;
+}
+.about ul li a {
+  font-size: 14px;
+  color: #0d6efd;
+  font-family: Arial;
+  text-decoration: underline;
+}
+
+@media screen and (max-width:1024px){
+.login_logo{
+  padding: 50px 0;
+}
+.white_bg{
+  padding: 15px;
+}
+
+}
+
+button[disabled] {
+  opacity: 0.3;
+}
+.login_form{
+  // padding: 80px 0;
+  height: 100vh;
+ }
