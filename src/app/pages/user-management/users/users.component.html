@@ -76,13 +76,13 @@
                 </td>
 
                 <td>
-                  <p [ngClass]="car['ISACTIVE'] == 'Active' ? 'Active' : 'In-Active'">{{ car["ISACTIVE"] }}</p>
+                  <p [ngClass]="car['ISACTIVE'] === 'Active' ? 'Active' : car['ISACTIVE'] === 'Pending For Approval' ? 'WFA' : 'In-Active'">{{ car["ISACTIVE"] }}</p>
                 </td>
 
                 <td>
                   <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Edit User"
                     class="btn btn-icon btn-icon-only" (click)="editEmployee(userFormPopup,car)"
-                    [disabled]="car['Status'] == 'Rejected' || car['Status'] == 'Waiting For Approval'">
+                    [disabled]="car['Status'] == 'Rejected' || car['Status'] == 'Waiting For Approval' || car['ISACTIVE'] == 'Pending For Approval'">
                     <span class="btn-inner--icon"><i class="fa fa-pen"></i></span>
                   </button>
 
@@ -93,7 +93,8 @@
                   </button>
 
                   <p-toggleButton [(ngModel)]="car.checked" onIcon="fa fa-lock" offIcon="fa fa-lock-open"
-                    styleClass="rounded-circle"onLabel="" offLabel="" [disabled]="car['Status'] == 'Rejected'"
+                    styleClass="rounded-circle" onLabel="" offLabel=""
+                    [disabled]="car['Status'] == 'Rejected' || car['Status'] == 'Waiting For Approval' || car['ISACTIVE'] == 'Pending For Approval'"
                     [tooltip]="car.checked ? 'Active User' : 'In-Active User'" (onChange)="ActiveInactiveProject(car)">
                   </p-toggleButton>
                 </td>
@@ -248,16 +249,15 @@
                 *ngIf="f.firstname.touched && f.firstname.invalid && f.firstname.errors.required">
                 First name is required</div>
             </div>
-             <div class="errorMsg-feedback"
-                   *ngIf="f.firstname.touched && f.firstname.errors?.pattern">
-                First name should contain only letters and spaces
-             </div>
+            <div class="errorMsg-feedback" *ngIf="f.firstname.touched && f.firstname.errors?.pattern">
+              First name should contain only letters and spaces
+            </div>
             <div class="col-md-6 mb-3">
               <label class="form-control-label" for="lastname">
                 Last name*
               </label>
               <input class="form-control" name="lastname" id="lastname" formControlName="lastname"
-                placeholder="Last name" type="text" (input)="filter()"/>
+                placeholder="Last name" type="text" (input)="filter()" />
               <div class="errorMsg-feedback"
                 *ngIf="f.lastname.touched && f.lastname.invalid && f.lastname.errors.required">
                 Last name is required</div>
@@ -305,9 +305,11 @@
               </label>
               <input name="mobile" id="mobile" maxlength="10" formControlName="mobile" placeholder="Mobile" type="text"
                 class="form-control" (input)="filter()" />
-                <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.hasError('required')">Mobile no Required
+              <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.hasError('required')">Mobile no
+                Required
               </div>
-              <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.errors?.pattern">Please Enter Valid 10 digit
+              <div class="errorMsg-feedback" *ngIf="f.mobile.touched && f.mobile.errors?.pattern">Please Enter Valid 10
+                digit
                 mobile number</div>
             </div>
             <div class=" col-md-6 mb-3">
@@ -335,12 +337,24 @@
                 Role*
               </label>
               <select class=" form-control" formControlName="sysRoleID" data-toggle="select" id="sysRoleID">
-                <option value=""> Select Role Name </option>
+                <option value="">-- Select Role Name --</option>
                 <option *ngFor="let _Role of _RoleList" [value]="_Role.id">
                   {{_Role.roleName}}
                 </option>
               </select>
               <div class="errorMsg-feedback" *ngIf="f.sysRoleID.touched && f.sysRoleID.hasError('required')">Role
+                Required</div>
+            </div>
+            <div class=" col-md-6 mb-3">
+              <label class=" form-control-label" for="UserType">
+                User Type*
+              </label>
+              <select class=" form-control" formControlName="UserType" data-toggle="select" id="UserType">
+                <option value="">-- Select User Type --</option>
+                <option value="Internal User">Internal User</option>
+                <option value="External User">External User</option>
+              </select>
+              <div class="errorMsg-feedback" *ngIf="f.UserType.touched && f.UserType.hasError('required')">User Type
                 Required</div>
             </div>
           </div>
@@ -360,7 +374,7 @@
 
 <ng-template #ViewFormPopup let-c="close" let-d="dismiss" let-modal>
   <div class="popup-container" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; 
-    height: 45vh; max-width: 1200px; overflow-y: auto; background-color: white; padding: 20px; 
+    height: 55vh; max-width: 1200px; overflow-y: auto; background-color: white; padding: 20px; 
     border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; margin-top: -8%;">
     <div class="p-0">
       <form [formGroup]="AddUserForm">
@@ -373,16 +387,15 @@
         </div>
         <!-- Project Details Section -->
         <div class="card-body" style="background-color: #ffffff;">
-        
+
           <div class="row">
-          
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="createdBy" style="color: black;">Created By:</label>
                 <span> {{AddUserForm.get('UserCreatedBy').value}} </span>
               </div>
             </div>
-         
+
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="createdDate" style="color: black;">Created Date:</label>
@@ -390,17 +403,37 @@
               </div>
             </div>
 
-             <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="createdTime" style="color: black;">Created Time:</label>
                 <span> {{AddUserForm.get('createdTime').value}} </span>
               </div>
             </div>
-
-           
           </div>
           <div class="row">
-             <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdBy" style="color: black;">Modified By:</label>
+                <span> {{AddUserForm.get('ModifiedBy').value}} </span>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdDate" style="color: black;">Modified Date:</label>
+                <span> {{AddUserForm.get('modifiedDate').value}} </span>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="createdTime" style="color: black;">Modified Time:</label>
+                <span> {{AddUserForm.get('modifiedTime').value}} </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="CheckerReviewBy" style="color: black;">Reviewed by:</label>
                 <span> {{AddUserForm.get('CheckerReviewBy').value}} </span>
@@ -413,7 +446,7 @@
               </div>
             </div>
 
-             <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="checkerReviewTime" style="color: black;">Reviewed time:</label>
                 <span> {{AddUserForm.get('checkerReviewTime').value}} </span>
@@ -425,13 +458,13 @@
                 <span> {{AddUserForm.get('Status').value}} </span>
               </div>
             </div>
-             <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="noOfBeneficiary" style="color: black;">Reviewer Remarks:</label>
                 <span> {{AddUserForm.get('ReviewerRemark').value}} </span>
               </div>
             </div>
-             <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="noOfBeneficiary" style="color: black;">Active/In-Active Remarks:</label>
                 <span> {{AddUserForm.get('activeInactiveViewRemark').value}} </span>

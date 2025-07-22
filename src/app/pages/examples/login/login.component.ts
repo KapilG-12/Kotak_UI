@@ -48,8 +48,6 @@ export class LoginComponent implements OnInit {
   }  
   const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
     this.authService.userLogin(this.loginForm.value,apiUrl)
-    // .pipe(first())
-
     .subscribe( data => {
 
       this.router.navigate(['/app-sidenav']);

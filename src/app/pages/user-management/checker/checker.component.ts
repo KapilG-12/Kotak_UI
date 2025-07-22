@@ -56,6 +56,7 @@ export class CheckerComponent implements OnInit {
       UserID: [""],
       Status: [""],
       _UserIDList: [""],
+      activeInactiveRemark: [""],
       approveremarks: new FormControl('', [Validators.required]),
       rejectremarks: new FormControl('', [Validators.required]),
       bulkapproveremarks: new FormControl('', [Validators.required]),
@@ -141,6 +142,11 @@ export class CheckerComponent implements OnInit {
       { field: 'location', header: 'Location', index: 3 },
       { field: 'branchcode', header: 'Branch Code', index: 3 },
       { field: 'roleName', header: 'Role', index: 3 },
+      { field: 'CreatedBy', header: 'Created By', index: 3 },
+      { field: 'ModifiedBy', header: 'Modified By', index: 3 },
+      { field: 'createdDate', header: 'Created DateTime', index: 3 },
+      { field: 'modifiedDate', header: 'Modified DateTime', index: 3 },
+      { field: 'ApprovalPurpose', header: 'Approval Purpose', index: 3 },
     ];
 
     tableData.forEach((el, index) => {
@@ -158,7 +164,15 @@ export class CheckerComponent implements OnInit {
         'roleName': el.roleName,
         'AccountTypeID': el.AccountTypeID,
         'CreatedBy': el.CreatedBy,
-        'isCheckboxDisabled': el.CreatedBy === this.UserCreatedBy,
+        'CreatedById': el.CreatedById,
+        'ModifiedById': el.ModifiedById,
+        'activeInactiveBy': el.activeInactiveBy,
+        'ApprovalPurpose': el.ApprovalPurpose,
+        'ModifiedBy': el.ModifiedBy,
+        'createdDate': el.createdDate,
+        'activeInactiveRemark': el.activeInactiveRemark,
+        'modifiedDate': el.modifiedDate,
+        'isCheckboxDisabled': el.CreatedById === this.UserCreatedBy || el.ModifiedById === this.UserCreatedBy || el.activeInactiveBy === this.UserCreatedBy,
       });
 
     });
@@ -230,7 +244,7 @@ export class CheckerComponent implements OnInit {
 
     const apiUrl = this._global.baseAPIUrl + "Admin/CheckerApproval";
     this._onlineExamService.postData(this.AddUserForm.value, apiUrl).subscribe((data) => {
-      if (data === 'User has been successfully Approved.') {
+      if (data === 'User has been successfully Approved.' || data === 'User activation/inactivation request has been approved.') {
         this.ShowMessage(data);
         this.OnReset();
         this.geUserList();
@@ -259,7 +273,7 @@ export class CheckerComponent implements OnInit {
 
     const apiUrl = this._global.baseAPIUrl + "Admin/CheckerBulkApproval";
     this._onlineExamService.postData(this.AddUserForm.value, apiUrl).subscribe((data) => {
-      if (data === 'User has been successfully Approved.') {
+      if (data === 'User has been successfully Approved.' || data === 'User activation/inactivation request has been approved.') {
         this.ShowMessage(data);
         this.OnReset();
         this.geUserList();
@@ -276,6 +290,14 @@ export class CheckerComponent implements OnInit {
   editEmployee(template: TemplateRef<any>, value: any) {
     this.AddUserForm.patchValue({
       UserID: value.id,
+    });
+    this.modalRef = this.modalService.show(template);
+  }
+
+  Activation(template: TemplateRef<any>, value: any) {
+    this.AddUserForm.patchValue({
+      UserID: value.id,
+      activeInactiveRemark : value.activeInactiveRemark
     });
     this.modalRef = this.modalService.show(template);
   }

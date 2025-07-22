@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { Globalconstants } from "../../Helper/globalconstants";
 import { OnlineExamServiceService } from "../../Services/online-exam-service.service";
- 
+
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ToastrService } from "ngx-toastr";
@@ -66,7 +66,6 @@ export class OtpComponent implements OnInit {
       email: localStorage.getItem("User_email"),
       password: localStorage.getItem("PW"),
       OTP: ['', Validators.required],
-      //  recaptcha: ['', Validators.required]
     });
     this.startTimer();
 
@@ -112,8 +111,8 @@ export class OtpComponent implements OnInit {
         this.timers--;
       } else {
         clearInterval(this.intervals);
-        localStorage.clear();
-        this.router.navigate(['/Login'])
+        // localStorage.clear();
+        // this.router.navigate(['/Login'])
       }
     }, 1000);
   }
@@ -133,7 +132,7 @@ export class OtpComponent implements OnInit {
   ResendOtp() {
     const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
     this.authService.userLogin(this.loginForm.value, apiUrl).subscribe(data => {
-             
+
       var that = this;
       that._LogData = data[0];
       localStorage.setItem('UserID', that._LogData.id);
@@ -147,29 +146,29 @@ export class OtpComponent implements OnInit {
   }
 
 
- VerifyOTP() {
-  debugger
-  this.loginForm.patchValue({
-    OTP: this._commonService.encryptData(this.otpNumber),
-  });
-  this.submitted = true;
-  const apiUrl = this._global.baseAPIUrl + 'UserLogin/VerifyOTP';
-  this._onlineExamService.postData(this.loginForm.value, apiUrl).subscribe({
-    next: (data) => {
-      const message = data?.Message;
+  VerifyOTP() {
+    debugger
+    this.loginForm.patchValue({
+      OTP: this._commonService.encryptData(this.otpNumber),
+    });
+    this.submitted = true;
+    const apiUrl = this._global.baseAPIUrl + 'UserLogin/VerifyOTP';
+    this._onlineExamService.postData(this.loginForm.value, apiUrl).subscribe({
+      next: (data) => {
+        const message = data?.Message;
 
-      if (message === "Login Successfully.") {
-        this.SignIn();
-      } else {
-        this.ErrorMessage(message);
-        this.otpNumber = ['', '', '', '', '', ''];
+        if (message === "Login Successfully.") {
+          this.SignIn();
+        } else {
+          this.ErrorMessage(message);
+          this.otpNumber = ['', '', '', '', '', ''];
+        }
+      },
+      error: () => {
+        this.ErrorMessage("Something went wrong.");
       }
-    },
-    error: () => {
-      this.ErrorMessage("Something went wrong.");
-    }
-  });
-}
+    });
+  }
 
 
   SignIn() {
@@ -194,22 +193,26 @@ export class OtpComponent implements OnInit {
           localStorage.setItem('UsertypeID', that._LogData.UsertypeID);
           localStorage.setItem('UserName', this.loginForm.get("username").value);
           if (this.loginForm.get("username").value == "admin") {
-            this.router.navigate(['dashboards/dashboard']);
+            this.router.navigate(['search/quick-search']);
             clearInterval(this.intervals);
             this.showSuccessToast('Successfully login...!!!');
-            this.loadingService.manualLoading(false); 
+            this.loadingService.manualLoading(false);
           }
           else if (this.loginForm.get("username").value == "upload") {
-            this.router.navigate(['upload/file-upload']);
+            this.router.navigate(['search/quick-search']);
+            clearInterval(this.intervals);
+            this.showSuccessToast('Successfully login...!!!');
             this.loadingService.manualLoading(false);
           } else {
             this.router.navigate(['search/quick-search']);
+            clearInterval(this.intervals);
+            this.showSuccessToast('Successfully login...!!!');
             this.loadingService.manualLoading(false);
-             
+
           }
         }
         else {
-          this.ErrorMessage(data[0].userid);  
+          this.ErrorMessage(data[0].userid);
         }
 
       }
@@ -218,74 +221,49 @@ export class OtpComponent implements OnInit {
 
 
   ErrorMessage(msg: any) {
-  this.toastr.show(
-    `<div class="alert-text">
+    this.toastr.show(
+      `<div class="alert-text">
        <span class="alert-title" data-notify="title"></span>
        <span data-notify="message"> ${msg} </span>
      </div>`,
-    "",
-    {
-      timeOut: 3000,
-      closeButton: true,
-      enableHtml: true,
-      tapToDismiss: false,
-      titleClass: "alert-title",
-      positionClass: "toast-top-center",
-      toastClass: "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-    }
-  );
-}
-
-
-  
-showSuccessToast(msg: any) {
-  this.toastr.show(
-    '<div class="alert-text"></div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> ' + msg + ' </span></div>',
-    "",
-    {
-      timeOut: 3000,
-      closeButton: true,
-      enableHtml: true,
-      tapToDismiss: false,
-      titleClass: "alert-title",
-      positionClass: "toast-top-center",
-      toastClass:
-        "ngx-toastr alert alert-dismissible alert-success alert-notify" // Use alert-success for green
-    }
-  );
-}
-  // ErrorMessage(msg: any) {
-  //   this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, sticky: false });
-  // }
-  showSuccessmessage(data: any) {
-    this.messageService.add({ severity: "success", summary: "Success", detail: data, });
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass: "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
   }
 
-  handleSuccess(data) {
 
+
+  showSuccessToast(msg: any) {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success ! </span> <span data-notify="message"> ' + msg + ' </span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass:
+          "ngx-toastr alert alert-dismissible alert-success alert-notify"
+      }
+    );
+  }
+  showSuccessmessage(data: any) {
+    this.messageService.add({ severity: "success", summary: "Success", detail: data, });
   }
 
   get f() {
     return this.loginForm.controls;
   }
-
-  // ErrorMessage(msg: any) {
-
-  //   this.toastr.show(
-  //     '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> ' + msg + ' </span></div>',
-  //     "",
-  //     {
-  //       timeOut: 3000,
-  //       closeButton: true,
-  //       enableHtml: true,
-  //       tapToDismiss: false,
-  //       titleClass: "alert-title",
-  //       positionClass: "toast-top-center",
-  //       toastClass:
-  //         "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-  //     }
-  //   );
-  // }
 
   Message(msg: any) {
 

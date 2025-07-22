@@ -35,7 +35,7 @@
         <div class="dataTables_wrapper checklist-table w-100">
           <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
             [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
-            (onPage)="paginate($event)" [loading]="loading"
+            (onPage)="paginate($event)" [loading]="loading" style="white-space: nowrap;"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
             <ng-template pTemplate="caption">
               <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 py-1">
@@ -48,15 +48,15 @@
                     <option value="Reject">Reject</option>
                   </select>
 
-                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Approve" class="btn btn-icon btn-icon-only"
-                    (click)="BulkAction(bulkApproveFormPopup)" [hidden]="ApproveBtn">
+                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Approve"
+                    class="btn btn-icon btn-icon-only" (click)="BulkAction(bulkApproveFormPopup)" [hidden]="ApproveBtn">
                     <span class="btn-inner--icon">
                       <img src="assets/img/Approve.png">
                     </span>
                   </button>
 
-                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Reject" class="btn btn-icon btn-icon-only"
-                    (click)="BulkAction(bulkRejectFormPopup)" [hidden]="RejectBtn">
+                  <button type="button" style="padding:0 0 5px 4px; border: none;" tooltip="Reject"
+                    class="btn btn-icon btn-icon-only" (click)="BulkAction(bulkRejectFormPopup)" [hidden]="RejectBtn">
                     <span class="btn-inner--icon">
                       <img src="assets/img/Reject.png">
                     </span>
@@ -79,7 +79,6 @@
 
                 <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
                   {{col.header}}
-                  <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon>
                 </th>
                 <th style="width: 10%;">
                   Action
@@ -90,7 +89,9 @@
               <tr>
                 <td [style.width]="'35px'">
                   <p-checkbox [(ngModel)]="car.selected" [binary]="true" [ngModelOptions]="{standalone: true}"
-                    (onChange)="selectRow($event, car)" [disabled]="car['CreatedBy'] == UserCreatedBy" #e></p-checkbox>
+                    (onChange)="selectRow($event, car)"
+                    [disabled]="car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy"
+                    #e></p-checkbox>
                 </td>
 
                 <td *ngFor="let col of headerList">
@@ -98,22 +99,28 @@
                 </td>
 
                 <td>
+                  <!-- (click)="editEmployee(approveFormPopup, car)"  -->
                   <button type="button" style="padding:0 0 5px 4px" tooltip="Approve" class="btn btn-icon btn-icon-only"
-                    (click)="editEmployee(approveFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    (click)="car.ApprovalPurpose === 'Activation Approval' || car.ApprovalPurpose === 'In-Activation Approval' ? Activation(activationapprovalFormPopup, car) : editEmployee(approveFormPopup, car)"
+                    [disabled]="bulkAction || car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy">
                     <span class="btn-inner--icon">
                       <img src="assets/img/Approve.png">
                     </span>
                   </button>
 
+                  <!-- (click)="editEmployee(rejectFormPopup, car)" -->
                   <button type="button" style="padding:0 0 5px 4px" tooltip="Reject" class="btn btn-icon btn-icon-only"
-                    (click)="editEmployee(rejectFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    (click)="car.ApprovalPurpose === 'Activation Approval' || car.ApprovalPurpose === 'In-Activation Approval' ? Activation(activationrejectFormPopup, car) : editEmployee(rejectFormPopup, car)"
+                    [disabled]="bulkAction || car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy">
                     <span class="btn-inner--icon">
                       <img src="assets/img/Reject.png">
                     </span>
                   </button>
 
                   <button type="button" style="padding:0 0 5px 4px" tooltip="Re-consider"
-                    class="btn btn-icon btn-icon-only" (click)="editEmployee(reconsiderFormPopup, car)" [disabled]="bulkAction || car['CreatedBy'] == UserCreatedBy">
+                    class="btn btn-icon btn-icon-only" (click)="editEmployee(reconsiderFormPopup, car)"
+                    [disabled]="bulkAction || car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy"
+                    [hidden]="car.ApprovalPurpose === 'Activation Approval' || car.ApprovalPurpose === 'In-Activation Approval'">
                     <span class="btn-inner--icon">
                       <img src="assets/img/Re-consider.png">
                     </span>
@@ -235,8 +242,8 @@
               <label class="form-control-label" for="bulkapproveremarks">
                 Add Bulk Approve Remarks*
               </label>
-              <textarea class="form-control" name="bulkapproveremarks" id="bulkapproveremarks" formControlName="bulkapproveremarks"
-                placeholder="Add the reason here"></textarea>
+              <textarea class="form-control" name="bulkapproveremarks" id="bulkapproveremarks"
+                formControlName="bulkapproveremarks" placeholder="Add the reason here"></textarea>
 
               <div class="errorMsg-feedback"
                 *ngIf="f.bulkapproveremarks.touched && f.bulkapproveremarks.invalid && f.bulkapproveremarks.errors.required">
@@ -267,8 +274,8 @@
               <label class="form-control-label" for="bulkrejectremarks">
                 Add Bulk Reject Remarks*
               </label>
-              <textarea class="form-control" name="bulkrejectremarks" id="bulkrejectremarks" formControlName="bulkrejectremarks"
-                placeholder="Add the reason here"></textarea>
+              <textarea class="form-control" name="bulkrejectremarks" id="bulkrejectremarks"
+                formControlName="bulkrejectremarks" placeholder="Add the reason here"></textarea>
 
               <div class="errorMsg-feedback"
                 *ngIf="f.bulkrejectremarks.touched && f.bulkrejectremarks.invalid && f.bulkrejectremarks.errors.required">
@@ -289,3 +296,66 @@
   </div>
 </ng-template>
 
+<ng-template #activationapprovalFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit('ActivationApproved')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="activeInactiveRemark">
+                Reason of Activation/ In-Activation*
+              </label>
+              <textarea class="form-control" name="activeInactiveRemark" id="activeInactiveRemark" formControlName="activeInactiveRemark"
+                placeholder="Add the reason here" [readOnly]="true"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.activeInactiveRemark.touched && f.activeInactiveRemark.invalid && f.activeInactiveRemark.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.activeInactiveRemark.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #activationrejectFormPopup let-c="close" let-d="dismiss" let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card-body">
+        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit('ActivationReject')">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="form-control-label" for="activeInactiveRemark">
+                Reason of Activation/ In-Activation*
+              </label>
+              <textarea class="form-control" name="activeInactiveRemark" id="activeInactiveRemark" formControlName="activeInactiveRemark"
+                placeholder="Add the reason here" [readOnly]="true"></textarea>
+
+              <div class="errorMsg-feedback"
+                *ngIf="f.activeInactiveRemark.touched && f.activeInactiveRemark.invalid && f.activeInactiveRemark.errors.required">
+                Remarks is required</div>
+            </div>
+          </div>
+          <div class=" form-row">
+            <div class="col-md-12 mb-3">
+              <button class="btn btn-primary" type="submit" [disabled]="f.activeInactiveRemark.invalid"
+                style="margin-left: 80%;">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

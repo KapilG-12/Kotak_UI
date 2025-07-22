@@ -111,20 +111,14 @@ export class LoginNewComponent implements OnInit {
 
     const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
     this.authService.userLogin(this.loginForm.value, apiUrl).subscribe(data => {
-      debugger;
-      //   console.log("that._LogData ",data);  
       if (data.length > 0 && data[0].id != 0) {
         var that = this;
         that._LogData = data[0];
-        //  console.log("that._LogData ",that._LogData.Days);      
         if (that._LogData.Days <= 15) {
           console.log(that._LogData.Days);
           var mess = " Your password expires in  " + that._LogData.Days + "  days. Change the password as soon as possible to prevent login problems"
-          //var mess="Your password will be expired in  Days" 
           this.Message(mess);
         }
-
-
         localStorage.setItem('UserID', that._LogData.id);
         localStorage.setItem('currentUser', that._LogData.id);
         localStorage.setItem('sysRoleID', that._LogData.sysRoleID);
@@ -134,27 +128,19 @@ export class LoginNewComponent implements OnInit {
         localStorage.setItem('PW', this.loginForm.get("password").value);
 
         if (this.loginForm.get("username").value == "admin") {
-          // this.router.navigate(['dashboards/dashboard']);
           this.router.navigate(['/otp']);
         }
         else if (this.loginForm.get("username").value == "upload") {
-          //this.router.navigate(['upload/file-upload']);
+          this.router.navigate(['/otp']);
         } else {
-          // this.router.navigate(['search/quick-search']); 
+          this.router.navigate(['/otp']);
         }
-
       }
       else {
-
         this.ErrorMessage(data[0].userid);
-        //      alert("Invalid userid and password.");     
       }
 
     });
-  }
-
-  handleSuccess(data) {
-
   }
 
   get f() {
