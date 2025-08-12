@@ -146,7 +146,7 @@ export class ProposalQCComponent implements OnInit {
   }
 
   uploadListener($event: any): void {
-    debugger;
+    
     let text = [];
     let files = $event.srcElement.files;
 
@@ -158,7 +158,7 @@ export class ProposalQCComponent implements OnInit {
       reader.readAsText(input.files[0]);
       $(".selected-file-name").html(input.files[0].name);
       reader.onload = () => {
-        debugger;
+        
         let csvData = reader.result;
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
 
@@ -258,7 +258,7 @@ export class ProposalQCComponent implements OnInit {
     this.records = [];
   }
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     this.proposalForm.controls['saveredio'].reset('');
@@ -266,7 +266,7 @@ export class ProposalQCComponent implements OnInit {
     this.DataUploadForm.controls['csvReader'].reset('');
   }
   save() {
-    debugger;
+    
     this.submitted = true;
     if (this.proposalForm.invalid) {
       return;
@@ -274,14 +274,14 @@ export class ProposalQCComponent implements OnInit {
     const apiUrl = this._global.baseAPIUrl + "BranchInward/AddEditProposalQC";
     this._onlineExamService.postData(this.proposalForm.value, apiUrl)
       .subscribe((data) => {
-        debugger;
+        
         if (data == 'Record save successfully' || data=='Record updated successfully') {
           this.ShowMessage(data);
         }
         else {
           this.ShowErrormessage(data);
         }
-        debugger;
+        
         this.reset();
       });
   }
@@ -292,7 +292,7 @@ export class ProposalQCComponent implements OnInit {
     if (this.DataUploadForm.invalid) {
       return;
     }
-    debugger;
+    
     if (this.csvData != null && this.csvData != undefined) {
       this.DataUploadForm.patchValue({
        // id: localStorage.getItem('UserID'),
@@ -301,7 +301,7 @@ export class ProposalQCComponent implements OnInit {
        // Save: this.DataUploadForm.controls['Save'].value
       });
       console.log(this.csvData);
-      debugger;
+      
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/AddEditProposalQCBulk';
       this._onlineExamService.postData(this.DataUploadForm.value, apiUrl)
         .subscribe(data => {

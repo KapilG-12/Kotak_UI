@@ -112,7 +112,7 @@ export class WelcomeKitQCComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/AddEditWelcomeKitQC";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -292,13 +292,13 @@ export class WelcomeKitQCComponent implements OnInit {
        // User_Token: localStorage.getItem('User_Token'),
        // Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/AddEditWelcomeKitQCBulk';
       this._onlineExamService.postData(this.DataUploadForm.value, apiUrl)
         .subscribe(data => {
-          debugger;
+          
           this.downloadFileErrorLog(data);
           this.showSuccessmessage("Record Save Successfully");
           this.reset();

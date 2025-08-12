@@ -57,18 +57,14 @@ rows = 10;
       id:[0]
     });
     this.geBranchList();
-    //this.getDepartmentList();
   }
 
   entriesChange($event) {
     this.entries = $event.target.value;
   }
   filterTable($event) {
-    //console.log($event.target.value);
-
     let val = $event.target.value;
     this._FilteredList = this._BranchList.filter(function (d) {
-    //  console.log(d);
       for (var key in d) {
         if (key == "BranchName") {
           if (d[key].toLowerCase().indexOf(val) !== -1) {
@@ -141,8 +137,6 @@ prepareTableData(tableData, headerList) {
 
 
 searchTable($event) {
-  // console.log($event.target.value);
-
   let val = $event.target.value;
   if(val == '') {
     this.formattedData = this.immutableFormattedData;
@@ -184,14 +178,12 @@ searchTable($event) {
 
   onSubmit() {
     this.submitted = true;
-    //console.log(this.AddBranchForm);
     if (this.AddBranchForm.invalid) {
       
       return;
     }
     const apiUrl = this._global.baseAPIUrl + 'Klap/AddEditDocuments';
     this._onlineExamService.postData(this.AddBranchForm.value,apiUrl).subscribe((data: {}) => {     
-    // console.log(data);
      this.toastr.show(
       '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message"> Succesfully Updated the list</span></div>',
       "",
@@ -246,8 +238,6 @@ searchTable($event) {
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-primary",
               });
-              console.log("thisis the delected",data);
-              
             });
             
             
@@ -261,7 +251,6 @@ searchTable($event) {
   editBranch(template: TemplateRef<any>, row: any) {
       var that = this;
       that._SingleDepartment = row;
-      console.log('data', row);
       this.AddBranchForm.patchValue({
         id: that._SingleDepartment.id,
         documents: that._SingleDepartment.documents,

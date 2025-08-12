@@ -90,7 +90,8 @@
                 <td [style.width]="'35px'">
                   <p-checkbox [(ngModel)]="car.selected" [binary]="true" [ngModelOptions]="{standalone: true}"
                     (onChange)="selectRow($event, car)"
-                    [disabled]="car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy"
+                    [disabled]="car['CreatedById'] == UserCreatedBy || car['ModifiedById'] == UserCreatedBy || car['activeInactiveBy'] == UserCreatedBy
+                                || car.ApprovalPurpose === 'Activation Approval' || car.ApprovalPurpose === 'In-Activation Approval'"
                     #e></p-checkbox>
                 </td>
 

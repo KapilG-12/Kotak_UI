@@ -73,7 +73,6 @@ export class PaymentUpdateComponent implements OnInit {
     this.prepareTableData(this._FilteredList, this._FilteredList);
   }
   toggleChange() {
-    console.log("this is the value", this.isChecked)
   }
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -99,19 +98,17 @@ export class PaymentUpdateComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
 
     this.pymentForm.controls['apac_no'].setValue('');
     this.pymentForm.controls['payment_date'].setValue('');
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/paymentupdate";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
-        debugger;
-        console.log(data);
         if (data == 'Record Save Succesfully..') {
           this.ShowMessage(data);
         }
@@ -173,7 +170,6 @@ export class PaymentUpdateComponent implements OnInit {
 
       let input = $event.target;
       let reader = new FileReader();
-      // console.log(input.files[0]);
       reader.readAsText(input.files[0]);
       $(".selected-file-name").html(input.files[0].name);
       reader.onload = () => {
@@ -183,7 +179,6 @@ export class PaymentUpdateComponent implements OnInit {
         let headersRow = this.getHeaderArray(csvRecordsArray);
 
         this._CSVData = csvRecordsArray;
-        console.log(this._CSVData);
         this._IndexList = csvRecordsArray;
         let validFile = this.getDisplayNames(csvRecordsArray);
         if (validFile == false) {
@@ -259,7 +254,6 @@ export class PaymentUpdateComponent implements OnInit {
   getHeaderArray(csvRecordsArr: any) {
     var headers;
     headers = ['apac_no', 'payment_date'];
-    // console.log("headers_1",headers);
     //  // let headerArray = [];
     // for (let j = 0; j < headers.length; j++) {
     //   headerArray.push(headers[j]);
@@ -285,7 +279,7 @@ export class PaymentUpdateComponent implements OnInit {
         CSVData: this._CSVData,
         User_Token: localStorage.getItem('User_Token')
       });
-      debugger;
+      
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/paymentupdateBulk';
       this._onlineExamService.postData(this.DataUploadForm.value, apiUrl)
@@ -471,7 +465,6 @@ export class PaymentUpdateComponent implements OnInit {
       { field: 'apac_no', header: 'APAC NO', index: 2 },
       { field: 'payment_date', header: "PAYMENT DATE", index: 1 },
     ];
-    console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),

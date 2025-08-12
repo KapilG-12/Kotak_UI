@@ -177,7 +177,7 @@ export class AddRoleComponent implements OnInit {
     if (__pageRights.length <= 0) {
       this.ShowErrormessage("Please select rights ");
     }
-
+    
     this.AddRoleForm.patchValue({
       CreatedBy: localStorage.getItem('UserID'),
       User_Token: localStorage.getItem('User_Token'),

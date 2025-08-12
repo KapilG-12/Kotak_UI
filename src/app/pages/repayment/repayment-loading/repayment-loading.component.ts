@@ -110,7 +110,7 @@ export class RepaymentLoadingComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/RepaymentLoading";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -288,7 +288,7 @@ export class RepaymentLoadingComponent implements OnInit {
        // User_Token: localStorage.getItem('User_Token'),
        // Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/RepaymentLoadingBulk';

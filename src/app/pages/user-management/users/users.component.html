@@ -67,7 +67,7 @@
 
                 <td>
                   <p [ngClass]="{
-                    'WFA': car['Status'] == 'Waiting For Approval' || car['Status'] == 'Re-considered',
+                    'WFA': car['Status'] == 'Waiting For Approval' || car['Status'] == 'Re-considered' || car['Status'] == 'Modification Rejected',
                     'Approved': car['Status'] == 'Approved',
                     'Rejected': car['Status'] == 'Rejected'
                     }">
@@ -76,7 +76,9 @@
                 </td>
 
                 <td>
-                  <p [ngClass]="car['ISACTIVE'] === 'Active' ? 'Active' : car['ISACTIVE'] === 'Pending For Approval' ? 'WFA' : 'In-Active'">{{ car["ISACTIVE"] }}</p>
+                  <p
+                    [ngClass]="car['ISACTIVE'] === 'Active' ? 'Active' : car['ISACTIVE'] === 'Pending For Approval' ? 'WFA' : 'In-Active'">
+                    {{ car["ISACTIVE"] }}</p>
                 </td>
 
                 <td>
@@ -107,127 +109,6 @@
   </div>
 </div>
 
-<!-- Old UserPopup -->
-<!-- <ng-template #userFormPopup let-c="close" let-d="dismiss" let-modal>
-  <div class="modal-content">
-    <div class="modal-body p-0">
-      <div class=" card-header">
-        <h3 class=" mb-0"> {{User}}</h3>
-      </div>
-      <div class="card-body">
-        <form class="needs-validation" novalidate="" [formGroup]="AddUserForm" (ngSubmit)="onSubmit()">
-          <div class="form-row">
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="firstname">
-                First name*
-              </label>
-              <input class="form-control" name="firstname" id="firstname" formControlName="firstname"
-                placeholder="First name" type="text" />
-              <div class="errorMsg-feedback"
-                *ngIf="f.firstname.touched && f.firstname.invalid && f.firstname.errors.required">
-                First name is required</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="lastname">
-                Last name*
-              </label>
-              <input class="form-control" name="lastname" id="lastname" formControlName="lastname"
-                placeholder="Last name" type="text" />
-              <div class="errorMsg-feedback"
-                *ngIf="f.lastname.touched && f.lastname.invalid && f.lastname.errors.required">
-                Last name is required</div>
-            </div>
-
-          </div>
-          <div class="form-row">
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="userid">
-                User Id*
-              </label>
-              <input name="userid" id="userid" formControlName="userid" placeholder="User Id" type="text"
-                class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">User Id Required
-              </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="empid">Employee Id*</label>
-              <input name="empid" id="empid" formControlName="empid" placeholder="Employee Id" type="text"
-                class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('required')">
-                Required
-              </div>
-              <div class="errorMsg-feedback" *ngIf="f.empid.touched && f.empid.hasError('pattern')">
-                Only alphanumeric characters are allowed
-              </div>
-            </div>
-          </div>
-
-          <div class=" form-row">
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="email">
-                Email Id*
-              </label>
-              <input id="email" formControlName="email" placeholder="Email" type="email" class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.hasError('required')">Email Id Required
-              </div>
-              <div class="errorMsg-feedback" *ngIf="f.email.touched && f.email.errors?.pattern">Please Enter Valid
-                Email Id</div>
-            </div>
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="mobile">
-                Mobile
-              </label>
-              <input name="mobile" id="mobile" maxlength="10" formControlName="mobile" placeholder="Mobile" type="text"
-                class="form-control" />
-            </div>
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="location">
-                Location*
-              </label>
-              <input name="location" id="location" maxlength="10" formControlName="location" placeholder="Location"
-                type="text" class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.location.touched && f.location.hasError('required')">
-                Location is Required
-              </div>
-            </div>
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="branchcode">
-                Branch code*
-              </label>
-              <input name="branchcode" id="branchcode" maxlength="10" formControlName="branchcode"
-                placeholder="Branch Code" type="text" class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.branchcode.touched && f.branchcode.hasError('required')">
-                Branch code is Required
-              </div>
-            </div>
-            <div class=" col-md-6 mb-3">
-              <label class=" form-control-label" for="sysRoleID">
-                Role*
-              </label>
-              <select class=" form-control" formControlName="sysRoleID" data-toggle="select" id="sysRoleID">
-                <option value="0"> Select Role Name </option>
-                <option *ngFor="let _Role of _RoleList" [value]="_Role.id">
-                  {{_Role.roleName}}
-                </option>
-              </select>
-              <div class="errorMsg-feedback" *ngIf="f.sysRoleID.touched && f.sysRoleID.hasError('required')">Role
-                Required</div>
-            </div>
-          </div>
-          <div class="form-row" style="text-align: right;">
-            <div class="col-md-12 mb-3">
-              <button type="button" class="btn btn-warning" (click)="OnClose()">Close</button>
-              <button class="btn btn-primary" [disabled]="!AddUserForm.valid" type="submit">
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</ng-template> -->
 
 <!-- New UserPopup -->
 <ng-template #userFormPopup let-c="close" let-d="dismiss" let-modal>
@@ -271,7 +152,11 @@
               </label>
               <input name="userid" id="userid" formControlName="userid" placeholder="User Id" type="text"
                 class="form-control" />
-              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">User Id Required
+              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('required')">
+                User Id Required
+              </div>
+              <div class="errorMsg-feedback" *ngIf="f.userid.touched && f.userid.hasError('pattern')">
+                Only alphanumeric characters and dots are allowed.
               </div>
             </div>
 
@@ -435,23 +320,25 @@
           <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
-                <label for="CheckerReviewBy" style="color: black;">Reviewed by:</label>
+                <label for="CheckerReviewBy" style="color: black;">Reviewed By:</label>
                 <span> {{AddUserForm.get('CheckerReviewBy').value}} </span>
               </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
-                <label for="checkerReviewDate" style="color: black;">Reviewed date:</label>
+                <label for="checkerReviewDate" style="color: black;">Reviewed Date:</label>
                 <span> {{AddUserForm.get('checkerReviewDate').value}} </span>
               </div>
             </div>
 
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
-                <label for="checkerReviewTime" style="color: black;">Reviewed time:</label>
+                <label for="checkerReviewTime" style="color: black;">Reviewed Time:</label>
                 <span> {{AddUserForm.get('checkerReviewTime').value}} </span>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="Status" style="color: black;">Status:</label>
@@ -468,6 +355,28 @@
               <div class="form-group">
                 <label for="noOfBeneficiary" style="color: black;">Active/In-Active Remarks:</label>
                 <span> {{AddUserForm.get('activeInactiveViewRemark').value}} </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="ActiveInactiveBy" style="color: black;">Active/In-Active By:</label>
+                <span> {{AddUserForm.get('ActiveInactiveBy').value}} </span>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="ActiveInactiveDate" style="color: black;">Active/In-Active Date:</label>
+                <span> {{AddUserForm.get('ActiveInactiveDate').value}} </span>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="ActiveInactiveTime" style="color: black;">Active/In-Active Time:</label>
+                <span> {{AddUserForm.get('ActiveInactiveTime').value}} </span>
               </div>
             </div>
           </div>

@@ -104,7 +104,7 @@ export class SendToBankerComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     this.pymentForm.controls['saveredio'].reset('');
@@ -112,7 +112,7 @@ export class SendToBankerComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/SendToBanker";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -283,7 +283,7 @@ export class SendToBankerComponent implements OnInit {
       this.DataUploadForm.patchValue({
         CSVData: this.csvData,
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/SendToBankerBulk';

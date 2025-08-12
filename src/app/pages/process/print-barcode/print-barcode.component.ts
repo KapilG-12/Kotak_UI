@@ -84,11 +84,11 @@ export class PrintBarcodeComponent implements OnInit {
     //   return;
     // } 
     //const fileExt = _File.lc_filepath.substring(_File.lc_filepath.lastIndexOf('.'), _File.lc_filepath.length);
-    debugger;
+    
     const data = [_File.batch_no];
     const apiUrl = this._global.baseAPIUrl + 'BranchInward/GetExcelBarcodeFileUrl?&batch_no=' + _File.batch_no + '&user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.postData(data, apiUrl).subscribe(res => {
-    debugger;
+    
     this._onlineExamService.downloadExcelFile(res, _File.batch_no);  
     });
 

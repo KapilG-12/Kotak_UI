@@ -124,7 +124,8 @@ export class CheckerRolesComponent implements OnInit {
         'CreatedByName': el.CreatedByName,
         'CreatedAt': el.CreatedAt,
         'RoleStatus': el.RoleStatus,
-        'CreatedById': el.CreatedById
+        'CreatedById': el.CreatedById,
+        'UpdatedBy': el.UpdatedBy
       });
 
     });

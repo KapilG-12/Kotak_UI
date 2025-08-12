@@ -78,7 +78,6 @@ export class FileInwardComponent implements OnInit {
     this.prepareTableData(this._FilteredList, this._FilteredList);
   }
   toggleChange() {
-    console.log("this is the value", this.isChecked)
   }
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -104,7 +103,7 @@ export class FileInwardComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     // this.pymentForm.controls['filebarcode'].setValue('');
@@ -112,7 +111,7 @@ export class FileInwardComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/HandedOverToNachTeam";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -172,7 +171,6 @@ export class FileInwardComponent implements OnInit {
     if (this.isValidCSVFile(files[0])) {
       let input = $event.target;
       let reader = new FileReader();
-      // console.log(input.files[0]);
       reader.readAsText(input.files[0]);
       $(".selected-file-name").html(input.files[0].name);
       reader.onload = () => {
@@ -180,7 +178,6 @@ export class FileInwardComponent implements OnInit {
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
         let headersRow = this.getHeaderArray(csvRecordsArray);
         this._CSVData = csvRecordsArray;
-        console.log(this._CSVData);
         this._IndexList = csvRecordsArray;
         let validFile = this.getDisplayNames(csvRecordsArray);
         if (validFile == false) {
@@ -256,7 +253,6 @@ export class FileInwardComponent implements OnInit {
   getHeaderArray(csvRecordsArr: any) {
     var headers;
     headers = ['filebarcode', 'remark'];
-    // console.log("headers_1",headers);
     //  // let headerArray = [];
     // for (let j = 0; j < headers.length; j++) {
     //   headerArray.push(headers[j]);
@@ -283,7 +279,7 @@ export class FileInwardComponent implements OnInit {
         //  User_Token: localStorage.getItem('User_Token')
         // Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/HandedOverToNachTeamBulk';
@@ -291,7 +287,7 @@ export class FileInwardComponent implements OnInit {
         .subscribe(data => {
           this.downloadFileErrorLog(data);
           this.BindHeader(this._FilteredList, this._FilteredList);
-          debugger;
+          
            this.showSuccessmessage("Record Save Successfully");
            this.csvReader=''
         });
@@ -480,7 +476,6 @@ export class FileInwardComponent implements OnInit {
       { field: 'remark', header: 'REMARK', index: 2 },
     ];
     this.headerList = tableHeader;
-    console.log("this.headerList", this.headerList);
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;
     this.loading = false;
@@ -493,7 +488,6 @@ export class FileInwardComponent implements OnInit {
       { field: 'filebarcode', header: 'FILE BARCODE', index: 2 },
       { field: 'remark', header: "REMARK", index: 1 },
     ];
-    console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),

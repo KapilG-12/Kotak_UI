@@ -85,7 +85,6 @@ export class ChangePasswordComponent implements OnInit {
 
     onSubmit() {
       this.submitted = true;
-      //console.log(this.changepasswordform);
       if (this.changepasswordform.invalid) {
         return;
       }
@@ -94,7 +93,6 @@ export class ChangePasswordComponent implements OnInit {
     
     this.ShowMessage(data);
     this.reset();
-        //   console.log(data);
      //   alert("Password changed successfully");
 
 
@@ -143,26 +141,15 @@ export class ChangePasswordComponent implements OnInit {
     
     sendMail() {
       this.submitted = true;
-      //console.log(this.changepasswordform);
       if (this.changepasswordform.invalid) {
-       // alert("Please Fill the Fields");
         return;
       }
       const apiUrl = this._global.baseAPIUrl + 'UserLogin/sendmailtocustomer';
       this._onlineExamService.postData(this.changepasswordform.value,apiUrl).subscribe((data: {}) => {     
-    //   console.log(data);
-     //   alert("Password changed successfully");
-
- 
-     
-     
       });
-  
-      //this.studentForm.patchValue({File: formData});
     }
-    
+
     handleSuccess(data) {
-      console.log(data);
     }
 
 }

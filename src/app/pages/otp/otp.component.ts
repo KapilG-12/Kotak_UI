@@ -74,8 +74,6 @@ export class OtpComponent implements OnInit {
     this.fieldTextType = !this.fieldTextType;
   }
   handleOtpChange(otp: string): void {
-    debugger;
-    //  console.log('Entered OTP:', otp);
     this.otpNumber = otp;
   }
   onInput(event: any, index: number) {
@@ -104,7 +102,7 @@ export class OtpComponent implements OnInit {
     }, 1000);
   }
   endTimer() {
-    debugger;
+    
     this.timers = 180;
     this.intervals = setInterval(() => {
       if (this.timers > 0) {
@@ -124,30 +122,37 @@ export class OtpComponent implements OnInit {
       }
     }
   }
+
   resendOtp() {
     this.startTimer();
     this.setSubmit = 0;
     this.ResendOtp();
   }
-  ResendOtp() {
-    const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
-    this.authService.userLogin(this.loginForm.value, apiUrl).subscribe(data => {
 
-      var that = this;
-      that._LogData = data[0];
-      localStorage.setItem('UserID', that._LogData.id);
-      localStorage.setItem('currentUser', that._LogData.id);
-      localStorage.setItem('sysRoleID', that._LogData.sysRoleID);
-      localStorage.setItem('User_Token', that._LogData.User_Token);
-      localStorage.setItem('User_email', that._LogData.email);
-      localStorage.setItem('UserName', this.loginForm.get("username").value);
-      localStorage.setItem('PW', this.loginForm.get("password").value);
+  ResendOtp() {
+    this.submitted = true;
+
+    this.loginForm.patchValue({
+        OTP: '',
+        password: this.loginForm.controls['password'].value,
+      });
+
+    const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
+    // this.authService.userLogin(this.loginForm.value, apiUrl).subscribe(data => {
+    this._onlineExamService.postData(this.loginForm.value, apiUrl).subscribe(data => {
+
+      if (data.length > 0 && data[0].id != 0) {
+        var that = this;
+        that._LogData = data[0];
+      }
     });
   }
 
-
   VerifyOTP() {
-    debugger
+    if(this.otpNumber === '' || this.otpNumber === null || this.otpNumber === undefined) {
+      this.ErrorMessage("Please enter OTP.");
+      return;
+    }
     this.loginForm.patchValue({
       OTP: this._commonService.encryptData(this.otpNumber),
     });
@@ -155,66 +160,64 @@ export class OtpComponent implements OnInit {
     const apiUrl = this._global.baseAPIUrl + 'UserLogin/VerifyOTP';
     this._onlineExamService.postData(this.loginForm.value, apiUrl).subscribe({
       next: (data) => {
-        const message = data?.Message;
-
-        if (message === "Login Successfully.") {
-          this.SignIn();
-        } else {
-          this.ErrorMessage(message);
-          this.otpNumber = ['', '', '', '', '', ''];
-        }
+        this.showSuccessToast(data);
+        this.SignIn();
       },
-      error: () => {
-        this.ErrorMessage("Something went wrong.");
+      error: (errorResponse) => {
+        const errorMessage = errorResponse.error.Message;
+        this.ErrorMessage(errorMessage);
       }
     });
   }
-
 
   SignIn() {
     this.submitted = true;
     const apiUrl = this._global.baseAPIUrl + 'UserLogin/UserSignIn';
     this.authService.userLogin(this.loginForm.value, apiUrl).subscribe({
       next: (data) => {
+
         this.loadingService.manualLoading(true);
+
         if (data.length > 0 && data[0].id != 0) {
           var that = this;
           that._LogData = data[0];
 
           if (that._LogData.Days <= 15) {
-            console.log(that._LogData.Days);
             var mess = " Your password expires in  " + that._LogData.Days + "  days. Change the password as soon as possible to prevent login problems"
-            this.showSuccessmessage(mess);
+            this.showSuccessToast(mess);
           }
+
           localStorage.setItem('UserID', that._LogData.id);
           localStorage.setItem('currentUser', that._LogData.id);
           localStorage.setItem('sysRoleID', that._LogData.sysRoleID);
           localStorage.setItem('User_Token', that._LogData.User_Token);
           localStorage.setItem('UsertypeID', that._LogData.UsertypeID);
           localStorage.setItem('UserName', this.loginForm.get("username").value);
-          if (this.loginForm.get("username").value == "admin") {
-            this.router.navigate(['search/quick-search']);
-            clearInterval(this.intervals);
-            this.showSuccessToast('Successfully login...!!!');
-            this.loadingService.manualLoading(false);
-          }
-          else if (this.loginForm.get("username").value == "upload") {
-            this.router.navigate(['search/quick-search']);
-            clearInterval(this.intervals);
-            this.showSuccessToast('Successfully login...!!!');
-            this.loadingService.manualLoading(false);
-          } else {
-            this.router.navigate(['search/quick-search']);
-            clearInterval(this.intervals);
-            this.showSuccessToast('Successfully login...!!!');
-            this.loadingService.manualLoading(false);
+          localStorage.removeItem('PW');
 
+          if (this.loginForm.get("username").value == "admin") {
+            this.router.navigate(['search/quick-search']).finally(() => {
+              clearInterval(this.intervals);
+              this.loadingService.manualLoading(false);
+            });
+          } else {
+            this.router.navigate(['search/quick-search']).finally(() => {
+              clearInterval(this.intervals);
+              this.loadingService.manualLoading(false);
+            });
           }
+        }
+        else if (data[0].userid === null || data[0].userid === '') {
+          this.ErrorMessage("Wrong UserID and Password.");
+          this.loadingService.manualLoading(false);
         }
         else {
-          this.ErrorMessage(data[0].userid);
+          this.ErrorMessage(data[0].userid)
+          this.loadingService.manualLoading(false);
         }
-
+      },
+      error: () => {
+        this.loadingService.manualLoading(false);
       }
     });
   }
@@ -222,10 +225,7 @@ export class OtpComponent implements OnInit {
 
   ErrorMessage(msg: any) {
     this.toastr.show(
-      `<div class="alert-text">
-       <span class="alert-title" data-notify="title"></span>
-       <span data-notify="message"> ${msg} </span>
-     </div>`,
+      `<div class="alert-text"> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> ${msg} </span> </div>`, 
       "",
       {
         timeOut: 3000,
@@ -238,8 +238,6 @@ export class OtpComponent implements OnInit {
       }
     );
   }
-
-
 
   showSuccessToast(msg: any) {
     this.toastr.show(
@@ -257,30 +255,8 @@ export class OtpComponent implements OnInit {
       }
     );
   }
-  showSuccessmessage(data: any) {
-    this.messageService.add({ severity: "success", summary: "Success", detail: data, });
-  }
 
   get f() {
     return this.loginForm.controls;
   }
-
-  Message(msg: any) {
-
-    this.toastr.show(
-      '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"><h4 class="text-white"> ' + msg + ' <h4></span></div>',
-      "",
-      {
-        timeOut: 7000,
-        closeButton: true,
-        enableHtml: true,
-        tapToDismiss: false,
-        titleClass: "alert-title",
-        positionClass: "toast-top-center",
-        toastClass:
-          "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-      }
-    );
-  }
-
 }

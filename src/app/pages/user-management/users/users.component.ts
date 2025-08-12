@@ -49,7 +49,7 @@ export class UsersComponent implements OnInit {
       id: [""],
       firstname: new FormControl('', [Validators.required]),
       lastname: new FormControl('', [Validators.required]),
-      userid: ["", [Validators.required]],
+      userid: ["", [Validators.required, Validators.pattern(/^[a-zA-Z0-9.]+$/)]],
       empid: ["", [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
       pwd: [""], //, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/)]
       confirmPass: [""], //, Validators.required
@@ -77,6 +77,9 @@ export class UsersComponent implements OnInit {
       Status: [""],
       User_Token: localStorage.getItem('User_Token'),
       CreatedBy: localStorage.getItem('UserID'),
+      ActiveInactiveBy: [""],
+      ActiveInactiveDate: [""],
+      ActiveInactiveTime: [""]
     }, {
       validator: this.ConfirmedValidator('pwd', 'confirmPass')
     });
@@ -193,12 +196,12 @@ export class UsersComponent implements OnInit {
         'UserType': el.UserType,
         'LastLoginDatetime': el.LastLoginDatetime,
         'AccountTypeID': el.AccountTypeID,
-        'ISACTIVE': 
-        (el.ApprovalPurpose === "Activation Approval" || el.ApprovalPurpose === "In-Activation Approval")
-          ? "Pending For Approval"
-          : el.IsActive === "Y"
-            ? "Active"
-            : "In-Active",
+        'ISACTIVE':
+          (el.ApprovalPurpose === "Activation Approval" || el.ApprovalPurpose === "In-Activation Approval")
+            ? "Pending For Approval"
+            : el.IsActive === "Y"
+              ? "Active"
+              : "In-Active",
         // 'ISACTIVE': el.IsActive == "Y" ? "Active" : "In-Active",
         'checked': el.IsActive === "Y" ? false : true,
       });
@@ -343,8 +346,6 @@ export class UsersComponent implements OnInit {
       this.ShowErrormessage('You cannot modify your own details.');
       return;
     }
-
-    console.log("value", value);
     const apiUrl = this._global.baseAPIUrl + "Admin/GetDetails?ID=" + value.id + "&user_Token=" + localStorage.getItem('User_Token');
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
       var that = this;
@@ -580,7 +581,10 @@ export class UsersComponent implements OnInit {
           location: data.location,
           sysRoleID: data.sysRoleID,
           ReviewerRemark: data.ReviewerRemark,
-          activeInactiveViewRemark: data.activeInactiveRemark
+          activeInactiveViewRemark: data.activeInactiveRemark,
+          ActiveInactiveBy: data.ActiveInactiveBy,
+          ActiveInactiveDate: data.ActiveInactiveDate,
+          ActiveInactiveTime: data.ActiveInactiveTime
         });
         this.modalRef = this.modalService.show(template);
       }

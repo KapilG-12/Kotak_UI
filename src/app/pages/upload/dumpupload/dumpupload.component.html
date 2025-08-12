@@ -36,9 +36,6 @@
         <div class=" card">
           <div class="card-header">
             <div class="position-relative row form-group">
-
-
-
               <div class="col-sm-3">
                 <div class="custom-file">
                   <input type="file" name="csvReader" id="csvReader" (change)="uploadListener($event)" accept=".csv" />
@@ -49,7 +46,7 @@
               </div>
               <div class="col-sm-1"></div>
               <div class="col-sm-6">
-                <button type="button" class="btn btn-success" style="font-size: 15px" (click)="onSubmit()">
+                <button type="button" class="btn btn-success" style="font-size: 15px" [disabled]="!fileSelected" (click)="onSubmit()">
                   Upload CSV <i class=" fas fa-file-upload"></i>
                 </button>
                 <button type="button" class="btn btn-warning" style="font-size: 15px" (click)="downloadFile()">
@@ -61,13 +58,6 @@
                   seperator
                 </label>
               </div>
-
-              <!-- <div class="col-sm-5">
-            
-
-            </div> -->
-
-
             </div>
           </div>
 

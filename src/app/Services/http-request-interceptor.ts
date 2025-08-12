@@ -3,9 +3,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor, HttpResponse
+  HttpInterceptor, HttpResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators'
 import { LoadingService } from './loading.service';
 import { Router } from '@angular/router';
@@ -26,7 +27,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this._loading.setLoading(true, request.url);
-    return next.handle(request).pipe(catchError((err) => {
+    return next.handle(request)
+    .pipe(catchError((err: HttpErrorResponse) => {
       if (err.status === 403) {
           this._router.navigate(['/unauthorized']);
         }
@@ -37,7 +39,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         });
       }
       this._loading.setLoading(false, request.url);
-      return err;
+      return throwError(err); 
     }))
       .pipe(map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
         if (evt instanceof HttpResponse) {

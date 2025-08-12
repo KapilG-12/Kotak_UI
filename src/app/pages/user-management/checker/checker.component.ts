@@ -57,6 +57,7 @@ export class CheckerComponent implements OnInit {
       Status: [""],
       _UserIDList: [""],
       activeInactiveRemark: [""],
+      ApprovalPurpose: [""],
       approveremarks: new FormControl('', [Validators.required]),
       rejectremarks: new FormControl('', [Validators.required]),
       bulkapproveremarks: new FormControl('', [Validators.required]),
@@ -172,7 +173,8 @@ export class CheckerComponent implements OnInit {
         'createdDate': el.createdDate,
         'activeInactiveRemark': el.activeInactiveRemark,
         'modifiedDate': el.modifiedDate,
-        'isCheckboxDisabled': el.CreatedById === this.UserCreatedBy || el.ModifiedById === this.UserCreatedBy || el.activeInactiveBy === this.UserCreatedBy,
+        'isCheckboxDisabled': el.CreatedById === this.UserCreatedBy || el.ModifiedById === this.UserCreatedBy || el.activeInactiveBy === this.UserCreatedBy
+                              || el.ApprovalPurpose === 'Activation Approval' || el.ApprovalPurpose === 'In-Activation Approval',
       });
 
     });
@@ -215,6 +217,7 @@ export class CheckerComponent implements OnInit {
       _UserIDList: '',
       bulkrejectremarks: '',
       bulkapproveremarks: '',
+      ApprovalPurpose: '',
       User_Token: localStorage.getItem('User_Token'),
       CreatedBy: localStorage.getItem('UserID')
     });
@@ -290,6 +293,7 @@ export class CheckerComponent implements OnInit {
   editEmployee(template: TemplateRef<any>, value: any) {
     this.AddUserForm.patchValue({
       UserID: value.id,
+      ApprovalPurpose: value.ApprovalPurpose,
     });
     this.modalRef = this.modalService.show(template);
   }
@@ -303,7 +307,7 @@ export class CheckerComponent implements OnInit {
   }
 
   BulkAction(template: TemplateRef<any>) {
-    debugger;
+    
     if (!this.selectedRowsUser || this.selectedRowsUser.length === 0) {
       this.ShowErrormessage("Please select at least one User");
       return;

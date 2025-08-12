@@ -63,7 +63,7 @@
                 </td>
                 <td>
                   <button type="button" style="padding:0 0 5px 4px" class="btn btn-icon btn-icon-only"
-                    (click)="OnEdit(car)" [disabled]="car['CreatedById'] == RoleCreatedBy">
+                    (click)="OnEdit(car)" [disabled]="car['CreatedById'] == RoleCreatedBy || car['UpdatedBy'] == RoleCreatedBy">
                     <span class="btn-inner--icon"><i class="fa fa-plus"></i></span>
                   </button>
                 </td>

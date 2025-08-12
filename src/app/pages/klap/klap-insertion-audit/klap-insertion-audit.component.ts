@@ -315,7 +315,7 @@ export class KlapInsertionAuditComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
+    
     this.submitted = true;
     if (!this.validation()) {
       return;
@@ -325,7 +325,7 @@ export class KlapInsertionAuditComponent implements OnInit {
       .postData(this.PODEntryForm.value, apiUrl)
       // .pipe(first())
       .subscribe((data) => {
-        debugger;
+        
         if (data == 'Record updated succesfully') {
           this.ShowMessage(data);
         }
@@ -378,7 +378,7 @@ export class KlapInsertionAuditComponent implements OnInit {
   }
 
   validation() {
-debugger;
+
     if (this.PODEntryForm.value.File_No == "" || this.PODEntryForm.value.File_No == null) {
 
       this.ShowErrormessage("Enter File No");

@@ -57,7 +57,7 @@
               <h5>Sign in</h5>
 
             </div>
-            <form [formGroup]="loginForm" (keyup.enter)="onSubmit()">
+            <form [formGroup]="loginForm" (submit)="onSubmit()">
               <div class="row input_bg">
                 <div class="input-group input-group-icon">
                   <input type="email" placeholder="Username" formControlName="username" maxlength="50" />
@@ -80,9 +80,7 @@
               <!-- <button [disabled]="loginForm.invalid" (click)="onSubmit()">Sign In</button>
                 <button routerLink="/forgot-password" class="ml-3">Forgot Password</button> -->
               <a style="color: #ffcc00;;" routerLink="/forgot-password" class=" ml-3">Forgot password?</a>
-              <button [disabled]="loginForm.invalid" (click)="onSubmit()" class="sign_btn">Sign In</button>
-
-              <!-- <a style="color: #ffcc00;;" routerLink="/otp" class=" ml-3">OTP?</a> -->
+              <button type="submit" [disabled]="loginForm.invalid" class="sign_btn">Sign In</button>
             </form>
           </div>
         </div>

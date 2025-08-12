@@ -66,7 +66,6 @@ _ColList = ["PODNo", "AccountNo","CartonNo","FileNo"];
       id:[0],     
        CSVData:[""]
     });     
-//this.BindHeader(this._FilteredList,this._FilteredList);
 this.prepareTableData(this._FilteredList,this._FilteredList);
   }
    
@@ -75,12 +74,9 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
     this.entries = $event.target.value;
   }
   filterTable($event) {
- //   console.log($event.target.value);
-
     let val = $event.target.value;
     let that = this
     this._FilteredList = this.records.filter(function (d) {
-    //  console.log(d);
       for (var key in d) {
         if (d[key].toLowerCase().indexOf(val) !== -1) {
           return true;
@@ -102,7 +98,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
   }
   handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
-    //console.log(this.DataUploadForm);
     
     if(this.DataUploadForm.valid && files.length>0) {
       var file = files[0];
@@ -121,8 +116,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
               };
               this._Records.push(orderDetails);
             }
-            // console.log(this.test);
-            // console.log('Parsed: k', results.data);
           }
         });
       }
@@ -153,7 +146,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
       
       let input = $event.target;
       let reader = new FileReader();
-     // console.log(input.files[0]);
       reader.readAsText(input.files[0]);
       $(".selected-file-name").html(input.files[0].name);
       reader.onload = () => {
@@ -170,27 +162,22 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
         //let ColName = 
         let validFile = this.getDisplayNames(csvRecordsArray);
         if (validFile == false) {
-        //  console.log('Not Valid File', csvRecordsArray);
           this.fileReset();
         } else {
           this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
        
           this._FilteredList = this.records;
 
-        //  console.log(this.records);
-          //console.log("_FilteredList",this._FilteredList);
 
           this.prepareTableDataForCSV(this._FilteredList);         
 
           (<HTMLInputElement>document.getElementById('csvReader')).value = '';
-        //  console.log('Records', this._FilteredList);
         }
   
 
       };
 
       reader.onerror = function () {
-       // console.log('error is occurred while reading file!');
       };
 
     } else {
@@ -214,7 +201,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
   }
 
   checkDateFormat(date) {
-  //  console.log("Date",date);
 
     if (date !="")
     {
@@ -363,7 +349,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
     const filename = 'INVUpload_CSVFileUpload';
      
     let csvData = "PODNo,AccountNo,CartonNo,FileNo";    
-    //console.log(csvData)
     let blob = new Blob(['\ufeff' + csvData], {
       type: 'text/csv;charset=utf-8;'
     });
@@ -446,7 +431,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
       // { field: 'Status', header: "Status", index: 1 }, 
       
     ];
-    console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),
@@ -466,7 +450,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
     this.formattedData = formattedData;
     this.loading = false;
   
-   // console.log("this.formattedData", this.formattedData);
   }
 
   prepareTableData(tableData, headerList) {
@@ -486,7 +469,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
       
       // { field: 'PropertyBarcode', header: 'PROPERTY BARCODE', index: 2 },
     ];
-   // console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),
@@ -494,7 +476,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
         'AccountNo': el.AccountNo,
         'CartonNo': el.CartonNo,
         'FileNo': el.FileNo,
-        // 'Status': el.Status,       
       
       });
    
@@ -506,15 +487,10 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
     this.formattedData = formattedData;
     this.loading = false;
   
-   // console.log("this.formattedData", this.formattedData);
   }
   
   BindHeader(tableData, headerList) {
     let formattedData = [];
-   // alert(this.type);
-  
-  // if (this.type=="Checker" )
-  //{
     let tableHeader: any = [
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'PODNo', header: "PODNo", index: 1 }, 
@@ -522,7 +498,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
 
       { field: 'CartonNo', header: "CartonNo", index: 1 }, 
       { field: 'FileNo', header: 'FileNo', index: 2 },
-      // { field: 'Status', header: "Status", index: 1 }, 
     ];
    
     
@@ -537,8 +512,6 @@ this.prepareTableData(this._FilteredList,this._FilteredList);
   
   
   searchTable($event) {
-    // console.log($event.target.value);
-  
     let val = $event.target.value;
     if(val == '') {
       this.formattedData = this.immutableFormattedData;
@@ -568,15 +541,10 @@ this.rows = e.rows;
  
 
 GetPendingData() {  
-
-  // var  dateCreated = formatDate(`${dateCreated}`.replaceFunction('/','-'),'full','es-CO');
-
     const apiUrl = this._global.baseAPIUrl + 'Inward/GetPendingINVData';          
     this._onlineExamService.postData(this.DataUploadForm.value,apiUrl)
-        // .pipe(first())
     .subscribe( data => {
       this._StatusList = data;
-      console.log("this._StatusList",this._StatusList);
       this.downloadPendingData();
   });
   }
@@ -584,7 +552,6 @@ GetPendingData() {
   downloadPendingData() { 
     this.GetColList()
     let csvData = this._HeaderColList;     
-  //  console.log(csvData) 
     if(this._StatusList.length>0) {
     let blob = new Blob(['\ufeff' +  csvData], { 
         type: 'text/csv;charset=utf-8;'
@@ -592,10 +559,6 @@ GetPendingData() {
     let dwldLink = document.createElement("a"); 
     let url = URL.createObjectURL(blob); 
     let isSafariBrowser =-1;
-    // let isSafariBrowser = navigator.userAgent.indexOf( 'Safari') != -1 & amp; & amp; 
-    // navigator.userAgent.indexOf('Chrome') == -1; 
-    
-    //if Safari open in new window to save file with random filename. 
     if (isSafariBrowser) {  
         dwldLink.setAttribute("target", "_blank"); 
     } 
@@ -632,9 +595,6 @@ GetPendingData() {
       // headerArray.push(headers[j]);  
     }
 
-    // console.log("this._HeaderColList",this._HeaderColList);
-    // console.log("this._ColList",this._ColList);
-    // console.log("this._StatusList 2",this._StatusList);
 
     this._HeaderColList += '\n'
     this._StatusList.forEach(stat => {

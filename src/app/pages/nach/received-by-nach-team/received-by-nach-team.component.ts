@@ -104,7 +104,7 @@ export class ReceivedByNachTeamComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     this.pymentForm.controls['saveredio'].reset('');
@@ -112,7 +112,7 @@ export class ReceivedByNachTeamComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/ReceivedByNachteam";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -273,7 +273,7 @@ export class ReceivedByNachTeamComponent implements OnInit {
   }
 
   onSubmit() {
-debugger;
+
     this.submitted = true;
     if(this.DataUploadForm.controls["saveredio"].value==''){
       this.ShowErrormessage("please select Checkbox!!..");
@@ -286,7 +286,7 @@ debugger;
         //  User_Token: localStorage.getItem('User_Token')
         // Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/ReceivedByNachteamBulk';
@@ -296,7 +296,7 @@ debugger;
           this.showSuccessmessage("Record Save Successfully");
           this.reset();
           this.BindHeader(this._FilteredList, this._FilteredList);
-          debugger;
+          
           
         });
 

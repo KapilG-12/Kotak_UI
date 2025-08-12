@@ -104,7 +104,7 @@ export class SiMandateSendToRcpComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     // this.pymentForm.controls['filebarcode'].setValue('');
@@ -112,7 +112,7 @@ export class SiMandateSendToRcpComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/SIMandateSendToRPC";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -283,7 +283,7 @@ export class SiMandateSendToRcpComponent implements OnInit {
         //  User_Token: localStorage.getItem('User_Token')
         // Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/SIMandateSendToRPCBulk';
@@ -291,7 +291,7 @@ export class SiMandateSendToRcpComponent implements OnInit {
         .subscribe(data => {
           this.downloadFileErrorLog(data);
           this.BindHeader(this._FilteredList, this._FilteredList);
-          debugger;
+          
            this.showSuccessmessage("Record Save Successfully");
            this.csvReader=''
         });

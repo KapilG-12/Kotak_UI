@@ -25,17 +25,17 @@ export class OnlineExamServiceService {
     private _global: Listboxclass
 
   ) { }
+
   private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
+    if (error.status === 0) {
+      console.error('An error occurred:', error.error);
     } else {
       console.error(
-        "Backend returned code ${error.status}, " +
-        "body was: ${error.error}");
-
+        `Backend returned code ${error.status}, body was: `, error.error);
     }
-    return throwError('Something bad happened; please try again later.');
+    return throwError(error);
   }
+
   getAllData(apiUrl: string): Observable<any> {
     return this.http.get(apiUrl).pipe(
       map(this.extractData));
@@ -68,8 +68,6 @@ export class OnlineExamServiceService {
 
   private extractData(res: Response) {
     let body = res;
-    //console.log(res);
-
     return body || {};
   }
 
@@ -124,9 +122,9 @@ export class OnlineExamServiceService {
   }
 
   downloadExcelFile(url: string, fileName: any): void {
-   this.http.get(url, { responseType: 'blob' })
+    this.http.get(url, { responseType: 'blob' })
       .subscribe((data) => {
-        debugger;
+
         const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);

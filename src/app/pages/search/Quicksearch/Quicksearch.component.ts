@@ -91,7 +91,6 @@ export class QuicksearchComponent implements OnInit {
     });
   } 
     GetFilterSearch() {     
-      console.log("this.ContentSearchForm.get('File_No').value",this.ContentSearchForm.get('File_No').value)
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/SearchRecordsByFilter?USERId='+localStorage.getItem('UserID')+'&user_Token='+ localStorage.getItem('User_Token') +'&FileNo='+this.ContentSearchForm.get('File_No').value+'&SearchBy='+this.ContentSearchForm.get('SearchBy').value;
       this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {     
       this._IndexPendingList = data;
@@ -175,11 +174,9 @@ export class QuicksearchComponent implements OnInit {
           this.allSelected = false;
         }, 100);
       }
-      console.log(this.selectedEntries);
     }
 
     selectAll(e) {
-      console.log('All files selected');
       if(e.target.checked) {
         this._FilteredList.forEach(element => {
           this.selectedEntries.push(element.FileNo);
@@ -253,12 +250,10 @@ export class QuicksearchComponent implements OnInit {
             this.loading = false;
             
 
-        //    console.log(this.formattedData);
 
           }
       
           searchTable($event) {
-            // console.log($event.target.value);
         
             let val = $event.target.value;
             if(val == '') {
@@ -308,7 +303,6 @@ downloadFile() {
   let csvData = this._HeaderList;     
   var csvDatas = csvData.replace("null", ""); 
 
- // console.log(csvData) 
   if(this._FilteredList.length>0) {
   let blob = new Blob(['\ufeff' +  csvDatas], { 
       type: 'text/csv;charset=utf-8;'
@@ -538,7 +532,6 @@ viewKlapDocumentList(row:any){
   if (row.document_type==='Original KLAP' || row.document_type=='Original KLAP Insert')
 {
   
-  console.log('rowinsisde',row.File_No)
   localStorage.setItem("file_no",row.File_No);
   this.router.navigate(['/search/Klap-search']);
   //"PD00034578"

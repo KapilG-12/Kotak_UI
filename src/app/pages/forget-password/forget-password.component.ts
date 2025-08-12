@@ -7,8 +7,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from "ngx-toastr";
 import { HttpEventType, HttpClient } from '@angular/common/http';
 import swal from "sweetalert2";
-import {AuthenticationService} from '../../Services/authentication.service';
+import { AuthenticationService } from '../../Services/authentication.service';
 import { DxiConstantLineModule } from "devextreme-angular/ui/nested";
+import { cos } from "@amcharts/amcharts4/.internal/core/utils/Math";
 
 
 
@@ -21,7 +22,7 @@ export class ForgetPasswordComponent implements OnInit {
 
   ForgotPasswordForm: FormGroup;
   submitted = false;
-  _LogData:any;
+  _LogData: any;
 
 
   constructor(
@@ -42,7 +43,7 @@ export class ForgetPasswordComponent implements OnInit {
 
     this.ForgotPasswordForm = this.formBuilder.group({
       username: ['', Validators.compose([Validators.required])]
-   
+
     });
 
     localStorage.clear();
@@ -51,69 +52,45 @@ export class ForgetPasswordComponent implements OnInit {
   onSubmit() {
 
     this.submitted = true;
-     // stop here if form is invalid
-     if (this.ForgotPasswordForm.invalid) {
+    // stop here if form is invalid
+    if (this.ForgotPasswordForm.invalid) {
       return;
-  }  
-  const apiUrl = this._global.baseAPIUrl + 'UserLogin/Forgotpassword';
-    this.authService.userLogin(this.ForgotPasswordForm.value,apiUrl).subscribe( data => {
-      if(data.length > 0)         
-      {        
-        // var that = this;
-        // that._LogData =data[0];
-
-             alert(data);
-
-             this.OnReset();
-
-        //   console.log("that._LogData ",that._LogData );      
-
-        // localStorage.setItem('UserID',that._LogData.id) ;
-       
-        // localStorage.setItem('UserName',this.ForgotPasswordForm.get("username").value) ;
-        
-       
-      //   if (this.ForgotPasswordForm.get("username").value == "admin")
-      //   {
-      //     this.router.navigate(['dashboards/dashboard']);
-      // }
-      // else{
-      //   this.router.navigate(['search/content-search']);      
-      // }
-
-      }
-    else
-    {
-      this.toastr.show(
-        '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> Invalid Email ID. </span></div>',
-        "",
-        {
-          timeOut: 3000,
-          closeButton: true,
-          enableHtml: true,
-          tapToDismiss: false,
-          titleClass: "alert-title",
-          positionClass: "toast-top-center",
-          toastClass:
-            "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-        }
-      );
-//      alert("Invalid userid and password.");     
     }
+    const apiUrl = this._global.baseAPIUrl + 'UserLogin/Forgotpassword';
+    this.authService.userLogin(this.ForgotPasswordForm.value, apiUrl).subscribe(data => {
+      if (data === 'Password send on mail please check.') {
+        alert(data);
+        this.OnReset();
+      }
+      else {
+        this.toastr.show(
+          '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> ' + data.Message + ' </span></div>',
+          "",
+          {
+            timeOut: 3000,
+            closeButton: true,
+            enableHtml: true,
+            tapToDismiss: false,
+            titleClass: "alert-title",
+            positionClass: "toast-top-center",
+            toastClass:
+              "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+          }
+        );
+      }
 
-  });
+    });
   }
 
-  get f(){
+  get f() {
     return this.ForgotPasswordForm.controls;
   }
 
-  OnReset()
-  {     
- // this.Reset = true;
-  this.ForgotPasswordForm.reset();      
+  OnReset() {
+    // this.Reset = true;
+    this.ForgotPasswordForm.reset();
 
- // this.FileStatus="New";
+    // this.FileStatus="New";
 
   }
 

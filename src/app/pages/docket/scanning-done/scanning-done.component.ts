@@ -104,7 +104,7 @@ export class ScanningDoneComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
      this.pymentForm.controls['saveredio'].reset('');
@@ -115,7 +115,7 @@ export class ScanningDoneComponent implements OnInit {
     if(this.pymentForm.invalid){
       return;
     }
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/ScanningDone";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
@@ -295,7 +295,7 @@ export class ScanningDoneComponent implements OnInit {
       //  User_Token: localStorage.getItem('User_Token'),
       //  Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/ScanningDoneBulk';

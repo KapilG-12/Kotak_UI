@@ -39,7 +39,6 @@ export class AuthGuardService implements CanActivate{
     //         }
     //       });
     //       // logged in so return true
-    //       console.log('status=>'+moduleAccessFlag);
     //       return moduleAccessFlag;
     //     });
         

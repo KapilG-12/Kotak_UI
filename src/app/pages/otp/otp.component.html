@@ -12,23 +12,58 @@
       <div class="col-md-12 col-lg-6">
         <div class="login_form d-flex align-content-around flex-wrap">
           <div class="login_field">
-            <div class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2">
+            <div
+              class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2"
+            >
               <h5>OTP</h5>
-
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="VerifyOTP()">
               <div class="otp-inputs">
-                <ng-otp-input [config]="{ length: 6, allowNumbersOnly: false }"
-                  (onInputChange)="handleOtpChange($event)">
+                <ng-otp-input
+                  [config]="{
+                    length: 6,
+                    allowNumbersOnly: false,
+                    autoFocus: true,
+                    isPasswordInput: true,
+                    inputStyles: {
+                      width: '50px',
+                      height: '50px',
+                      margin: '0 5px',
+                      fontSize: '24px',
+                      borderRadius: '8px',
+                      borderColor: '#ccc'
+                    },
+                    inputClass: 'otp-uppercase'
+                  }"
+                  (onInputChange)="handleOtpChange($event)"
+                >
                 </ng-otp-input>
               </div>
 
-              <button *ngIf="setSubmit === 0" class="sign_btn" type="submit">Verify OTP</button>
+              <button *ngIf="setSubmit === 0" class="sign_btn" type="submit">
+                Verify OTP
+              </button>
 
               <div *ngIf="timer > 0">Resend OTP in {{ timer }}s</div>
-              <button class="sign_btn" *ngIf="timer === 0" type="button" (click)="resendOtp()">Resend OTP</button>
-              <button *ngIf="timer === 0" class="sign_btn" type="submit">Verify OTP</button>
-              <button class="sign_btn" *ngIf="timer === 0" type="button" routerLink="/Login">Sign In</button>
+              <button
+                class="sign_btn"
+                *ngIf="timer === 0"
+                type="button"
+                (click)="resendOtp()"
+              >
+                Resend OTP
+              </button>
+              <button *ngIf="timer === 0" class="sign_btn" type="submit">
+                Verify OTP
+              </button>
+              <button
+                class="sign_btn"
+                *ngIf="timer === 0"
+                type="button"
+                routerLink="/Login"
+              >
+                Sign In
+              </button>
             </form>
           </div>
         </div>

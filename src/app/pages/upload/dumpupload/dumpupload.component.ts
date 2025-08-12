@@ -29,6 +29,7 @@ export class DumpuploadComponent implements OnInit {
   modalRef: BsModalRef;
   _SingleDepartment: any;
   submitted = false;
+  fileSelected = false;
   Reset = false;
   sMsg: string = '';
   _FilteredList = [];
@@ -70,8 +71,6 @@ export class DumpuploadComponent implements OnInit {
       File_Name: '',
       File_Name_Uploaded: ''
     });
-    // this.BindHeader(this._FilteredList, this._FilteredList);
-    // this.prepareTableData(this._FilteredList, this._FilteredList);
     this.getFileUplodedHistory()
   }
 
@@ -80,26 +79,19 @@ export class DumpuploadComponent implements OnInit {
     this.entries = $event.target.value;
   }
   getFileUplodedHistory() {
-    debugger;
+
 
     const userToken = localStorage.getItem('User_Token');
     const apiUrl = this._global.baseAPIUrl + "DataUpload/GetUploaded_File_History?user_Token=" + userToken;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this.getFileHistory = data;
-      debugger;
-      console.log(data);
-      // this._FilteredList = data;
       this.prepareTableData(this.getFileHistory, this.getFileHistory);
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
   filterTable($event) {
-    //   console.log($event.target.value);
-
     let val = $event.target.value;
     let that = this
     this._FilteredList = this.records.filter(function (d) {
-      //  console.log(d);
       for (var key in d) {
         if (d[key].toLowerCase().indexOf(val) !== -1) {
           return true;
@@ -121,8 +113,6 @@ export class DumpuploadComponent implements OnInit {
   }
   handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
-    //console.log(this.DataUploadForm);
-
     if (this.DataUploadForm.valid && files.length > 0) {
       var file = files[0];
       var reader = new FileReader();
@@ -140,8 +130,6 @@ export class DumpuploadComponent implements OnInit {
               };
               this._Records.push(orderDetails);
             }
-            // console.log(this.test);
-            // console.log('Parsed: k', results.data);
           }
         });
       }
@@ -164,8 +152,8 @@ export class DumpuploadComponent implements OnInit {
   }
 
   uploadListener($event: any): void {
-debugger;
     let text = [];
+    this.fileSelected = true;
     let files = $event.srcElement.files;
     this.File_Name = $event.srcElement.files[0].name;
     this.File_Name = this.File_Name.substring(0, this.File_Name.lastIndexOf('.')) || this.File_Name;
@@ -173,7 +161,6 @@ debugger;
 
       let input = $event.target;
       let reader = new FileReader();
-      // console.log(input.files[0]);
       reader.readAsText(input.files[0]);
       $(".selected-file-name").html(input.files[0].name);
       reader.onload = () => {
@@ -185,32 +172,17 @@ debugger;
         this._CSVData = csvRecordsArray;
         this._IndexList = csvRecordsArray;
 
-        // alert(headersRow);
-        // alert(this._ColNameList);
-        //let ColName = 
         let validFile = this.getDisplayNames(csvRecordsArray);
         if (validFile == false) {
-          //  console.log('Not Valid File', csvRecordsArray);
           this.fileReset();
         } else {
           this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
 
           this._FilteredList = this.records;
-
-          //  console.log(this.records);
-          //console.log("_FilteredList",this._FilteredList);
-
-          //  this.prepareTableDataForCSV(this._FilteredList);         
-
           (<HTMLInputElement>document.getElementById('csvReader')).value = '';
-          //  console.log('Records', this._FilteredList);
         }
-
-
       };
-
       reader.onerror = function () {
-        // console.log('error is occurred while reading file!');
       };
 
     } else {
@@ -234,8 +206,6 @@ debugger;
   }
 
   checkDateFormat(date) {
-    //  console.log("Date",date);
-
     if (date != "") {
       let dateArr = date.split('-');
       const dateString = dateArr[1] + '/' + dateArr[0] + '/' + dateArr[2];
@@ -274,26 +244,19 @@ debugger;
 
   getHeaderArray(csvRecordsArr: any) {
     var headers;
-    // headers ="NewCBSAccountNo,ApplicationNo,CBSCUSTIC,Team,HandliedBy,ProductCode,Product,ProductDescription,JCCode,JCName,Zone,CustomerName,DBDate,FinalRemarks,DisbursedMonth";
-    headers = ['state', 'region', 'appl', 'apac', 'contract_no', 'apac_effective_date', 'product', 'location', 'sub_location', 'tenure', 'maturity_date', 'maln_party_id', 'party_name', 'agr_value', 'eml_start_date', 'pdc_type'];
-    // console.log("headers_1",headers);
-    //  // let headerArray = [];
-    // for (let j = 0; j < headers.length; j++) {
-    //   headerArray.push(headers[j]);
-    // }
-
+    headers = ['State', 'Region', 'Appl', 'Apac', 'Contract_No', 'Apac_Effective_Date', 'Product', 'Location', 'Sub_Location', 'Tenure', 'maturity_date', 'maln_party_id', 'Party_Name', 'Agreement_Value', 'EMI_Start_Date', 'PDC_Type'];
     return headers;
-
-
   }
 
   fileReset() {
-    //this.csvReader.nativeElement.value = "";  
     this.records = [];
+    const span = document.querySelector('.selected-file-name');
+    span.textContent = '';
+    this.fileSelected = false;
   }
 
   onSubmit() {
-debugger;
+
     this.submitted = true;
 
     if (this._CSVData != null && this._CSVData != undefined) {
@@ -307,20 +270,14 @@ debugger;
 
       const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       this._onlineExamService.postData(this.DataUploadForm.value, apiUrl)
-        // .pipe(first())
         .subscribe(data => {
-this.getFileUplodedHistory();
-          // alert(data);
+          this.getFileUplodedHistory();
           this.showSuccessmessage(data);
-        //  this.BindHeader(this._FilteredList, this._FilteredList);
-
+          this.fileReset();
         });
-
-      //  }     
     }
     else {
       this.showmessage("please select file");
-
     }
   }
 
@@ -343,79 +300,52 @@ this.getFileUplodedHistory();
   }
 
   onFormat(csvRecordsArr: any) {
-    //   let dt;
-
   }
 
-  
 
-    getDisplayNames(csvRecordsArr: any) {
 
-    //  console.log("csvRecordsArr",csvRecordsArr);
-
+  getDisplayNames(csvRecordsArr: any) {
     let headers = (<string>csvRecordsArr[0]).split(',');
     let headerArray = [];
-
-    // console.log("headers",headers);
-    // console.log("headers",headers.length);
-    // console.log(this._ColNameList);
     if (headers.length != 14) {
-      // alert('Invalid No. of Column Expected :- ' + this._ColNameList.length);
       var msg = 'Invalid No. of Column Expected :- ' + 14;
-      //this.showmessage(msg);
       this.ShowErrormessage(msg);
-
       return false;
     }
-    // this._HeaderList ="POD No,Invoice Details,Invoice No,Invoice Date,Vendor Name,Barcode No";
-
-    //  this._ColNameList[0] ="appl_apac";
-    this._ColNameList[0] = "state";
-    this._ColNameList[1] = "region";
-    this._ColNameList[2] = "appl";
-    this._ColNameList[3] = "apac";
-    this._ColNameList[4] = "party_name";
-    this._ColNameList[5] = "contract_no";
-    this._ColNameList[6] = "apac_effective_date";
-    this._ColNameList[7] = "product";
-    this._ColNameList[8] = "location";
+    this._ColNameList[0] = "State";
+    this._ColNameList[1] = "Region";
+    this._ColNameList[2] = "Appl";
+    this._ColNameList[3] = "Apac";
+    this._ColNameList[4] = "Party_Name";
+    this._ColNameList[5] = "Contract_No";
+    this._ColNameList[6] = "Apac_Effective_Date";
+    this._ColNameList[7] = "Product";
+    this._ColNameList[8] = "Location";
     this._ColNameList[9] = "sub_location";
-    this._ColNameList[10] = "tenure";
-    // this._ColNameList[10] = "maturity_date";
-    // this._ColNameList[11] = "maln_party_id";
-    this._ColNameList[11] = "agr_value";
-    this._ColNameList[12] = "eml_start_date";
-    this._ColNameList[13] = "pdc_type";
+    this._ColNameList[10] = "Tenure";
+    this._ColNameList[11] = "Agreement_Value";
+    this._ColNameList[12] = "EMI_Start_Date";
+    this._ColNameList[13] = "PDC_Type";
 
     return true;
   }
 
   GetHeaderNames() {
-    //  this._HeaderList = "";
-    // this._HeaderList = "state,region,appl,apac,contract_no,apac_effective_date,product,location,sub_location,tenure,maturity_date,maln_party_id,party_name,agr_value,eml_start_date,pdc_type";
-    this._HeaderList = "state,region,appl,apac,party_name,contract_no,apac_effective_date,product,location,sub_location,tenure,agr_value,eml_start_date,pdc_type";
+    this._HeaderList = "State,Region,Appl,Apac,Party_Name,Contract_No,Apac_Effective_Date,Product,Location,Sub_Location,Tenure,Agreement_Value,EMI_Start_Date,PDC_Type";
   }
 
 
 
   downloadFile() {
     const filename = 'DumpUpload_Format_CSV';
-    // let csvData = "state,region,appl,apac,contract_no,apac_effective_date,product,location,sub_location,tenure,maturity_date,maln_party_id,party_name,agr_value,eml_start_date,pdc_type";
 
-    let csvData = "state,region,appl,apac,party_name,contract_no,apac_effective_date,product,location,sub_location,tenure,agr_value,eml_start_date,pdc_type";
-
-    // let csvData = "AccountNo,AppNo,CRN,URN,DBDate,DBMonth,DBYear,ProductCode,ProductType,ProductName,COD_OFFICR_ID,CustomerName,BranchCode,BranchName,Zone,ClosedDate";    
-    //console.log(csvData)
+    let csvData = "State,Region,Appl,Apac,Party_Name,Contract_No,Apac_Effective_Date,Product,Location,Sub_Location,Tenure,Agreement_Value,EMI_Start_Date,PDC_Type";
     let blob = new Blob(['\ufeff' + csvData], {
       type: 'text/csv;charset=utf-8;'
     });
     let dwldLink = document.createElement("a");
     let url = URL.createObjectURL(blob);
     let isSafariBrowser = -1;
-    // let isSafariBrowser = navigator.userAgent.indexOf( 'Safari') != -1 & amp; & amp; 
-    // navigator.userAgent.indexOf('Chrome') == -1; 
-
-    //if Safari open in new window to save file with random filename. 
     if (isSafariBrowser) {
       dwldLink.setAttribute("target", "_blank");
     }
@@ -475,68 +405,50 @@ this.getFileUplodedHistory();
     let formattedData = [];
     let tableHeader: any = [
       { field: 'srNo', header: "SR NO", index: 1 },
-      //  { field: 'appl_apac', header: "APPL_APAC", index: 1 }, 
-      { field: 'state', header: 'STATE', index: 2 },
-      { field: 'region', header: "REGION", index: 1 },
-      { field: 'appl', header: 'APPL', index: 2 },
-      { field: 'apac', header: "APAC", index: 1 },
-      { field: 'contract_no', header: 'CONTRACT_NO', index: 2 },
-      { field: 'apac_effective_date', header: "APAC_EFFECTIVE_DATE", index: 1 },
-      { field: 'product', header: 'PRODUCT', index: 2 },
-      { field: 'location', header: "LOCATION", index: 1 },
-      { field: 'sub_location', header: 'sub_location', index: 2 },
-      { field: 'tenure', header: "TENURE", index: 1 },
+      { field: 'State', header: 'STATE', index: 2 },
+      { field: 'Region', header: "REGION", index: 1 },
+      { field: 'Appl', header: 'APPL', index: 2 },
+      { field: 'Apac', header: "APAC", index: 1 },
+      { field: 'Contract_No', header: 'CONTRACT_NO', index: 2 },
+      { field: 'Apac_Effective_Date', header: "APAC_EFFECTIVE_DATE", index: 1 },
+      { field: 'Product', header: 'PRODUCT', index: 2 },
+      { field: 'Location', header: "LOCATION", index: 1 },
+      { field: 'Sub_Location', header: 'SUB_LOCATION', index: 2 },
+      { field: 'Tenure', header: "TENURE", index: 1 },
       { field: 'maturity_date', header: 'MATURITY_DATE', index: 2 },
       { field: 'maln_party_id', header: "MALN_PARTY_ID", index: 1 },
-      { field: 'party_name', header: 'PARTY_NAME', index: 2 },
-      { field: 'agr_value', header: 'AGR_VALUE', index: 2 },
-      { field: 'eml_start_date', header: 'EML_START_DATE', index: 2 },
-      { field: 'pdc_type', header: 'PDC_TYPE', index: 3 },
-
-
+      { field: 'Party_Name', header: 'PARTY_NAME', index: 2 },
+      { field: 'Agreement_Value', header: 'AGR_VALUE', index: 2 },
+      { field: 'EMI_Start_Date', header: 'EML_START_DATE', index: 2 },
+      { field: 'PDC_Type', header: 'PDC_TYPE', index: 3 },
     ];
-    console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),
-        //  'appl_apac': el[0],   
-        'state': el[0],
-        'region': el[1],
-        'appl': el[2],
-        'apac': el[3],
-        'contract_no': el[4],
-        'apac_effective_date': el[5],
-        'product': el[6],
-        'location': el[7],
-        'sub_location': el[8],
-        'tenure': el[9],
+        'State': el[0],
+        'Region': el[1],
+        'Appl': el[2],
+        'Apac': el[3],
+        'Contract_No': el[4],
+        'Apac_Effective_Date': el[5],
+        'Product': el[6],
+        'Location': el[7],
+        'Sub_Location': el[8],
+        'Tenure': el[9],
         'maturity_date': el[10],
         'maln_party_id': el[11],
-        'party_name': el[12],
-        'agr_value': el[13],
-        'eml_start_date': el[14],
-        'pdc_type': el[15],
-        // 'Password': el[3],
-        // 'Moblienumber': el[4],
-        // 'Role': el[5],
-        // 'Remarks': el[6]
-
+        'Party_Name': el[12],
+        'Agreement_Value': el[13],
+        'EMI_Start_Date': el[14],
+        'PDC_Type': el[15],
       });
-
     });
     this.headerList = tableHeader;
-    //}
-
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
-    // this.formattedData = formattedData;
     this.loading = false;
-
-    // console.log("this.formattedData", this.formattedData);
   }
 
   FileuploadedList(folderName: any) {
-    debugger;
-    console.log(folderName);
     let filename = folderName.File_Name_Uploaded
 
     this.DataUploadForm.patchValue({
@@ -549,17 +461,14 @@ this.getFileUplodedHistory();
     const apiUrl = this._global.baseAPIUrl + "DataUpload/DownLoad_Uploaded_File_History";
     this._onlineExamService.postData(this.DataUploadForm.value, apiUrl).subscribe((data: {}) => {
       this.Download_File_List = data;
-      console.log(data);
-      this.Download_ExportExcel(this.Download_File_List);
+      this.Download_ExportCSV(this.Download_File_List, filename);
       this.loading = false;
     });
 
   }
 
   Error_File(folderName: any) {
-    console.log(folderName);
     debugger;
-    console.log(folderName);
     let filename = folderName.File_Name_Uploaded
     this.DataUploadForm.patchValue({
       id: localStorage.getItem('UserID'),
@@ -571,46 +480,60 @@ this.getFileUplodedHistory();
     const apiUrl = this._global.baseAPIUrl + "DataUpload/DownLoad_Error_File_History";
     this._onlineExamService.postData(this.DataUploadForm.value, apiUrl).subscribe((data: {}) => {
       this.Download_File_List = data;
-      console.log(data);
-      this.Error_ExportExcel(this.Download_File_List);
+      this.Error_ExportCSV(this.Download_File_List, folderName.Error_File);
       this.loading = false;
     });
-
-
   }
 
-  Download_ExportExcel(dt: any) {
-    let Exportdata: any[];
-    const worksheet = XLSX.utils.json_to_sheet(dt)//ForExcelData);//,{header:[+filtered+]}
-    const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, "Download File Data");
+  Download_ExportCSV(dt: any, filename: any) {
+    const worksheet = XLSX.utils.json_to_sheet(dt);
+    const csv: string = XLSX.utils.sheet_to_csv(worksheet);
+    this.saveAsCSVFile(csv, filename);
   }
 
-  Error_ExportExcel(dt: any) {
-    let Exportdata: any[];
-    const worksheet = XLSX.utils.json_to_sheet(dt)//ForExcelData);//,{header:[+filtered+]}
-    const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, "Download Error File Data");
+  Error_ExportCSV(dt: any, filename: any) {
+    const worksheet = XLSX.utils.json_to_sheet(dt);
+    const csv: string = XLSX.utils.sheet_to_csv(worksheet);
+    this.saveAsCSVFile(csv, filename);
   }
 
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export' + EXCEL_EXTENSION);
+  saveAsCSVFile(csv: string, fileName: string): void {
+    const CSV_TYPE = 'text/csv;charset=utf-8;';
+    const CSV_EXTENSION = '.csv';
+    const data: Blob = new Blob([csv], { type: CSV_TYPE });
+    FileSaver.saveAs(data, fileName + CSV_EXTENSION);
   }
+
+
+
+  // Download_ExportExcel(dt: any) {
+  //   let Exportdata: any[];
+  //   const worksheet = XLSX.utils.json_to_sheet(dt)//ForExcelData);//,{header:[+filtered+]}
+  //   const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  //   const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //   this.saveAsExcelFile(excelBuffer, "Download File Data");
+  // }
+
+  // Error_ExportExcel(dt: any) {
+  //   let Exportdata: any[];
+  //   const worksheet = XLSX.utils.json_to_sheet(dt)//ForExcelData);//,{header:[+filtered+]}
+  //   const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  //   const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //   this.saveAsExcelFile(excelBuffer, "Download Error File Data");
+  // }
+
+  // saveAsExcelFile(buffer: any, fileName: string): void {
+  //   let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  //   let EXCEL_EXTENSION = '.xlsx';
+  //   const data: Blob = new Blob([buffer], {
+  //     type: EXCEL_TYPE
+  //   });
+  //   FileSaver.saveAs(data, fileName + '_export' + EXCEL_EXTENSION);
+  // }
 
 
   prepareTableData(tableData, headerList) {
     let formattedData = [];
-    // alert(this.type);
-
-    // if (this.type=="Checker" )
-    //{
     let tableHeader: any = [
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'File_Name_Uploaded', header: 'FILE UPLOADED', index: 2 },
@@ -621,7 +544,6 @@ this.getFileUplodedHistory();
       { field: 'Uploaded_By', header: 'UPLOADED BY', index: 2 },
       { field: 'Uploaded_Date_time', header: "UPLOADED DATE TIME", index: 1 },
     ];
-    // console.log("this.formattedData", tableData);
     tableData.forEach((el, index) => {
       formattedData.push({
 
@@ -633,29 +555,20 @@ this.getFileUplodedHistory();
         'Error_Records': el.Error_Records,
         'Uploaded_By': el.Uploaded_By,
         'Uploaded_Date_time': el.Uploaded_Date_time,
-
       });
-
     });
     this.headerList = tableHeader;
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;
     this.loading = false;
-
-    // console.log("this.formattedData", this.formattedData);
   }
 
   BindHeader(tableData, headerList) {
     let formattedData = [];
-    // alert(this.type);
-
-    // if (this.type=="Checker" )
-    //{
     let tableHeader: any = [
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'AccountNo', header: "ACCOUNT N0", index: 1 },
       { field: 'AppNo', header: 'APP NO', index: 2 },
-
       { field: 'CRN', header: "CRN", index: 1 },
       { field: 'URN', header: 'URN', index: 2 },
       { field: 'DBDate', header: "DB DATE", index: 1 },

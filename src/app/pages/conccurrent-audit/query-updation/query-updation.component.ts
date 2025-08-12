@@ -104,7 +104,7 @@ export class QueryUpdationComponent implements OnInit {
   }
 
   reset() {
-    debugger;
+    
     this.filebarcode = '';
     this.remark = '';
     // this.pymentForm.controls['filebarcode'].setValue('');
@@ -112,11 +112,11 @@ export class QueryUpdationComponent implements OnInit {
   }
   save() {
     this.submitted = true;
-    debugger;
+    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/QueryUpdation";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
-        debugger;
+        
         if (data == 'Record save successfully' || data=='Record updated successfully') {
           this.ShowMessage(data);
         }
@@ -291,7 +291,7 @@ export class QueryUpdationComponent implements OnInit {
       //  User_Token: localStorage.getItem('User_Token'),
         //Save: this.DataUploadForm.controls['Save'].value
       });
-      debugger;
+      
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/DispatchInwardBulk';
