@@ -121,5 +121,5 @@ jobs:
 
               Write-Error 'Deployment aborted and rollback completed.'
               exit 1
-          }
+          } 
 
