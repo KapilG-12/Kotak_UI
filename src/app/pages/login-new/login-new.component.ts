@@ -195,8 +195,8 @@ export class LoginNewComponent implements OnInit {
   }
 
   login() {
-    // window.location.href = 'https://dmstest.crownims.com/KotakAPI/Account/Login' //Testing SSO URL
-    window.location.href = 'https://kotakprime.crownims.com/KotakDartAPI/Account/Login' //Live SSO URL
+    window.location.href = 'https://dmstest.crownims.com/KotakAPI/Account/Login' //Testing SSO URL
+    // window.location.href = 'https://kotakprime.crownims.com/KotakDartAPI/Account/Login' //Live SSO URL
   }
 
   onSubmitSSOLogin(sessionId: any) {
