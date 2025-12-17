@@ -12,15 +12,12 @@
       <div class="col-md-12 col-lg-6">
         <div class="login_form d-flex align-content-around flex-wrap">
           <div class="login_field">
-            <div
-              class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2"
-            >
+            <div class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2">
               <h5>OTP</h5>
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="VerifyOTP()">
               <div class="otp-inputs">
-                <ng-otp-input
-                  [config]="{
+                <ng-otp-input [config]="{
                     length: 6,
                     allowNumbersOnly: false,
                     autoFocus: true,
@@ -34,9 +31,7 @@
                       borderColor: '#ccc'
                     },
                     inputClass: 'otp-uppercase'
-                  }"
-                  (onInputChange)="handleOtpChange($event)"
-                >
+                  }" (onInputChange)="handleOtpChange($event)">
                 </ng-otp-input>
               </div>
 
@@ -45,23 +40,13 @@
               </button>
 
               <div *ngIf="timer > 0">Resend OTP in {{ timer }}s</div>
-              <button
-                class="sign_btn"
-                *ngIf="timer === 0"
-                type="button"
-                (click)="resendOtp()"
-              >
+              <button class="sign_btn" *ngIf="timer === 0" type="button" (click)="resendOtp()">
                 Resend OTP
               </button>
               <button *ngIf="timer === 0" class="sign_btn" type="submit">
                 Verify OTP
               </button>
-              <button
-                class="sign_btn"
-                *ngIf="timer === 0"
-                type="button"
-                routerLink="/Login"
-              >
+              <button class="sign_btn" *ngIf="timer === 0" type="button" routerLink="/Login">
                 Sign In
               </button>
             </form>

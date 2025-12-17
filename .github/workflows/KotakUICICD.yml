@@ -1,0 +1,125 @@
+name: Kotak_UI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: [self-hosted, Windows]
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+        
+      - name: Cache Node_Modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: Windows-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            Windows-node-
+
+      - name: Install Dependencies
+        run: npm ci --force
+
+      - name: Build Angular App
+        # run: npx ng build --prod
+        run: npx ng build --configuration production --aot=true --optimization=true 
+        # For Server Base Href
+        # --base-href="/AvanseUI/"
+
+      - name: Zip Build Artifact
+        shell: powershell
+        run: |
+          $timestamp = Get-Date -Format "yyyyMMdd_HHmm"
+          $zipName = "Build_$timestamp.zip"
+          Compress-Archive -Path "dist/*" -DestinationPath $zipName -Force
+          Write-Host "Created: $zipName"
+
+      - name: Deploy to IIS with Rollback
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          
+          # *******************************Things To be chagne For Server*******************************
+          $sitePath = 'C:\inetpub\wwwroot\Kotak'
+          $appPool = 'KotakApplicationPool'
+          $backup = "$sitePath-backup-" + (Get-Date -Format 'yyyyMMdd_HHmm')
+
+          # Get latest artifact
+          $artifact = Get-ChildItem -Filter 'Build_*.zip' |
+                      Sort-Object LastWriteTime -Descending |
+                      Select-Object -First 1
+
+          if (-not $artifact) {
+            Write-Error 'Build artifact not found!'
+            exit 1
+          }
+
+          Write-Host "Artifact found: $($artifact.FullName)"
+
+          try {
+
+              # BACKUP
+              if (Test-Path $sitePath) {
+                  Write-Host "Creating backup at: $backup"
+                  Copy-Item -Path $sitePath -Destination $backup -Recurse -Force
+              } else {
+                  New-Item -Path $sitePath -ItemType Directory | Out-Null
+              }
+
+              # DEPLOYMENT
+              Write-Host "Stopping App Pool: $appPool"
+              Stop-WebAppPool -Name $appPool
+
+              Write-Host 'Clearing old files...'
+              Remove-Item "$sitePath\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+              Write-Host 'Extracting new deployment...'
+              Expand-Archive -Path $artifact.FullName -DestinationPath $sitePath -Force
+
+              Write-Host "Restarting App Pool: $appPool"
+              Start-WebAppPool -Name $appPool
+
+              Write-Host 'Deployment completed, running smoke test...'
+
+              # *******************************Things To be chagne For Server*******************************
+              # SMOKE TEST
+              $url = 'http://kotakuicicd/'
+
+              Start-Sleep -Seconds 5
+
+              $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 15
+
+              if ($response.StatusCode -ne 200) {
+                  throw "Smoke test failed (HTTP $($response.StatusCode))"
+              }
+
+              Write-Host 'Smoke test passed!'
+
+          } catch {
+          
+              Write-Host 'Deployment failed. Restoring backup...'
+              Stop-WebAppPool -Name $appPool -ErrorAction SilentlyContinue
+
+              if (Test-Path $backup) {
+                  Remove-Item "$sitePath\*" -Recurse -Force -ErrorAction SilentlyContinue
+                  Copy-Item -Path $backup -Destination $sitePath -Recurse -Force
+                  Write-Host 'Backup restored successfully.'
+              } else {
+                  Write-Error 'Backup folder missing — cannot restore!'
+              }
+
+              Start-WebAppPool -Name $appPool -ErrorAction SilentlyContinue
+
+              Write-Error 'Deployment aborted and rollback completed.'
+              exit 1
+          }
+

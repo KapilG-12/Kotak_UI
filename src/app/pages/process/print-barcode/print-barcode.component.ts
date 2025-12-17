@@ -63,46 +63,41 @@ export class PrintBarcodeComponent implements OnInit {
       batch_no: ['', Validators.required],
       User_Token: localStorage.getItem('User_Token'),
       CreatedBy: localStorage.getItem('UserID'),
-
     });
 
     this.GetPODDetails();
     this.PODAckForm.controls['courier_name'].setValue(0);
     this.UserID = localStorage.getItem('UserID');
   }
+
   downloadLC(_File: any) {
-
-    console.log(_File);
-    // if (_File.request_reason !="Loan Closure")
-    // {
-    //   return;
-    // } 
-
-    // if (_File.file_path ==null || _File.lc_filepath =="" || _File.lc_filepath.length ==0)
-    // {
-    //   this.showmessage("LC Attachment not available");
-    //   return;
-    // } 
-    //const fileExt = _File.lc_filepath.substring(_File.lc_filepath.lastIndexOf('.'), _File.lc_filepath.length);
-    
     const data = [_File.batch_no];
     const apiUrl = this._global.baseAPIUrl + 'BranchInward/GetExcelBarcodeFileUrl?&batch_no=' + _File.batch_no + '&user_Token=' + localStorage.getItem('User_Token');
-    this._onlineExamService.postData(data, apiUrl).subscribe(res => {
-    
-    this._onlineExamService.downloadExcelFile(res, _File.batch_no);  
-    });
+    this._onlineExamService.downloadDoc(apiUrl).subscribe((data) => {
+      // Create Blob for Excel file
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
 
+      // Create download link
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = _File.batch_no + '_' + 'Barcode.xlsx';
+      link.click();
+      // Clean up
+      window.URL.revokeObjectURL(link.href);
+    });
   }
+
   GetPODDetails() {
     const apiUrl = this._global.baseAPIUrl + 'BranchInward/PrintBarcode?UserID=' + localStorage.getItem('UserID') + '&user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.getAllData(apiUrl).subscribe((data: {}) => {
       this._IndexPendingList = data;
       this._FilteredList = data;
-      //console.log("IndexListPending",data);
       this.prepareTableData(this._FilteredList, this._IndexPendingList);
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
+
   formattedData: any = [];
   headerList: any;
   immutableFormattedData: any;
@@ -113,15 +108,6 @@ export class PrintBarcodeComponent implements OnInit {
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'batch_no', header: 'BATCHID', index: 2 },
       { field: 'pod_no', header: 'AWB STATUS', index: 3 },
-      // { field: 'new_pod_no', header: 'NEW POD NO', index: 3 },
-
-      // { field: 'courier_name', header: 'COURIER NAME', index: 3 },
-      // { field: 'status', header: 'STATUS', index: 4 },  
-      // { field: 'pod_dispatch_date', header: 'DISPATCH DATE', index: 5 },  
-      // { field: 'InwardBy', header: 'INWARD BY', index: 6 },
-      // { field: 'pod_ack_date', header: 'POD ACK DATE', index: 8 },  
-      // { field: 'pod_ack_by', header: 'POD ACK BY', index: 9 }, 
-      // { field: 'file_count', header: 'APAC COUNT', index: 9 }, 
     ];
 
     tableData.forEach((el, index) => {
@@ -129,31 +115,15 @@ export class PrintBarcodeComponent implements OnInit {
         'srNo': parseInt(index + 1),
         'batch_no': el.batch_no,
         'pod_no': el.status,
-        // 'courier_name': el.courier_name,       
-        //  'status': el.status,   
-        // "pod_dispatch_date": el.pod_dispatch_date, 
-        // 'CourierID': el.CourierID,  
-        // 'InwardBy': el.InwardBy,
-        // 'pod_ack_date': el.pod_ack_date,  
-        // 'pod_ack_by': el.pod_ack_by, 
-        // 'new_pod_no': el.new_pod_no,  
-        // 'file_count': el.file_count,   
-
-
       });
-
     });
     this.headerList = tableHeader;
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;
     this.loading = false;
-
-    // console.log(this.formattedData);
-
   }
-  searchTable($event) {
-    // console.log($event.target.value);
 
+  searchTable($event) {
     let val = $event.target.value;
     if (val == '') {
       this.formattedData = this.immutableFormattedData;
@@ -183,10 +153,6 @@ export class PrintBarcodeComponent implements OnInit {
   }
 
   Print(row: any) {
-
-    //console.log("Print",row);
-
-    // const fileExt = _File.filePath.substring(_File.filePath.lastIndexOf('.'), _File.filePath.length);
     const apiUrl = this._global.baseAPIUrl + 'BranchInward/DownloadFile?BatchNo=' + row.batch_no + '&user_Token=' + localStorage.getItem('User_Token');
     this._onlineExamService.downloadDoc(apiUrl).subscribe(res => {
       if (res) {
@@ -195,20 +161,12 @@ export class PrintBarcodeComponent implements OnInit {
         const blobUrl = URL.createObjectURL(pdf);
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
-        iframe.src = blobUrl; //this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl));
+        iframe.src = blobUrl;
         document.body.appendChild(iframe);
         iframe.contentWindow.print();
-        //   }
-
-
       }
     });
-
   }
-
-
-  //}
-
 
   onSubmit() {
     this.submitted = true;
@@ -217,13 +175,10 @@ export class PrintBarcodeComponent implements OnInit {
       return;
     }
 
-
     const that = this;
     const apiUrl = this._global.baseAPIUrl + 'BranchInward/PODAckdetailsEntry';
     this._onlineExamService.postData(this.PODAckForm.value, apiUrl)
-      // .pipe(first())
       .subscribe(data => {
-
         this.toastr.show(
           '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message"> ' + data + ' </span></div>',
           "",
@@ -238,16 +193,9 @@ export class PrintBarcodeComponent implements OnInit {
               "ngx-toastr alert alert-dismissible alert-success alert-notify"
           }
         );
-
-
-
-        // this.modalRef
         this.modalRef.hide();
         that.GetPODDetails();
-        //this.OnReset();      
       });
-    // }
-
   }
 
   paginate(e) {
@@ -256,11 +204,8 @@ export class PrintBarcodeComponent implements OnInit {
   }
 
   hidepopup() {
-    // this.modalService.hide;
     this.modalRef.hide();
-    //this.modalRef.hide
   }
-
 
   Editinward(template: TemplateRef<any>, row: any) {
     var that = this;
@@ -279,8 +224,6 @@ export class PrintBarcodeComponent implements OnInit {
 
     this.modalRef = this.modalService.show(template);
     this.GetBatchDetails();
-    //this.GetVerificationData(row.FileNo);
-
   }
   entriesChange($event) {
     this.entries = $event.target.value;
@@ -297,8 +240,6 @@ export class PrintBarcodeComponent implements OnInit {
   ngOnDestroy() {
     document.body.classList.remove('data-entry')
   }
-
-
 
   showmessage(data: any) {
     this.toastr.show(
@@ -344,14 +285,9 @@ export class PrintBarcodeComponent implements OnInit {
   }
 
 
-
-
-
   formattedFileData: any = [];
   headerListFile: any;
   immutableFormattedDataFile: any;
-  //loading: boolean = true;
-
   BindFileDetails(tableData, headerList) {
     let formattedFileData = [];
     let tableHeader: any = [
@@ -378,9 +314,6 @@ export class PrintBarcodeComponent implements OnInit {
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedFileData));
     this.formattedFileData = formattedFileData;
     this.loading = false;
-
-    // console.log(this.formattedData);
-
   }
 
 

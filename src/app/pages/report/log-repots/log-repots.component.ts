@@ -328,9 +328,14 @@ export class LogRepotsComponent implements OnInit {
   }
 
   onReportTypeChange() {
-    this.formattedData = [];
-    this.formattedData1 = [];
-    this.formattedData2 = [];
+    if(this.DumpReportForm.get('report_type').value == 1){
+      this.getRoleReport();
+    }
+    else{
+      this.formattedData = [];
+      this.formattedData1 = [];
+      this.formattedData2 = [];
+    }
   }
 
   getAllsearch() {
@@ -342,6 +347,16 @@ export class LogRepotsComponent implements OnInit {
         this.prepareTableData(this._StatusList, this._FilteredList);
         this.prepareTableData1(this._StatusList, this._FilteredList);
         this.prepareTableData2(this._StatusList, this._FilteredList);
+      });
+  }
+
+  getRoleReport() {
+    const apiUrl = this._global.baseAPIUrl + 'BranchInward/GetAllReport';
+    this._onlineExamService.postData(this.DumpReportForm.value, apiUrl)
+      .subscribe(data => {
+        this._StatusList = data;
+        this._FilteredList = data;
+        this.prepareTableData(this._StatusList, this._FilteredList);
       });
   }
 

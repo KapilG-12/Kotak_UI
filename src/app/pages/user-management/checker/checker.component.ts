@@ -317,8 +317,15 @@ export class CheckerComponent implements OnInit {
     for (let j = 0; j < this.selectedRowsUser.length; j++) {
       UserIDList += this.selectedRowsUser[j] + ',';
     }
+    
+    let ApprovalPurposeList = this.formattedData
+    .filter((row: any) => this.selectedRowsUser.includes(row.id)) 
+    .map((row: any) => row.ApprovalPurpose)
+    .join(",");
+
     this.AddUserForm.patchValue({
       _UserIDList: UserIDList,
+      ApprovalPurpose: ApprovalPurposeList
     });
     this.modalRef = this.modalService.show(template);
   }

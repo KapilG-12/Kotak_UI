@@ -1,52 +1,10 @@
-<!-- <div class="login">  
-
-   
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="login_form">
-                    <div class="white_bg">
-                        <h5>Sign In</h5>
-                        <form [formGroup]="loginForm" (keyup.enter)="onSubmit()">
-                            <div class="row pb-4">
-                              <div class="input-group input-group-icon">
-                                <input type="email" placeholder="Email Address" formControlName="username" />
-                                <div class="input-icon"><img src="assets/img/Login/email.svg"></div>
-                                <div class="errorMsg-feedback" *ngIf="f.username.touched && f.username.hasError('required')">Enter
-                                  User ID</div>
-                              </div>
-                              <div class="input-group input-group-icon">
-                                <input type="password" placeholder="Password" formControlName="password" />
-                                <div class="input-icon"><img src="assets/img/Login/lock.svg"></div>
-                                <div class="errorMsg-feedback" *ngIf="f.password.touched && f.password.hasError('required')">Enter
-                                  password</div>
-                              </div>
-                            </div>
-                            <button (click)="onSubmit()">Sign In</button>
-                            <button routerLink="/forgot-password" style="float:right">Forgot Password</button>
-                          </form>
-                    </div>
-                    <p class="pt-3">The power of memory</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="logo">
-      <p>Support : estoragesupport@crownims.com </p>
-        <img src="assets/img/Login/logo.png">
-    </div>
-</div> -->
-
-
-
 <div class="login">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12 col-lg-6 p-0">
         <div class="login_logo text-center">
           <div class="login_img">
-            <!-- <img src="assets/img/logo1.png">  -->
-            <!-- <p>The power of memory</p> -->
+            <img src="./assets/img/Crown_logo.png" alt="Crown Logo" />
           </div>
         </div>
       </div>
@@ -55,17 +13,18 @@
           <div class="login_field">
             <div class="login_heading d-flex justify-content-between pr-4 pl-4 pb-2">
               <h5>Sign in</h5>
-
             </div>
+
             <form [formGroup]="loginForm" (submit)="onSubmit()">
               <div class="row input_bg">
-                <div class="input-group input-group-icon">
+                <div *ngIf="!showPassword" class="input-group input-group-icon">
                   <input type="email" placeholder="Username" formControlName="username" maxlength="50" />
                   <div class="input-icon"><img src="assets/img/email.svg"></div>
                   <div class="errorMsg-feedback" *ngIf="f.username.touched && f.username.hasError('required')">Enter
                     User ID</div>
                 </div>
-                <div class="input-group input-group-icon">
+
+                <div *ngIf="showPassword" class="input-group input-group-icon">
                   <input type="password" placeholder="Password" formControlName="password"
                     [type]="fieldTextType ? 'text' : 'password'" />
                   <div class="input-icon"><i class="fa" [ngClass]="{
@@ -75,38 +34,30 @@
                   <div class="errorMsg-feedback" *ngIf="f.password.touched && f.password.hasError('required')">Enter
                     password</div>
                 </div>
-
               </div>
-              <!-- <button [disabled]="loginForm.invalid" (click)="onSubmit()">Sign In</button>
-                <button routerLink="/forgot-password" class="ml-3">Forgot Password</button> -->
-              <a style="color: #ffcc00;;" routerLink="/forgot-password" class=" ml-3">Forgot password?</a>
-              <button type="submit" [disabled]="loginForm.invalid" class="sign_btn">Sign In</button>
+
+              <div class="button-row">
+                <a *ngIf="showPassword" style="color: #ffcc00;;" routerLink="/forgot-password" class=" ml-3">Forgot
+                  password ?</a>
+                <button *ngIf="!showPassword" type="button" (click)="proceedToPassword()" class="sign_btn">Next</button>
+                <button *ngIf="showPassword" type="submit" [disabled]="loginForm.invalid" class="sign_btn">Sign
+                  In</button>
+                <button *ngIf="showPassword" type="button" (click)="backToUserId()" style="margin-right: 1rem;"
+                  class="back_btn">Back To UserID</button>
+              </div>
+
+              <div *ngIf="!showPassword" class="sso-section">
+                <div class="divider"><span>OR</span></div>
+                <button class="microsoft-auth-btn" (click)="login()" type="button">
+                  <div class="logo-section">
+                    <img src="assets/img/microsoft-logo.svg" alt="Microsoft logo" />
+                  </div>
+                  <span class="btn-text">Sign in with Microsoft</span>
+                </button>
+              </div>
             </form>
           </div>
         </div>
-        <!-- <div class="about">
-          <img src="assets/about.png">
-          <div class="row pt-3">
-            <div class="col-md-5 pb-3">
-              <p>A complete range of services to help you and your business</p>
-              <a href="https://www.crownworldwide.com/en-us" target="_blank">crownworldwide.com</a>
-            </div>
-            <div class="col-md-4">
-              <ul style="border-left: 2px solid #ddd;">
-                <li><a href="https://www.crownworldmobility.com/" target="_blank">World Mobility</a></li>
-                <li><a href="http://www.crownrelo.com/"  target="_blank">Relocations</a></li>
-                <li><a href="http://www.crownrms.com/" target="_blank">Records Management</a></li>
-              </ul>
-            </div>
-            <div class="col-md-3">
-              <ul>
-                <li><a href="https://www.crownfineart.com" target="_blank">Fine Art</a></li>
-                <li><a href="https://www.crown-logistics.com" target="_blank">Logistics</a></li>
-                <li><a href="https://crownworkspace.com" target="_blank">Workspace</a></li>
-              </ul>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
     <div *ngIf="showotpTemplate">
@@ -120,20 +71,6 @@
         </div>
         <div class="card-body">
           <app-otp></app-otp>
-          <!-- <form (ngSubmit)="submitOtp()">
-          <div class="otp-inputs">
-            <input maxlength="1" type="text" [(ngModel)]="otp[0]" name="otp1" (input)="focusNext($event, 0)" />
-            <input maxlength="1" type="text" [(ngModel)]="otp[1]" name="otp2" (input)="focusNext($event, 1)" />
-            <input maxlength="1" type="text" [(ngModel)]="otp[2]" name="otp3" (input)="focusNext($event, 2)" />
-            <input maxlength="1" type="text" [(ngModel)]="otp[3]" name="otp4" (input)="focusNext($event, 3)" />
-          </div>
-
-          <button class="sign_btn" type="submit">Verify OTP</button>
-
-          <div *ngIf="timer > 0">Resend OTP in {{ timer }}s</div>
-          <button class="sign_btn" *ngIf="timer === 0" type="button" (click)="resendOtp()">Resend OTP</button>
-          
-        </form> -->
         </div>
       </div>
     </ng-template>

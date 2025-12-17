@@ -190,10 +190,6 @@ immutableFormattedData: any;
 loading: boolean = true;
 prepareTableData(tableData, headerList) {
   let formattedData = [];
- // alert(this.type);
-
-// if (this.type=="Checker" )
-//{
   let tableHeader: any = [
     { field: 'srNo', header: "SR NO", index: 1 },
     { field: 'BatchNo', header: 'BATCH ID', index: 2 },   
@@ -201,19 +197,8 @@ prepareTableData(tableData, headerList) {
     { field: 'appl', header: 'APPL', index: 4 },
     { field: 'document_type', header: 'DOCUMENT TYPE', index: 4 },
     { field: 'File_No', header: 'FILE NO', index: 4 },
-    { field: 'status', header: 'STATUS', index: 4 },
+    { field: 'Status', header: 'STATUS', index: 4 },
     { field: 'file_status', header: 'FILE STATUS', index: 4 },
- 
- //   { field: 'document_type', headerList: 'DOCUMENT TYPE', index: 5},
-    // { field: 'product', header: 'PRODUCT', index: 6 },
-    // { field: 'location', header: 'LOCATION', index: 7 },
-    // { field: 'sub_lcoation', header: 'SUB LOACTION', index: 8 },
-    // { field: 'maln_party_id', header: 'MAIN PARTY ID', index: 9 },
-    // { field: 'party_name', header: 'PARTY NAME', index: 10 },
-    // { field: 'agr_value', header: 'AGR VALUE', index: 11},
-    // { field: 'pdc_type', header: 'PDC TYPE', index: 12}, 
-    // { field: 'apac_effective_date', header: 'APAC EFFECTIVE DATE', index: 13}, 
-      
   ];
  console.log("tableData",tableData);
   tableData.forEach((el, index) => {
@@ -224,28 +209,14 @@ prepareTableData(tableData, headerList) {
       'apac': el.apac,
       'appl': el.appl,
       'File_No': el.File_No,
-      'status': el.status,
+      'Status': el.Status,
       'file_status': el.file_status,
-      // 'product': el.product,
-      // 'location': el.location,
-      // 'sub_lcoation': el.sub_lcoation,
-      // 'maln_party_id': el.maln_party_id,
-      // 'party_name': el.party_name,
-      // 'agr_value': el.agr_value,
-      // 'pdc_type': el.pdc_type,
-      // 'apac_effective_date': el.apac_effective_date
     });
-
-
- 
   });
   this.headerList = tableHeader;
-//}
-
   this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
   this.formattedData = formattedData;
   this.loading = false;
-
 }
 
 

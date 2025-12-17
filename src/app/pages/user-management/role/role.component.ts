@@ -116,6 +116,8 @@ export class RoleComponent implements OnInit {
       { field: 'remarks', header: 'REMARKS', index: 2 },
       { field: 'CreatedBy', header: 'CREATED BY', index: 2 },
       { field: 'CreatedAt', header: 'CREATED AT', index: 2 },
+      { field: 'UpdatedBy', header: 'UPDATED BY', index: 2 },
+      { field: 'UpdatedDate', header: 'UPDATED AT', index: 2 },
       { field: 'CheckerRoleReviewBy', header: 'REVIEWED BY', index: 2 },
       { field: 'CheckerRoleReviewDate', header: 'REVIEWED DATE', index: 2 },
     ];
@@ -128,6 +130,8 @@ export class RoleComponent implements OnInit {
         'remarks': el.remarks,
         'CreatedBy': el.CreatedBy,
         'CreatedAt': el.CreatedAt,
+        'UpdatedBy': el.UpdatedBy,
+        'UpdatedDate': el.UpdatedDate,
         'RoleStatus': el.RoleStatus,
         'CheckerRoleReviewBy': el.CheckerRoleReviewBy,
         'CheckerRoleReviewDate': el.CheckerRoleReviewDate,

@@ -29,7 +29,7 @@ export class BranchMappingComponent implements OnInit {
   activeRow: any;
   _FilteredList: [];
   _BranchList: any;
-  _BranchID: any =0;
+  _BranchID: any = 0;
   modalRef: BsModalRef;
   BranchMappingForm: FormGroup;
   AddBranchMappingForm: FormGroup;
@@ -64,12 +64,12 @@ export class BranchMappingComponent implements OnInit {
     private _global: Globalconstants,
     public router: Router,
     private formBuilder: FormBuilder
-  ) {}
+  ) { }
   ngOnInit() {
     this.BranchMappingForm = this.formBuilder.group({
       BranchName: ["", Validators.required],
-      User_Token: localStorage.getItem('User_Token') ,
-      CreatedBy: localStorage.getItem('UserID') ,
+      User_Token: localStorage.getItem('User_Token'),
+      CreatedBy: localStorage.getItem('UserID'),
       id: [0],
       UserIDS: ['', Validators.required],
       UserID: [0, Validators.required],
@@ -77,12 +77,12 @@ export class BranchMappingComponent implements OnInit {
     this.AddBranchMappingForm = this.formBuilder.group({
       BranchName: [""],
       SelectItem: [""],
-      User_Token: localStorage.getItem('User_Token') ,
-      CreatedBy: localStorage.getItem('UserID') ,
+      User_Token: localStorage.getItem('User_Token'),
+      CreatedBy: localStorage.getItem('UserID'),
       id: [0],
       UserID: ["", Validators.required],
       checkedList: [""],
-          
+
       checklist: this.formBuilder.array([]),
       selectAll: [false],
     });
@@ -90,15 +90,15 @@ export class BranchMappingComponent implements OnInit {
     // this.geBranchListchecked();
     this.geUserList();
     this.geBranchList(0);
-  
+
     //this.getBranch(0);
   }
   OnReset() {
     this.Reset = true;
-    this.BranchMappingForm.reset({ User_Token:  localStorage.getItem('User_Token') , UserID: 0 , UserIDS:0});
+    this.BranchMappingForm.reset({ User_Token: localStorage.getItem('User_Token'), UserID: 0, UserIDS: 0 });
     this.checklistArray.clear();
 
-    this.modalRef.hide();  
+    this.modalRef.hide();
     //this.geBranchList();
   }
 
@@ -111,11 +111,11 @@ export class BranchMappingComponent implements OnInit {
       "&user_Token=" +
       this.BranchMappingForm.get("User_Token").value;
     this._onlineExamService.getAllData(apiUrl).subscribe((data: any) => {
-//console.log(data);
+      //console.log(data);
 
       this._BranchList = data;
       this._FilteredList = data;
-      this.prepareTableData( this._BranchList,  this._FilteredList);
+      this.prepareTableData(this._BranchList, this._FilteredList);
       //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
@@ -126,54 +126,37 @@ export class BranchMappingComponent implements OnInit {
   loading: boolean = true;
   prepareTableData(tableData, headerList) {
     let formattedData = [];
-   // alert(this.type);
-  
-   //console.log("LL",tableData);
-  // if (this.type=="Checker" )
-  //{
+    // alert(this.type);
+
+    //console.log("LL",tableData);
+    // if (this.type=="Checker" )
+    //{
     let tableHeader: any = [
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'UserName', header: 'USER NAME', index: 3 },
       { field: 'SFCode', header: 'SF CODE', index: 2 },
       { field: 'SFName', header: 'SF Name', index: 2 },
-  
-      // { field: 'Ref3', header: 'Ref3', index: 3 },
-      // { field: 'Ref4', header: 'Ref4', index: 3 },
-      // { field: 'Ref5', header: 'Ref5', index: 3 },
-      // { field: 'Ref6', header: 'Ref6', index: 3 },
-  //    { field: 'SubfolderName', header: 'SUB FOLDER', index: 3 }
-      //,{ field: 'DownloadDate', header: 'DownloadDate', index: 3 },
-     // { field: 'SendDate', header: 'SendDate', index: 7 }, { field: 'IsSend', header: 'IsSend', index: 8 },
-  
     ];
-   
+
     tableData.forEach((el, index) => {
       formattedData.push({
         'srNo': parseInt(index + 1),
         'UserName': el.UserName,
-         'SFCode': el.SFCode,
-         'id': el.id,
-         'UserID': el.UserID,
+        'SFCode': el.SFCode,
+        'id': el.id,
+        'UserID': el.UserID,
         'SFName': el.SFName,
-        // 'Ref6': el.Ref6
-      
       });
-   
     });
     this.headerList = tableHeader;
-  //}
-  
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;
     this.loading = false;
-  
   }
-  
+
   searchTable($event) {
-    // console.log($event.target.value);
-  
     let val = $event.target.value;
-    if(val == '') {
+    if (val == '') {
       this.formattedData = this.immutableFormattedData;
     } else {
       let filteredArr = [];
@@ -181,7 +164,7 @@ export class BranchMappingComponent implements OnInit {
       this.formattedData = this.immutableFormattedData.filter(function (d) {
         for (var key in d) {
           strArr.forEach(el => {
-            if (d[key] && el!== '' && (d[key]+ '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
+            if (d[key] && el !== '' && (d[key] + '').toLowerCase().indexOf(el.toLowerCase()) !== -1) {
               if (filteredArr.filter(el => el.srNo === d.srNo).length === 0) {
                 filteredArr.push(d);
               }
@@ -193,7 +176,6 @@ export class BranchMappingComponent implements OnInit {
     }
   }
 
-
   geUserList() {
     const apiUrl =
       this._global.baseAPIUrl +
@@ -203,12 +185,9 @@ export class BranchMappingComponent implements OnInit {
       this._UserL = data;
       this.BranchMappingForm.controls["UserID"].setValue(0);
       this.BranchMappingForm.controls["UserIDS"].setValue(0);
-      
-      // this.BranchMappingForm.controls['UserIDM'].setValue(0);
-      //this.itemRows = Array.from(Array(Math.ceil(this.adresseList.length/2)).keys())
     });
   }
-  
+
   getBranch(userid: number) {
     const apiUrl =
       this._global.baseAPIUrl +
@@ -216,7 +195,6 @@ export class BranchMappingComponent implements OnInit {
       userid +
       "&user_Token=" +
       this.BranchMappingForm.get("User_Token").value;;
-    //const apiUrl=this._global.baseAPIUrl+'BranchMapping/GetList?user_Token=123123'
     this._onlineExamService.getProducts(apiUrl).subscribe((res) => {
       this.checkbox_list = [];
       this.checkbox_list = res;
@@ -226,28 +204,16 @@ export class BranchMappingComponent implements OnInit {
           id: [item.id],
           BranchName: [item.BranchName],
           ischecked: [item.ischecked]
-          })
-          this.checklistArray.push(fg)
+        })
+        this.checklistArray.push(fg)
       });
-    //  console.log('Branch Mapping -> ',res);
-      
-      // this.itemRows = Array.from(Array(Math.ceil(this.checkbox_list.length/2)).keys())
-
-      //this.productsArray = res;
-      //  this.checkbox_list= res;
-      //this.checklist =res;
     });
   }
 
   master_change() {
-    //console.log('Checked All');
-    
-    // this.checklistArray.controls.forEach(control => {
-    //   control.patchValue({ischecked: true});
-    // });
-    let _bool =this.AddBranchMappingForm.controls['selectAll'].value;
+    let _bool = this.AddBranchMappingForm.controls['selectAll'].value;
     this.checklistArray.controls.forEach(role => {
-      role.patchValue({ischecked: _bool})
+      role.patchValue({ ischecked: _bool })
     });
   }
   deleteBranch(car: any) {
@@ -281,7 +247,7 @@ export class BranchMappingComponent implements OnInit {
                 confirmButtonClass: "btn btn-primary",
               });
               this.geBranchList(this.BranchMappingForm.get("UserIDS").value);
-              
+
             });
         }
       });
@@ -302,7 +268,7 @@ export class BranchMappingComponent implements OnInit {
     });
   }
   addBranchMapping(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);  
+    this.modalRef = this.modalService.show(template);
     this.getBranchForUser(0);
     this.BranchMappingForm.controls["UserID"].setValue(0);
   }
@@ -313,25 +279,20 @@ export class BranchMappingComponent implements OnInit {
       alert("Please Fill the Fields");
       return;
     }
-    this.__checkedList ="";
-   // console.log('Checklist Array=> ',this.checklistArray.value);
-   var _chkstatus =false;
+    this.__checkedList = "";
+    var _chkstatus = false;
     for (let value of this.checklistArray.value) {
-      if (value.ischecked)
-      {
-        this.__checkedList +=value.id + "#";
+      if (value.ischecked) {
+        this.__checkedList += value.id + "#";
         _chkstatus = true;
       }
     }
-   // console.log("_chkstatus" , _chkstatus);
 
-    if (_chkstatus == false )
-    {
-      console.log("_chkstatus" , _chkstatus);    
+    if (_chkstatus == false) {
+      console.log("_chkstatus", _chkstatus);
       alert("Please select at lease one branch");
       return;
     }
-//console.log("UserID", this.AddBranchMappingForm.get('UserID').value);
     this.AddBranchMappingForm.patchValue({
       checkedList: this.__checkedList,
       CreatedBy: 1,
@@ -344,13 +305,9 @@ export class BranchMappingComponent implements OnInit {
       checkedList: this.AddBranchMappingForm.get('checkedList').value,
       CreatedBy: this.AddBranchMappingForm.get('CreatedBy').value
     }
-  //  console.log('Submitting Form',objectToSend);
-    
     const apiUrl = this._global.baseAPIUrl + "BranchMapping/Create";
     this._onlineExamService
       .postData(this.AddBranchMappingForm.value, apiUrl)
-      // .pipe(first())
-
       .subscribe((data) => {
         this.toastr.show(
           '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Success!</span> <span data-notify="message">Branch Mapping Done</span></div>',
@@ -375,29 +332,22 @@ export class BranchMappingComponent implements OnInit {
   }
 
   list_change() {
-    //alert("Hi");
-
     let checked_count = 0;
-    //Get total checked items
     for (let value of Object.values(this.checkbox_list)) {
       if (value.ischecked) checked_count++;
     }
 
     if (checked_count > 0 && checked_count < this.checkbox_list.length) {
-      // If some checkboxes are checked but not all; then set Indeterminate state of the master to true.
       this.master_indeterminate = true;
     } else if (checked_count == this.checkbox_list.length) {
-      //If checked count is equal to total items; then check the master checkbox and also set Indeterminate state to false.
       this.master_indeterminate = false;
       this.master_checked = true;
     } else {
-      //If none of the checkboxes in the list is checked then uncheck master also set Indeterminate to false.
       this.master_indeterminate = false;
       this.master_checked = false;
     }
   }
   geBranchListByUserID(userid: number) {
-    //     alert(this.BranchMappingForm.value.UserID);
     this.geBranchList(userid);
   }
   getBranchForUser(userid: number) {
@@ -405,13 +355,10 @@ export class BranchMappingComponent implements OnInit {
 
 
   }
-  editBranchMapping(template: TemplateRef<any>, row:any) {
-
-    console.log("row",row);
-    
+  editBranchMapping(template: TemplateRef<any>, row: any) {
     this.addBranchMapping(template)
     this.checklistArray.clear()
-    this.AddBranchMappingForm.patchValue({UserID: row.userid})
+    this.AddBranchMappingForm.patchValue({ UserID: row.userid })
     this.getBranch(row.userid)
   }
 
@@ -449,6 +396,4 @@ export class BranchMappingComponent implements OnInit {
     this.first = e.first;
     this.rows = e.rows;
   }
-
-
 }

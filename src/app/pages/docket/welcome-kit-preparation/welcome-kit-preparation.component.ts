@@ -113,6 +113,7 @@ export class WelcomeKitPreparationComponent implements OnInit {
     // this.pymentForm.controls['filebarcode'].setValue('');
     // this.pymentForm.controls['remark'].setValue('');
   }
+  
   save() {
     
     this.submitted = true;
@@ -123,7 +124,7 @@ export class WelcomeKitPreparationComponent implements OnInit {
     const apiUrl = this._global.baseAPIUrl + "BranchInward/AddEditWelcomeKitPreparation";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
-        if (data == 'Record save succesfully' || data=='Record updated succesfully') {
+        if (data == 'Record save successfully' || data=='Record updated successfully') {
           this.ShowMessage(data);
         }
         else {

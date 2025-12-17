@@ -1,29 +1,27 @@
-<div >
+<div>
   <div class=" header bg-danger pb-6">
     <div class=" container-fluid">
       <div class=" header-body">
         <div class=" row align-items-center py-4">
           <div class=" col-lg-6 col-7">
             <h6 class=" h2 text-white d-inline-block mb-0">File Inward</h6>
-            <nav
-            aria-label="breadcrumb"
-            class=" d-none d-md-inline-block ml-md-4">
-            <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
-              <li class=" breadcrumb-item">
-                <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/quick-search"> </i> </a>
-              </li>
+            <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+              <ol class=" breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> <i class=" fas fa-home" routerLink="/search/quick-search"> </i> </a>
+                </li>
 
-              <li class=" breadcrumb-item">
-                <a href="javascript:void(0)"> Process </a>
-              </li>
+                <li class=" breadcrumb-item">
+                  <a href="javascript:void(0)"> Process </a>
+                </li>
 
-              <li aria-current="page" class=" breadcrumb-item active">
-                File Ack
-              </li>
-            </ol>
-          </nav>
+                <li aria-current="page" class=" breadcrumb-item active">
+                  File Ack
+                </li>
+              </ol>
+            </nav>
           </div>
-  
+
           <!-- <div class=" col-lg-6 col-5 text-right">
             <a class=" btn btn-sm btn-neutral" (click)="addUser(userFormPopup)"> Create New User</a>
           </div> -->
@@ -31,164 +29,145 @@
       </div>
     </div>
   </div>
- 
-          <div class=" container-fluid mt--6">
-            <div class=" row">
-              <div class=" col">
-                <div class=" card"> 
-                  <div class="retrieval_add_form">
-                    
-                    <form  class="needs-validation p-4" [formGroup]="AddFileInwardForm">
-                      <div class="form-row">
-                        <!-- <div class="col-md-3 mb-3">
+
+  <div class=" container-fluid mt--6">
+    <div class=" row">
+      <div class=" col">
+        <div class=" card">
+          <div class="retrieval_add_form">
+
+            <form class="needs-validation p-4" [formGroup]="AddFileInwardForm">
+              <div class="form-row">
+                <!-- <div class="col-md-3 mb-3">
                           <label class="form-control-label" for="BatchID">Batch ID</label>
                           <input class="form-control" name="BatchID" formControlName="BatchID" type="text"/>
                         </div> -->
-                        <div class="col-md-3 mb-3">
-                          <label class="form-control-label" for="BatchID">Batch ID</label>                     
-                          <div class="input-group input-group-merge serchInput">
-                            <input  style="border-color: green;" type="text" readonly  class="form-control" name="BatchNo" formControlName="BatchNo" (change)="GetBatchDetails()"  />                      
-                            
-                          </div>
-                        </div>
-                      
-                       <!-- <div class=" col-md-3 mb-3">
-                        <label class=" form-control-label" for="document_type">Select Appl </label>
-                        <select class=" form-control"  style="border-color: green;" type="text" formControlName="appl" data-toggle="select" (change)="OnreadonlyAppc()" >
-                          <option value=0>Select Appl</option>
-                          <option value="CF">CF</option>
-                          <option value="CLF">CLF</option>
-                            <option value="TWF">TWF</option>
-                            <option value="KLAP">KLAP</option>
-                        </select>
-                      </div> -->
+                <div class="col-md-3 mb-3">
+                  <label class="form-control-label" for="BatchID">Batch ID</label>
+                  <div class="input-group input-group-merge serchInput">
+                    <input style="border-color: green;" type="text" readonly class="form-control" name="BatchNo"
+                      formControlName="BatchNo" (change)="GetBatchDetails()" />
 
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="appl">Apac</label>
-                          <input   name="appl" style="border-color: green;" type="text"   (change)="getAppackDetails()"  formControlName="apac" type="text" class="form-control"/>
-                     
-                        </div>
-
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="document_type">File Barcode</label>
-                          <input readonly  name="File_No"  style="border-color: green;" formControlName="File_No" type="text" class="form-control"/>
-                     
-                        </div>
-
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="appl">Appl</label>
-                          <input readonly name="appl"  type="text"  formControlName="appl" type="text" class="form-control"/>
-                     
-                        </div>
-
-
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="document_type">Document Type</label>
-                          <input readonly name="document_type" formControlName="document_type" type="text" class="form-control"/>
-                     
-                        </div>
-
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="product">Product</label>
-                          <input readonly name="product" formControlName="product" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="location">Location</label>
-                          <input readonly name="location" formControlName="location" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="sub_lcoation">Sub Location</label>
-                          <input readonly name="sub_lcoation"  formControlName="sub_lcoation" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="maln_party_id">Main Party Id</label>
-                          <input readonly name="maln_party_id"  formControlName="maln_party_id"  type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="party_name">Party Name</label>
-                          <input readonly name="party_name"   formControlName="party_name" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="agr_value">Agr Value</label>
-                          <input readonly name="agr_value" id="agr_value" formControlName="agr_value" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="pdc_type">Pdc Type</label>
-                          <input readonly name="pdc_type"  formControlName="pdc_type" type="text" class="form-control"/>
-                     
-                        </div>
-                        <div class=" col-md-3 mb-3">
-                          <label class=" form-control-label" for="apac_effective_date">Appl Effective Date</label>
-                          <input readonly name="apac_effective_date"  formControlName="apac_effective_date" type="text" class="form-control"/>
-                     
-                        </div>
-
-                        
-                      </div>
-          
-                     <div class="float-right pb-3">
-                    
-                      <button  class="btn btn-primary" type="submit" (click)="onSubmit()">Received</button>
-                      <button  class="btn btn-primary" style="background-color: #f3c110;border-color: #f3c110;"  (click)="OnReset()">Reset</button>
-                      <button  class="btn btn-danger"  (click)="onBack()">Back</button>
-                      <button type="button" class="btn btn-warning" (click)="NotReceived()">Not Received</button>
-                     </div>
-                     
-                    </form>
                   </div>
-
-                  <div class="dataTables_wrapper checklist-table w-100">
-                    <!--             
-                                <div class="col-md-1">    
-                                  <button type="button" class="btn btn-primary" (click)="downloadFile()" style="float: right;text-align: right;    padding: 5px 15px;">Download
-                                  
-                                  </button>
-                                                  
-                                </div> -->
-                    
-                                <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first" (onPage)="paginate($event)" [loading]="loading" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
-                                
-                                  <ng-template pTemplate="caption">
-                                      <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
-                                      <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)" class="global-search">
-                               
-                                    </ng-template>
-                                  <ng-template pTemplate="header">
-                                      <tr>
-                                         
-                                          <th *ngFor="let col of headerList; let i = index;"  [ngStyle]="i==0 && {'width': '5%'}">
-                                              {{col.header}}
-                                              <!-- <p-sortIcon *ngIf="i==10" [field]="col.field"></p-sortIcon> -->
-                                          </th>
-                                          <!-- <th style="width: 10%;">
-                                            ACTION
-                                          </th> -->
-                                      </tr>
-                                  </ng-template>
-                                  <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
-                                      <tr>
-                                         
-                                          <td *ngFor="let col of headerList">
-                                            {{car[col.field]}}
-                                          </td>
-                                            <!-- <td>
-                                            
-                                              <button type="button" style="padding:0 0 5px 1px" class="btn btn-icon btn-icon-only" (click)="DeleteFile(car)" >
-                                                <span class="btn-inner--icon"><img src="assets/img/icons/delete.svg"></span>
-                                              </button>
-                                            </td>  -->
-                                      </tr>
-                                  </ng-template>
-                              </p-table> 
-                              </div>
                 </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="appl">Apac</label>
+                  <input name="appl" style="border-color: green;" type="text" (change)="getAppackDetails()"
+                    formControlName="apac" type="text" class="form-control" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="document_type">File Barcode</label>
+                  <input readonly name="File_No" style="border-color: green;" formControlName="File_No" type="text"
+                    class="form-control" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="appl">Appl</label>
+                  <input readonly name="appl" type="text" formControlName="appl" type="text" class="form-control" />
+
+                </div>
+
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="document_type">Document Type</label>
+                  <input readonly name="document_type" formControlName="document_type" type="text"
+                    class="form-control" />
+
+                </div>
+
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="product">Product</label>
+                  <input readonly name="product" formControlName="product" type="text" class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="location">Location</label>
+                  <input readonly name="location" formControlName="location" type="text" class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="sub_lcoation">Sub Location</label>
+                  <input readonly name="sub_lcoation" formControlName="sub_lcoation" type="text" class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="maln_party_id">Main Party Id</label>
+                  <input readonly name="maln_party_id" formControlName="maln_party_id" type="text"
+                    class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="party_name">Party Name</label>
+                  <input readonly name="party_name" formControlName="party_name" type="text" class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="agr_value">Agr Value</label>
+                  <input readonly name="agr_value" id="agr_value" formControlName="agr_value" type="text"
+                    class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="pdc_type">Pdc Type</label>
+                  <input readonly name="pdc_type" formControlName="pdc_type" type="text" class="form-control" />
+
+                </div>
+                <div class=" col-md-3 mb-3">
+                  <label class=" form-control-label" for="apac_effective_date">Appl Effective Date</label>
+                  <input readonly name="apac_effective_date" formControlName="apac_effective_date" type="text"
+                    class="form-control" />
+
+                </div>
+
+
               </div>
-            </div>
+
+              <div class="float-right pb-3">
+
+                <button class="btn btn-primary" type="submit" (click)="onSubmit()">Received</button>
+                <button class="btn btn-primary" style="background-color: #f3c110;border-color: #f3c110;"
+                  (click)="OnReset()">Reset</button>
+                <button class="btn btn-danger" (click)="onBack()">Back</button>
+                <button type="button" class="btn btn-warning" (click)="NotReceived()">Not Received</button>
+              </div>
+
+            </form>
           </div>
+
+          <div class="dataTables_wrapper checklist-table w-100">
+            <p-table [paginator]="true" [rows]="10" [value]="formattedData" [autoLayout]="true"
+              [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [(first)]="first"
+              (onPage)="paginate($event)" [loading]="loading"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+              <ng-template pTemplate="caption">
+                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" pInputText size="50" placeholder="Search records" (input)="searchTable($event)"
+                  class="global-search">
+
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+
+                  <th *ngFor="let col of headerList; let i = index;" [ngStyle]="i==0 && {'width': '5%'}">
+                    {{col.header}}
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-car let-rowIndex="rowIndex">
+                <tr>
+
+                  <td *ngFor="let col of headerList">
+                    {{car[col.field]}}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>

@@ -61,6 +61,7 @@ export class AddcheckerRolesComponent implements OnInit {
       roleName: ['', Validators.required],
       Status: [""],
       id: [""],
+      RoleApprovalPurpose: [""],
       remarks: ['', Validators.required],
       approveremarks: new FormControl('', [Validators.required]),
       rejectremarks: new FormControl('', [Validators.required]),
@@ -84,6 +85,7 @@ export class AddcheckerRolesComponent implements OnInit {
       this.getRightList(Number(_RoleID));
       this.AddRoleForm.controls['roleName'].setValue(localStorage.getItem('_RoleName'));
       this.AddRoleForm.controls['remarks'].setValue(localStorage.getItem('_RoleRemark'));
+      this.AddRoleForm.controls['RoleApprovalPurpose'].setValue(localStorage.getItem('_RoleApprovalPurpose'));
       this.Role = "Edit Role";
       this.editrole = true;
     }
@@ -157,7 +159,8 @@ export class AddcheckerRolesComponent implements OnInit {
       Status: type,
       id: localStorage.getItem('_RoleID'),
       User_Token: localStorage.getItem('User_Token'),
-      CreatedBy: localStorage.getItem('UserID')
+      CreatedBy: localStorage.getItem('UserID'),
+      RoleApprovalPurpose: localStorage.getItem('_RoleApprovalPurpose')
     });
 
     const apiUrl = this._global.baseAPIUrl + "Role/CheckerRoleApproval";
@@ -288,6 +291,7 @@ export class AddcheckerRolesComponent implements OnInit {
     localStorage.removeItem('_RoleID');
     localStorage.removeItem('_RoleName');
     localStorage.removeItem('_RoleRemark');
+    localStorage.removeItem('_RoleApprovalPurpose');
     this.router.navigate(['/usermanagement/checker-roles']);
   }
 

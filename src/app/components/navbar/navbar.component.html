@@ -75,10 +75,9 @@
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" *dropdownMenu>
-            <!-- <a class="dropdown-item" routerLink="/usermanagement/change-password">
+            <a class="dropdown-item" [hidden]="!ChaangePassword" routerLink="/usermanagement/change-password">
               <i class="ni ni-key-25"></i> <span>Change Password</span>
-            </a> -->
-            <!-- <div class="dropdown-divider"></div> -->
+            </a>
             <a href="javascript:void()" class="dropdown-item" (click)="Logout()">
               <i class="ni ni-user-run"></i> <span>Logout</span>
             </a>

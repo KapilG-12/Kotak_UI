@@ -71,7 +71,7 @@
                 </td>
                 <td>
                   <p [ngClass]="{
-                    'WFA': car['RoleStatus'] == 'Waiting For Approval' || car['RoleStatus'] == 'Re-considered',
+                    'WFA': car['RoleStatus'] == 'Waiting For Approval' || car['RoleStatus'] == 'Re-considered' || car['RoleStatus'] == 'Modification Rejected',
                     'Approved': car['RoleStatus'] == 'Approved',
                     'Rejected': car['RoleStatus'] == 'Rejected'
                     }">

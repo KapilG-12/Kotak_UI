@@ -184,7 +184,7 @@ export class AddRoleComponent implements OnInit {
       _PageIDAndChk: this._PageIDAndChk,
       pageRights: __pageRights
     });
-
+    
     const apiUrl = this._global.baseAPIUrl + 'Role/Create';
     const rights = this.AddRoleForm.value._PageRight;
     this._onlineExamService.postData(this.AddRoleForm.value, apiUrl)

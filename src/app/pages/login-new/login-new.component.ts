@@ -20,18 +20,21 @@ import { CommonService } from "src/app/Services/common.service";
 export class LoginNewComponent implements OnInit {
 
   loginForm: FormGroup;
+  loginFormSSO: FormGroup;
   submitted = false;
+  showPassword = false;
+  sessionId: string = '';
   _LogData: any;
   fieldTextType: boolean;
   modalRef: BsModalRef;
   otp: string[] = ['', '', '', ''];
   timer: number = 60;
   interval: any;
+
   public captchaIsLoaded = false;
   public captchaSuccess = false;
   public captchaIsExpired = false;
   public captchaResponse?: string;
-
   public theme: 'light' | 'dark' = 'light';
   public size: 'compact' | 'normal' = 'normal';
   public lang = 'en';
@@ -61,28 +64,74 @@ export class LoginNewComponent implements OnInit {
       password: ['', Validators.required],
     });
 
+    this.loginFormSSO = this.formBuilder.group({
+      Email: [''],
+      nameId: [''],
+      sessionId: ['']
+    });
+
+    this.route.queryParams.subscribe(params => {
+      this.sessionId = params['sessionId'] || '';
+      if (this.sessionId) {
+        this.onSubmitSSOLogin(this.sessionId);
+      }
+    });
+
     localStorage.clear();
   }
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
   }
+
   closeTemplate() {
-    
     this.showotpTemplate = false;
   }
+
   onOtp(template: TemplateRef<any>) {
     this.startTimer();
     this.modalRef = this.modalService.show(template, this.config);
   }
+
   submitOtp() {
     const otpValue = this.otp.join('');
     console.log('Entered OTP:', otpValue);
-    // Call API to verify OTP
   }
+
+  proceedToPassword() {
+    if (this.loginForm.get("username").value == "" || this.loginForm.get("username").value == null) {
+      this.toastr.show(
+        '<div class="alert-text"</div> <span class="alert-title" data-notify="title"></span> <span data-notify="message"> Please enter User ID </span></div>',
+        "",
+        {
+          timeOut: 3000,
+          closeButton: true,
+          enableHtml: true,
+          tapToDismiss: false,
+          titleClass: "alert-title",
+          positionClass: "toast-top-center",
+          toastClass:
+            "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+        }
+      );
+      return;
+    }
+    this.loginForm.get("password").setValue('');
+    this.fieldTextType = false;
+    this.showPassword = true;
+  }
+
+  backToUserId() {
+    this.loginForm.get("password").setValue('');
+    this.fieldTextType = false;
+    this.showPassword = false;
+  }
+
   resendOtp() {
     this.otp = ['', '', '', ''];
     this.startTimer();
   }
+
   focusNext(event: any, index: number) {
     if (event.target.value && index < 3) {
       const nextInput = document.querySelectorAll('input')[index + 1] as HTMLInputElement;
@@ -105,16 +154,16 @@ export class LoginNewComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+
     if (this.loginForm.invalid) {
       return;
     }
 
     this.loginForm.patchValue({
-        password: this._commonService.encryptData(this.loginForm.controls['password'].value),
-      });
+      password: this._commonService.encryptData(this.loginForm.controls['password'].value),
+    });
 
     const apiUrl = this._global.baseAPIUrl + 'UserLogin/Create';
-    // this.authService.userLogin(this.loginForm.value, apiUrl).subscribe(data => {
     this._onlineExamService.postData(this.loginForm.value, apiUrl).subscribe(data => {
 
       if (data.length > 0 && data[0].id != 0) {
@@ -125,11 +174,6 @@ export class LoginNewComponent implements OnInit {
           var mess = " Your password expires in  " + that._LogData.Days + "  days. Change the password as soon as possible to prevent login problems"
           this.showSuccessToast(mess);
         }
-
-        // localStorage.setItem('UserID', that._LogData.id);
-        // localStorage.setItem('currentUser', that._LogData.id);
-        // localStorage.setItem('sysRoleID', that._LogData.sysRoleID);
-        // localStorage.setItem('User_Token', that._LogData.User_Token);
         localStorage.setItem('User_email', that._LogData.email);
         localStorage.setItem('UserName', this.loginForm.get("username").value);
         localStorage.setItem('PW', this.loginForm.get("password").value);
@@ -140,6 +184,55 @@ export class LoginNewComponent implements OnInit {
         else if (this.loginForm.get("username").value == "upload") {
           this.router.navigate(['/otp']);
         } else {
+          this.router.navigate(['/otp']);
+        }
+      }
+      else {
+        this.ErrorMessage(data[0].userid);
+      }
+
+    });
+  }
+
+  login() {
+    // window.location.href = 'https://dmstest.crownims.com/KotakAPI/Account/Login' //Testing SSO URL
+    window.location.href = 'https://kotakprime.crownims.com/KotakDartAPI/Account/Login' //Live SSO URL
+  }
+
+  onSubmitSSOLogin(sessionId: any) {
+    this.submitted = true;
+
+    if (!sessionId) {
+      this.ErrorMessage("Invalid SSO session. Please try again.");
+      return;
+    }
+
+    this.loginFormSSO.patchValue({
+      sessionId: sessionId
+    });
+
+    const apiUrl = this._global.baseAPIUrl + 'UserLogin/UserLoginSSO';
+    this._onlineExamService.postData(this.loginFormSSO.value, apiUrl).subscribe(data => {
+
+      if (data.length > 0 && data[0].id != 0) {
+        var that = this;
+        that._LogData = data[0];
+
+        if (that._LogData.Days <= 15) {
+          var mess = " Your password expires in  " + that._LogData.Days + "  days. Change the password as soon as possible to prevent login problems"
+          this.showSuccessToast(mess);
+        }
+        localStorage.setItem('User_email', that._LogData.email);
+        localStorage.setItem('UserName', this._commonService.decryptdata(that._LogData.username));
+        localStorage.setItem('PW', that._LogData.PW);
+
+        if (this.loginForm.get("username").value == "admin") {
+          this.router.navigate(['/otp']);
+        }
+        else if (this.loginForm.get("username").value == "upload") {
+          this.router.navigate(['/otp']);
+        }
+        else {
           this.router.navigate(['/otp']);
         }
       }

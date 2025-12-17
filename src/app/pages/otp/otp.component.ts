@@ -27,6 +27,7 @@ export class OtpComponent implements OnInit {
   otp: string[] = ['', '', '', '', '', ''];
   timer: number = 60;
   interval: any;
+  RoleName: any;
   timers: number = 180;
   msgs: any[] = [];
   intervals: any;
@@ -68,14 +69,16 @@ export class OtpComponent implements OnInit {
       OTP: ['', Validators.required],
     });
     this.startTimer();
-
   }
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
   }
+  
   handleOtpChange(otp: string): void {
     this.otpNumber = otp;
   }
+  
   onInput(event: any, index: number) {
     const input = event.target;
     const value = input.value;
@@ -89,6 +92,7 @@ export class OtpComponent implements OnInit {
       this.otpInputs.get(index - 1)?.nativeElement.focus();
     }
   }
+  
   startTimer() {
     this.timer = 60;
     this.interval = setInterval(() => {
@@ -101,19 +105,18 @@ export class OtpComponent implements OnInit {
       }
     }, 1000);
   }
-  endTimer() {
-    
+  
+  endTimer() {  
     this.timers = 180;
     this.intervals = setInterval(() => {
       if (this.timers > 0) {
         this.timers--;
       } else {
         clearInterval(this.intervals);
-        // localStorage.clear();
-        // this.router.navigate(['/Login'])
       }
     }, 1000);
   }
+
   focusNext(event: any, index: number) {
     if (event.target.value && index < 5) {
       const nextInput = document.querySelectorAll('input')[index + 1] as HTMLInputElement;
@@ -191,12 +194,24 @@ export class OtpComponent implements OnInit {
           localStorage.setItem('currentUser', that._LogData.id);
           localStorage.setItem('sysRoleID', that._LogData.sysRoleID);
           localStorage.setItem('User_Token', that._LogData.User_Token);
-          localStorage.setItem('UsertypeID', that._LogData.UsertypeID);
+          localStorage.setItem('Usertype', that._LogData.Usertype);
           localStorage.setItem('UserName', this.loginForm.get("username").value);
           localStorage.removeItem('PW');
 
-          if (this.loginForm.get("username").value == "admin") {
+          this.RoleName = that._LogData.roleName;
+
+          if (this.RoleName == "Admin") {
             this.router.navigate(['search/quick-search']).finally(() => {
+              clearInterval(this.intervals);
+              this.loadingService.manualLoading(false);
+            });
+          } else if (this.RoleName == "Checker") {
+            this.router.navigate(['usermanagement/checker']).finally(() => {
+              clearInterval(this.intervals);
+              this.loadingService.manualLoading(false);
+            });
+          } else if (this.RoleName == "Maker") {
+            this.router.navigate(['usermanagement/users']).finally(() => {
               clearInterval(this.intervals);
               this.loadingService.manualLoading(false);
             });

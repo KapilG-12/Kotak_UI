@@ -43,7 +43,7 @@ export class ScanningInwardComponent implements OnInit {
   _HeaderList: any;
   _ColNameList = [];
   _CSVData: any;
-  csvData:any;
+  csvData: any;
   public records: any[] = [];
   papa: any;
   _TempID: any = 0;
@@ -104,19 +104,18 @@ export class ScanningInwardComponent implements OnInit {
   }
 
   reset() {
-    
     this.filebarcode = '';
     this.remark = '';
     this.pymentForm.controls['saveredio'].reset('');
     this.DataUploadForm.controls['saveredio'].reset('');
   }
+
   save() {
     this.submitted = true;
-    
     const apiUrl = this._global.baseAPIUrl + "BranchInward/ScanningInward";
     this._onlineExamService.postData(this.pymentForm.value, apiUrl)
       .subscribe((data) => {
-        if (data == 'Record save successfully' || data=='Record updated successfully') {
+        if (data == 'Record save successfully' || data == 'Record updated successfully') {
           this.ShowMessage(data);
         }
         else {
@@ -124,8 +123,6 @@ export class ScanningInwardComponent implements OnInit {
         }
         this.reset();
       });
-
-
   }
 
   handleFileSelect(evt) {
@@ -287,18 +284,18 @@ export class ScanningInwardComponent implements OnInit {
     }
     if (this.csvData != null && this.csvData != undefined) {
       this.DataUploadForm.patchValue({
-       // id: localStorage.getItem('UserID'),
+        // id: localStorage.getItem('UserID'),
         CSVData: this.csvData,
-       // User_Token: localStorage.getItem('User_Token'),
+        // User_Token: localStorage.getItem('User_Token'),
         //Save: this.DataUploadForm.controls['Save'].value
       });
-      
+
 
       // const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditDump';
       const apiUrl = this._global.baseAPIUrl + 'BranchInward/ScanningInwardBulk';
       this._onlineExamService.postData(this.DataUploadForm.value, apiUrl)
         .subscribe(data => {
-         this.downloadFileErrorLog(data);
+          this.downloadFileErrorLog(data);
           this.showSuccessmessage("Record save successfully");
           this.reset();
           this.BindHeader(this._FilteredList, this._FilteredList);
@@ -484,7 +481,7 @@ export class ScanningInwardComponent implements OnInit {
       { field: 'remark', header: 'REMARK', index: 2 },
     ];
     this.headerList = tableHeader;
-    console.log("this.headerList",this.headerList);
+    console.log("this.headerList", this.headerList);
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;
     this.loading = false;
@@ -506,7 +503,7 @@ export class ScanningInwardComponent implements OnInit {
       });
 
     });
-    this.csvData=formattedData;
+    this.csvData = formattedData;
     this.headerList = tableHeader;
     this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
     this.formattedData = formattedData;

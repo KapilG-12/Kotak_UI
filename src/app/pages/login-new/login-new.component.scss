@@ -80,10 +80,19 @@ border-radius: 8px;
 }
 .input-icon img{
   width: 15px;
+  margin-left: 15px;
 }
 .sign_btn{
   float: right;
   background: #cf1919;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 25px;
+}
+.back_btn{
+  float: right;
+  background: #005984;
   border: none;
   color: #fff;
   font-size: 20px;
@@ -281,7 +290,72 @@ color:#CC0000;
 button[disabled] {
   opacity: 0.3;
 }
+
 .login_form{
-  // padding: 80px 0;
   height: 100vh;
  }
+
+ 
+.microsoft-auth-btn {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  background-color: #444; /* Dark background like in your image */
+  height: 40px;
+  margin-top: 0px;
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.microsoft-auth-btn .logo-section {
+  background-color: #fff;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.microsoft-auth-btn img {
+  width: 30px;
+  height: 30px;
+}
+
+.microsoft-auth-btn .btn-text {
+  flex: 1;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sso-section {
+  width: 100%;
+  text-align: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-weight: 500;
+  width: 100%;
+  margin: 5rem 0 1rem 0rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ccc; /* line color */
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+

@@ -27,7 +27,9 @@ export class NavbarComponent implements OnInit {
   public listTitles: any[];
   public location: Location;
   UserName: any;
+  Usertype: any;
   sidenavOpen: boolean = false;
+  ChaangePassword: boolean = false;
 
   constructor(
     location: Location,
@@ -40,12 +42,8 @@ export class NavbarComponent implements OnInit {
     this.location = location;
     this.router.events.subscribe((event: Event) => {
        if (event instanceof NavigationStart) {
-           // Show loading indicator
-   
        }
        if (event instanceof NavigationEnd) {
-           // Hide loading indicator
-
            if (window.innerWidth < 1200) {
         
              document.body.classList.remove("g-sidenav-pinned");
@@ -68,6 +66,14 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
     this.UserName= localStorage.getItem('UserName') ;
+    this.Usertype = localStorage.getItem('Usertype') ;
+
+    if(this.Usertype == "Internal User"){
+      this.ChaangePassword = false;
+    }
+    else{
+      this.ChaangePassword = true;
+    }
   }
 
 

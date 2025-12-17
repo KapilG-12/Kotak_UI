@@ -111,8 +111,12 @@ export class CheckerRolesComponent implements OnInit {
       { field: 'srNo', header: "SR NO", index: 1 },
       { field: 'roleName', header: 'ROLE NAME', index: 3 },
       { field: 'remarks', header: 'REMARKS', index: 2 },
-      { field: 'CreatedByName', header: 'CREATED BY', index: 2 },
+      { field: 'CreatedBy', header: 'CREATED BY', index: 2 },
       { field: 'CreatedAt', header: 'CREATED AT', index: 2 },
+      { field: 'UpdatedByName', header: 'UPDATED BY', index: 2 },
+      { field: 'UpdatedDate', header: 'UPDATED AT', index: 2 },
+      { field: 'UpdatedDate', header: 'UPDATED AT', index: 2 },
+      { field: 'RoleApprovalPurpose', header: 'Role Approval Purpose', index: 2 }
     ];
 
     tableData.forEach((el, index) => {
@@ -121,9 +125,12 @@ export class CheckerRolesComponent implements OnInit {
         'roleName': el.roleName,
         'id': el.id,
         'remarks': el.remarks,
-        'CreatedByName': el.CreatedByName,
+        'CreatedBy': el.CreatedBy,
+        'UpdatedByName': el.UpdatedByName,
         'CreatedAt': el.CreatedAt,
+        'UpdatedDate': el.UpdatedDate,
         'RoleStatus': el.RoleStatus,
+        'RoleApprovalPurpose': el.RoleApprovalPurpose,
         'CreatedById': el.CreatedById,
         'UpdatedBy': el.UpdatedBy
       });
@@ -175,6 +182,7 @@ export class CheckerRolesComponent implements OnInit {
     localStorage.setItem('_RoleID', RoleL.id);
     localStorage.setItem('_RoleName', RoleL.roleName);
     localStorage.setItem('_RoleRemark', RoleL.remarks);
+    localStorage.setItem('_RoleApprovalPurpose', RoleL.RoleApprovalPurpose);
     this.router.navigate(['/usermanagement/addchecker-roles']);
   }
 

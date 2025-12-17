@@ -108,14 +108,13 @@ export class OnlineExamServiceService {
   }
 
   public downloadDoc(apiUrl: string): Observable<any> {
-    // let url = this.apiUrl + "api/myApi/download/" + Id;
     return this.http.get(apiUrl, { responseType: "blob" });
   }
 
   DownloadpostData(data, apiUrl): Observable<any> {
     return this.http.get(apiUrl, { responseType: "blob" });
   }
-
+  
   public BulkDownload(data, apiUrl): Observable<any> {
     return this.http.post(apiUrl, data, { responseType: "blob" })
 
@@ -124,7 +123,6 @@ export class OnlineExamServiceService {
   downloadExcelFile(url: string, fileName: any): void {
     this.http.get(url, { responseType: 'blob' })
       .subscribe((data) => {
-
         const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
@@ -132,6 +130,4 @@ export class OnlineExamServiceService {
         link.click();
       });
   }
-
-
 }

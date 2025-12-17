@@ -49,7 +49,7 @@
               </div>
 
 
-              <div class=" col-md-3">
+              <div *ngIf="DumpReportForm.get('report_type').value != 1" class=" col-md-3">
                 <div class=" form-group">
                   <label class=" form-control-label" for="FromDate">
                     From Date
@@ -64,7 +64,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div *ngIf="DumpReportForm.get('report_type').value != 1" class="col-md-3">
                 <div class="form-group"> <label class=" form-control-label" for="ToDate">
                     To Date
                   </label>
@@ -80,7 +80,7 @@
               </div>
               <div class=" col-md-3 mt-4 pt-2">
                 <button class="btn btn-primary" style="border: none;color: #fff;opacity: 1;"
-                  [disabled]="!DumpReportForm.valid" (click)="getAllsearch()"> Search</button>
+                  [disabled]="!DumpReportForm.valid" *ngIf="DumpReportForm.get('report_type').value != 1" (click)="getAllsearch()"> Search</button>
                 <button class="btn" style="background-color: #F2A123;border: none;color: #fff;opacity: 1;"
                   (click)="onDownload()"> Download</button>
               </div>

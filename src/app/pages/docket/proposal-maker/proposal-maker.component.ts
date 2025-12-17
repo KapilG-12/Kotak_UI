@@ -59,25 +59,25 @@ export class ProposalMakerComponent implements OnInit {
     private _onlineExamService: OnlineExamServiceService,
     private _global: Globalconstants,) { }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
+  this.proposalForm = this.fb.group({
+    File_No: ['', [Validators.required, Validators.minLength(10)]],
+    remark: [''],
+    User_Token: [localStorage.getItem('User_Token')],
+    CreatedBy: [localStorage.getItem('UserID')]
+  });
 
-    this.proposalForm = this.fb.group({
-      File_No: ['', [Validators.required, Validators.minLength(10)]],
-      remark: [],
-      User_Token: localStorage.getItem('User_Token'),
-      CreatedBy: localStorage.getItem('UserID')
-    });
+  this.uploadForm = this.fb.group({
+    user_Token: [localStorage.getItem('User_Token')],
+    entry_by: [localStorage.getItem('UserID')],
+    CSVData: this.fb.control("")
+  });
 
-    this.uploadForm = this.fb.group({
-      user_Token: localStorage.getItem('User_Token'),
-      entry_by: localStorage.getItem('UserID'),
-      CSVData: [""]
-    });
+  // call after initializing, so table headers bind correctly
+  this.BindHeader(this._FilteredList, this._FilteredList);
+  this.prepareTableData(this._FilteredList, this._FilteredList);
+}
 
-    this.BindHeader(this._FilteredList, this._FilteredList);
-    this.prepareTableData(this._FilteredList, this._FilteredList);
-
-  }
 
   toggleChange() {
     console.log("this is the value", this.isChecked)
@@ -204,75 +204,58 @@ export class ProposalMakerComponent implements OnInit {
       );
     }
   }
+  
+uploadListener($event: any): void {
+  let files = $event.srcElement.files;
 
-  uploadListener($event: any): void {
+  if (this.isValidCSVFile(files[0])) {
+    let reader = new FileReader();
+    reader.readAsText(files[0]);
+    $(".selected-file-name").html(files[0].name);
 
-    let text = [];
-    let files = $event.srcElement.files;
+    reader.onload = () => {
+      let csvData = reader.result;
+      let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+      let headersRow = this.getHeaderArray(csvRecordsArray);
 
-    if (this.isValidCSVFile(files[0])) {
+      let validFile = this.getDisplayNames(csvRecordsArray);
+      if (!validFile) {
+        this.fileReset();
+      } else {
+        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+        this._FilteredList = this.records;
 
-      let input = $event.target;
-      let reader = new FileReader();
-      // console.log(input.files[0]);
-      reader.readAsText(input.files[0]);
-      $(".selected-file-name").html(input.files[0].name);
-      reader.onload = () => {
-        let csvData = reader.result;
-        let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+        this._CSVData = this.records;
 
-        let headersRow = this.getHeaderArray(csvRecordsArray);
+        this.prepareTableDataForCSV(this._FilteredList);
 
-        this._CSVData = csvRecordsArray;
-        this._IndexList = csvRecordsArray;
+        (<HTMLInputElement>document.getElementById('csvReader')).value = '';
+      }
+    };
 
-        // alert(headersRow);
-        // alert(this._ColNameList);
-        //let ColName = 
-        let validFile = this.getDisplayNames(csvRecordsArray);
-        if (validFile == false) {
-          //  console.log('Not Valid File', csvRecordsArray);
-          this.fileReset();
-        } else {
-          this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+    reader.onerror = () => {
+      console.error('error occurred while reading file!');
+    };
 
-          this._FilteredList = this.records;
-
-          //  console.log(this.records);
-          //console.log("_FilteredList",this._FilteredList);
-
-          this.prepareTableDataForCSV(this._FilteredList);
-
-          (<HTMLInputElement>document.getElementById('csvReader')).value = '';
-          //  console.log('Records', this._FilteredList);
-        }
-
-
-      };
-
-      reader.onerror = function () {
-        // console.log('error is occurred while reading file!');
-      };
-
-    } else {
-      this.toastr.show(
-        '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message">Please Select A Valid CSV File And Template</span></div>',
-        "",
-        {
-          timeOut: 3000,
-          closeButton: true,
-          enableHtml: true,
-          tapToDismiss: false,
-          titleClass: "alert-title",
-          positionClass: "toast-top-center",
-          toastClass:
-            "ngx-toastr alert alert-dismissible alert-danger alert-notify"
-        }
-      );
-      this.fileReset();
-    }
-    this._FilteredList = this.records
+  } else {
+    this.toastr.show(
+      '<div class="alert-text"</div> <span class="alert-title" data-notify="title">Error!</span> <span data-notify="message">Please Select A Valid CSV File And Template</span></div>',
+      "",
+      {
+        timeOut: 3000,
+        closeButton: true,
+        enableHtml: true,
+        tapToDismiss: false,
+        titleClass: "alert-title",
+        positionClass: "toast-top-center",
+        toastClass: "ngx-toastr alert alert-dismissible alert-danger alert-notify"
+      }
+    );
+    this.fileReset();
   }
+
+  this._FilteredList = this.records;
+}
 
   // checkDateFormat(date) {
   // //  console.log("Date",date);
@@ -295,23 +278,25 @@ export class ProposalMakerComponent implements OnInit {
   // }
   // }
 
-  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
-    let csvArr = [];
+ getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
+  let csvArr: any[] = [];
 
-    for (let i = 1; i < csvRecordsArray.length; i++) {
-      let curruntRecord = (<string>csvRecordsArray[i]).split(',');
-      if (curruntRecord.length == headerLength) {
-        const single = []
-        for (let i = 0; i < this._ColNameList.length; i++) {
-          single.push(curruntRecord[i].toString().trim())
-        }
-        csvArr.push(single)
+  for (let i = 1; i < csvRecordsArray.length; i++) {
+    let currentRecord = (<string>csvRecordsArray[i]).split(',');
+
+    if (currentRecord.length === headerLength) {
+      let obj: any = {};
+      for (let j = 0; j < this._ColNameList.length; j++) {
+        obj[this._ColNameList[j]] = currentRecord[j].trim();
       }
-      console.log("this is the ", csvArr);
-
+      csvArr.push(obj);
     }
-    return csvArr;
   }
+
+  console.log("✅ Parsed CSV Data:", csvArr);
+  return csvArr;
+}
+
 
   isValidCSVFile(file: any) {
     return file.name.endsWith(".csv");
@@ -327,7 +312,9 @@ export class ProposalMakerComponent implements OnInit {
       headerArray.push(headers[j]);
     }
 
-    return headers;
+    // return headers;
+      return ['File_No', 'remark'];   
+
 
 
   }
@@ -337,37 +324,59 @@ export class ProposalMakerComponent implements OnInit {
     this.records = [];
   }
 
-  onSubmit() {
+onSubmit() {
+  this.submitted = true;
+debugger
+  if (this._CSVData && this._CSVData.length > 0) {
+    const formattedCSV = this._CSVData.map(item => ({
+      File_No: item.File_No,
+      remark: item.remark,
+      entry_by: localStorage.getItem('UserID')
+    }));
 
-    this.submitted = true;
+    this.uploadForm.patchValue({
+      user_Token: localStorage.getItem('User_Token'),
+      entry_by: localStorage.getItem('UserID'),
+      CSVData: formattedCSV
+    });
 
-    if (this._CSVData != null && this._CSVData != undefined) {
-      this.uploadForm.patchValue({
-        // id: localStorage.getItem('UserID'),
-        CSVData: this._CSVData,
-        // User_Token: localStorage.getItem('User_Token')
-      });
-      const apiUrl = this._global.baseAPIUrl + 'DataUpload/AddEditProposalMakerBulk';
-      this._onlineExamService.postData(this.uploadForm.value, apiUrl)
-        // .pipe(first())
-        .subscribe(data => {
-          if (data == "Record updated successfully" || data == "Record save successfully") {
-            // alert(data);
-            this.showSuccessmessage(data);
+    const apiUrl = this._global.baseAPIUrl + 'BranchInward/AddEditProposalMakerBulk';
+
+    this._onlineExamService.postData(this.uploadForm.value, apiUrl)
+      .subscribe({
+        next: (data: any) => {
+          if (data && (data.includes("Record updated successfully") || data.includes("Record save successfully"))) {
+            this.downloadFileErrorLog(data);
+
+            this.showSuccessmessage("Record Save Successfully");
+            this.reset();
           } else {
             this.ShowErrormessage(data);
+                        this.downloadFileErrorLog(data);
+
           }
           this.BindHeader(this._FilteredList, this._FilteredList);
+        },
+        error: (err: any) => {
+          this.ShowErrormessage("API error: " + err.message);
+                      this.downloadFileErrorLog(formattedCSV);
 
-        });
-
-      //  }     
-    }
-    else {
-      this.ShowErrormessage("please select file");
-
-    }
+        }
+      });
+  } else {
+    this.ShowErrormessage("Please select file");
   }
+}
+
+ reset() {
+    
+    this.formattedData = [];
+    // this.remark = '';
+    this.proposalForm.controls['saveredio'].reset('');
+    this.uploadForm.controls['saveredio'].reset('');
+    this.uploadForm.controls['csvReader'].reset('');
+  }
+
 
   ShowErrormessage(data: any) {
     this.toastr.show(
@@ -428,7 +437,7 @@ export class ProposalMakerComponent implements OnInit {
 
   downloadFile() {
     const filename = 'ProposalMakerFormat_CSV';
-    let csvData = "FileBarcode,Remark";
+  let csvData = "File_No,remark";   
 
     // let csvData = "AccountNo,AppNo,CRN,URN,DBDate,DBMonth,DBYear,ProductCode,ProductType,ProductName,COD_OFFICR_ID,CustomerName,BranchCode,BranchName,Zone,ClosedDate";    
     //console.log(csvData)
@@ -497,108 +506,118 @@ export class ProposalMakerComponent implements OnInit {
   immutableFormattedData: any;
   loading: boolean = true;
 
-  prepareTableDataForCSV(tableData) {
-    let formattedData = [];
-    let tableHeader: any = [
-      { field: 'srNo', header: "SR NO", index: 1 },
-      //  { field: 'appl_apac', header: "APPL_APAC", index: 1 }, FileBarcode,Remark
-      { field: 'File_No', header: 'FileBarcode', index: 2 },
-      { field: 'remark', header: "Remark", index: 1 },
-      // { field: 'appl', header: 'APPL', index: 2 },
-      // { field: 'apac', header: "APAC", index: 1 }, 
-      // { field: 'contract_no', header: 'CONTRACT_NO', index: 2 },
-      // { field: 'apac_effective_date', header: "APAC_EFFECTIVE_DATE", index: 1 }, 
-      // { field: 'product', header: 'PRODUCT', index: 2 },
-      // { field: 'location', header: "LOCATION", index: 1 }, 
-      // { field: 'sub_lcoation', header: 'SUB_LCOATION', index: 2 },
-      // { field: 'tenure', header: "TENURE", index: 1 }, 
-      // { field: 'maturity_date', header: 'MATURITY_DATE', index: 2 },
+prepareTableDataForCSV(tableData) {
+  let formattedData = [];
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'File_No', header: 'FileBarcode', index: 2 },
+    { field: 'remark', header: "Remark", index: 1 },
+  ];
 
-    ];
-    console.log("this.formattedData", tableData);
-    tableData.forEach((el, index) => {
-      formattedData.push({
-        'srNo': parseInt(index + 1),
-        //  'appl_apac': el[0],   
-        'File_No': el[0],
-        'remark': el[1],
-      });
+  console.log("📂 Raw tableData (for CSV):", tableData);
 
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      srNo: index + 1,
+      File_No: el.File_No,   // ✅ use object property
+      remark: el.remark      // ✅ use object property
     });
-    this.headerList = tableHeader;
-    //}
+  });
 
-    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
-    this.formattedData = formattedData;
-    this.loading = false;
+  this.headerList = tableHeader;
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+}
 
-    // console.log("this.formattedData", this.formattedData);
-  }
+prepareTableData(tableData, headerList) {
+  let formattedData = [];
+  let tableHeader: any = [
+    { field: 'srNo', header: "SR NO", index: 1 },
+    { field: 'File_No', header: 'FileBarcode', index: 2 },
+    { field: 'remark', header: "Remark", index: 1 },
+  ];
 
-  prepareTableData(tableData, headerList) {
-    let formattedData = [];
-    // alert(this.type);
+  console.log("📂 Raw tableData:", tableData);
 
-    // if (this.type=="Checker" )FileBarcode,Remark
-    //{
-    let tableHeader: any = [
-      { field: 'srNo', header: "SR NO", index: 1 },
-
-      //   { field: 'appl_apac', header: "APPL_APAC", index: 1 }, 
-      { field: 'File_No', header: 'FileBarcode', index: 2 },
-      { field: 'remark', header: "Remark", index: 1 },
-      // { field: 'appl', header: 'APPL', index: 2 },
-      // { field: 'apac', header: "APAC", index: 1 }, 
-      // { field: 'contract_no', header: 'CONTRACT_NO', index: 2 },
-      // { field: 'apac_effective_date', header: "APAC_EFFECTIVE_DATE", index: 1 }, 
-      // { field: 'product', header: 'PRODUCT', index: 2 },
-      // { field: 'location', header: "LOCATION", index: 1 }, 
-      // { field: 'sub_lcoation', header: 'SUB_LCOATION', index: 2 },
-      // { field: 'tenure', header: "TENURE", index: 1 }, 
-      // { field: 'maturity_date', header: 'MATURITY_DATE', index: 2 },
-      // { field: 'maln_party_id', header: "MALN_PARTY_ID", index: 1 }, 
-      // { field: 'party_name', header: 'PARTY_NAME', index: 2 },
-      // { field: 'agr_value', header: 'AGR_VALUE', index: 2 },
-      // { field: 'eml_start_date', header: 'EML_START_DATE', index: 2 },
-      //  { field: 'pdc_type', header: 'PDC_TYPE', index: 3 },
-
-
-      // { field: 'PropertyBarcode', header: 'PROPERTY BARCODE', index: 2 },
-    ];
-    console.log("this.formattedData", tableData);
-    tableData.forEach((el, index) => {
-      formattedData.push({
-        'srNo': parseInt(index + 1),
-        //   'appl_apac': el[0],   FileBarcode,Remark
-        'File_No': el[0],
-        'remark': el[1],
-        // 'appl': el[2],
-        // 'apac': el[3],   
-        // 'contract_no': el[4],
-        // 'apac_effective_date': el[5],   
-        // 'product': el[6],
-        // 'location': el[7],   
-        // 'sub_lcoation': el[8],
-        // 'tenure': el[9],   
-        // 'maturity_date': el[10],
-        // 'maln_party_id': el[11],   
-        // 'party_name': el[12],
-        // 'agr_value': el[13],   
-        // 'eml_start_date': el[14],
-        // 'pdc_type': el[15],
-
-      });
-
+  tableData.forEach((el, index) => {
+    formattedData.push({
+      srNo: index + 1,
+      File_No: el.File_No,   
+      remark: el.remark       
     });
-    this.headerList = tableHeader;
-    //}
+  });
 
-    this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
-    this.formattedData = formattedData;
-    this.loading = false;
+  this.headerList = tableHeader;
+  this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  this.formattedData = formattedData;
+  this.loading = false;
+}
 
-    // console.log("this.formattedData", this.formattedData);
-  }
+  // prepareTableData(tableData, headerList) {
+  //   let formattedData = [];
+  //   // alert(this.type);
+
+  //   // if (this.type=="Checker" )FileBarcode,Remark
+  //   //{
+  //   let tableHeader: any = [
+  //     { field: 'srNo', header: "SR NO", index: 1 },
+
+  //     //   { field: 'appl_apac', header: "APPL_APAC", index: 1 }, 
+  //     { field: 'File_No', header: 'FileBarcode', index: 2 },
+  //     { field: 'remark', header: "Remark", index: 1 },
+  //     // { field: 'appl', header: 'APPL', index: 2 },
+  //     // { field: 'apac', header: "APAC", index: 1 }, 
+  //     // { field: 'contract_no', header: 'CONTRACT_NO', index: 2 },
+  //     // { field: 'apac_effective_date', header: "APAC_EFFECTIVE_DATE", index: 1 }, 
+  //     // { field: 'product', header: 'PRODUCT', index: 2 },
+  //     // { field: 'location', header: "LOCATION", index: 1 }, 
+  //     // { field: 'sub_lcoation', header: 'SUB_LCOATION', index: 2 },
+  //     // { field: 'tenure', header: "TENURE", index: 1 }, 
+  //     // { field: 'maturity_date', header: 'MATURITY_DATE', index: 2 },
+  //     // { field: 'maln_party_id', header: "MALN_PARTY_ID", index: 1 }, 
+  //     // { field: 'party_name', header: 'PARTY_NAME', index: 2 },
+  //     // { field: 'agr_value', header: 'AGR_VALUE', index: 2 },
+  //     // { field: 'eml_start_date', header: 'EML_START_DATE', index: 2 },
+  //     //  { field: 'pdc_type', header: 'PDC_TYPE', index: 3 },
+
+
+  //     // { field: 'PropertyBarcode', header: 'PROPERTY BARCODE', index: 2 },
+  //   ];
+  //   console.log("this.formattedData", tableData);
+  //   tableData.forEach((el, index) => {
+  //     formattedData.push({
+  //       'srNo': parseInt(index + 1),
+  //       //   'appl_apac': el[0],   FileBarcode,Remark
+  //       'File_No': el[0],
+  //       'remark': el[1],
+  //       // 'appl': el[2],
+  //       // 'apac': el[3],   
+  //       // 'contract_no': el[4],
+  //       // 'apac_effective_date': el[5],   
+  //       // 'product': el[6],
+  //       // 'location': el[7],   
+  //       // 'sub_lcoation': el[8],
+  //       // 'tenure': el[9],   
+  //       // 'maturity_date': el[10],
+  //       // 'maln_party_id': el[11],   
+  //       // 'party_name': el[12],
+  //       // 'agr_value': el[13],   
+  //       // 'eml_start_date': el[14],
+  //       // 'pdc_type': el[15],
+
+  //     });
+
+  //   });
+  //   this.headerList = tableHeader;
+  //   //}
+
+  //   this.immutableFormattedData = JSON.parse(JSON.stringify(formattedData));
+  //   this.formattedData = formattedData;
+  //   this.loading = false;
+
+  //   // console.log("this.formattedData", this.formattedData);
+  // }
 
   BindHeader(tableData, headerList) {
     let formattedData = [];
@@ -625,6 +644,47 @@ export class ProposalMakerComponent implements OnInit {
     this.loading = false;
 
   }
+
+downloadFileErrorLog(data: any) {
+  const filename = 'ProposalMaker_CSV';
+
+  // If data is array of objects → convert to CSV
+  let csvData = '';
+  if (Array.isArray(data)) {
+    // Extract headers from first object
+    const headers = Object.keys(data[0]).join(',');
+    // Map rows
+    const rows = data.map((row: any) =>
+      Object.values(row).map(v => `"${v ?? ''}"`).join(',')
+    );
+    csvData = headers + '\n' + rows.join('\n');
+  } else {
+    // If backend already sends CSV string
+    csvData = data;
+  }
+
+  const blob = new Blob(['\ufeff' + csvData], {
+    type: 'text/csv;charset=utf-8;'
+  });
+
+  const dwldLink = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+
+  // Safari handling
+  const isSafariBrowser =
+    navigator.userAgent.indexOf('Safari') !== -1 &&
+    navigator.userAgent.indexOf('Chrome') === -1;
+  if (isSafariBrowser) {
+    dwldLink.setAttribute("target", "_blank");
+  }
+
+  dwldLink.setAttribute("href", url);
+  dwldLink.setAttribute("download", filename + ".csv");
+  dwldLink.style.visibility = "hidden";
+  document.body.appendChild(dwldLink);
+  dwldLink.click();
+  document.body.removeChild(dwldLink);
+}
 
 
   searchTable($event) {

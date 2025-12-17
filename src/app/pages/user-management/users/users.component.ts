@@ -489,7 +489,7 @@ export class UsersComponent implements OnInit {
   addUser(template: TemplateRef<any>) {
     this.AddUserForm.controls['userid'].enable();
     this.AddUserForm.controls['empid'].enable();
-    this.AddUserForm.controls['email'].enable();
+    // this.AddUserForm.controls['email'].enable();
 
     this.AddUserForm.patchValue({
       firstname: '',
