@@ -51,7 +51,15 @@ jobs:
           # *******************************Things To be chagne For Server*******************************
           $sitePath = 'C:\inetpub\wwwroot\Kotak'
           $appPool = 'KotakApplicationPool'
-          $backup = "$sitePath-backup-" + (Get-Date -Format 'yyyyMMdd_HHmm')
+          
+          # Backup path
+          $backupRoot = 'A:\DeploymentBackup\KotakUI_Test'
+          $backup = Join-Path $backupRoot ("KotakUITest-backup-" + (Get-Date -Format 'yyyyMMdd_HHmm'))
+
+          # Ensure backup directory exists
+          if (-not (Test-Path $backupRoot)) {
+              New-Item -Path $backupRoot -ItemType Directory -Force | Out-Null
+          }
 
           # Get latest artifact
           $artifact = Get-ChildItem -Filter 'Build_*.zip' |
