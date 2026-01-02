@@ -12,7 +12,57 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Create Source Code Checksum (exclude Other)
+        shell: powershell
+        run: |
+          Write-Host "Creating source code checksum..."
+
+          $checksumFile = "Other\SourceCode_Checksum.sha256"
+
+          if (!(Test-Path "Other")) {
+              New-Item -Path "Other" -ItemType Directory | Out-Null
+          }
+
+          $files = Get-ChildItem -Path . -Recurse -File |
+            Where-Object {
+              $_.FullName -notmatch "\\(Other)\\"
+            }
+
+          $hashes = foreach ($file in $files) {
+              $hash = Get-FileHash -Path $file.FullName -Algorithm SHA256
+              $relativePath = $file.FullName.Substring((Get-Location).Path.Length + 1)
+              "$($hash.Hash)  $relativePath"
+          }
+
+          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+          $writer = New-Object System.IO.StreamWriter($checksumFile, $false, $utf8NoBom)
+
+          foreach ($line in $hashes) {
+              $writer.WriteLine($line)
+          }
+
+          $writer.Close()
+
+          Write-Host "Source code checksum saved to: $checksumFile"
+
+      - name: Commit and push checksum
+        shell: powershell
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add Other\SourceCode_Checksum.sha256
+
+          if (git diff --cached --quiet) {
+              Write-Host "No checksum changes detected"
+          } else {
+              git commit -m "Update source code checksum"
+              git push origin main
+          }
+          
       - name: Setup Node.js 
         uses: actions/setup-node@v4
         with:
@@ -49,8 +99,8 @@ jobs:
           Import-Module WebAdministration
           
           # *******************************Things To be chagne For Server*******************************
-          $sitePath = 'C:\inetpub\wwwroot\Kotak'
-          $appPool = 'KotakApplicationPool'
+          $sitePath = 'C:\inetpub\wwwroot\Escrow'
+          $appPool = 'EscrowTesting'
           
           # Backup path
           $backupRoot = 'A:\DeploymentBackup\KotakUI_Test'
@@ -100,7 +150,7 @@ jobs:
 
               # *******************************Things To be chagne For Server*******************************
               # SMOKE TEST
-              $url = 'http://kotakuicicd/'
+              $url = 'http://escrow/'
 
               Start-Sleep -Seconds 5
 
