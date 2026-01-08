@@ -33,7 +33,7 @@ jobs:
 
           $files = Get-ChildItem -Path . -Recurse -File |
             Where-Object {
-              $_.FullName -notmatch "\\(Other)\\"
+              $_.FullName -notmatch "\\(Other|node_modules|dist|bin|obj|packages|\.vscode|\.git|\.vs)\\"
             }
 
           $hashes = foreach ($file in $files) {
