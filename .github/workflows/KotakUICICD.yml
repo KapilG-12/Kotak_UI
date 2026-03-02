@@ -16,29 +16,87 @@ jobs:
 
     steps:
 
+      # ─────────────────────────────────
+      # STEP 1 — Checkout
+      # ─────────────────────────────────
       - name: Checkout Code
         uses: actions/checkout@v4
 
+
+      # ─────────────────────────────────
+      # STEP 2 — Setup Node
+      # ─────────────────────────────────
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: 'npm'
 
+
+      # ─────────────────────────────────
+      # STEP 3 — Install Dependencies
+      # (Fix for Angular peer conflicts)
+      # ─────────────────────────────────
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
+
+      # ─────────────────────────────────
+      # STEP 4 — Build Angular
+      # ─────────────────────────────────
       - name: Build Angular
         run: npx ng build --configuration production
 
+
+      # ─────────────────────────────────
+      # STEP 5 — Generate Source Checksum
+      # ─────────────────────────────────
       - name: Generate Source Checksum
         run: |
-          find . -type f ! -path './.git/*' | sort | xargs sha256sum > source_checksum.txt
+          find . -type f \
+            ! -path './.git/*' \
+            ! -path './.github/*' \
+            ! -path './node_modules/*' \
+            ! -path './dist/*' \
+            ! -name 'source_checksum.txt' \
+            ! -name 'build_checksum.txt' \
+            | sort | xargs sha256sum > source_checksum.txt
 
+          echo "Source checksum generated"
+          wc -l source_checksum.txt
+
+
+      # ─────────────────────────────────
+      # STEP 6 — Generate Build Checksum
+      # (Angular dist/<project-name>)
+      # ─────────────────────────────────
       - name: Generate Build Checksum
         run: |
+          echo "Locating Angular build output..."
+
+          if [ ! -d "dist" ]; then
+            echo "ERROR: dist folder not found"
+            exit 1
+          fi
+
           BUILD_DIR=$(find dist -mindepth 1 -maxdepth 1 -type d | head -n 1)
+
+          if [ -z "$BUILD_DIR" ]; then
+            echo "ERROR: No project folder found inside dist"
+            exit 1
+          fi
+
+          echo "Build folder: $BUILD_DIR"
+
           find "$BUILD_DIR" -type f | sort | xargs sha256sum > build_checksum.txt
 
+          echo "Build checksum generated"
+          wc -l build_checksum.txt
+
+
+      # ─────────────────────────────────
+      # STEP 7 — Upload Artifacts
+      # ─────────────────────────────────
       - name: Upload Escrow Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -46,3 +104,4 @@ jobs:
           path: |
             source_checksum.txt
             build_checksum.txt
+          retention-days: 30
