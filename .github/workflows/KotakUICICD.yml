@@ -6,10 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  BUILD_REQUIRED: "yes"
-  PROJECT_TYPE: "angular"
-
 jobs:
   escrow:
     runs-on: ubuntu-latest
@@ -17,14 +13,14 @@ jobs:
     steps:
 
       # ─────────────────────────────────
-      # STEP 1 — Checkout
+      # STEP 1 — Checkout Repository
       # ─────────────────────────────────
       - name: Checkout Code
         uses: actions/checkout@v4
 
 
       # ─────────────────────────────────
-      # STEP 2 — Setup Node
+      # STEP 2 — Setup Node (Angular 13 Safe)
       # ─────────────────────────────────
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -35,14 +31,14 @@ jobs:
 
       # ─────────────────────────────────
       # STEP 3 — Install Dependencies
-      # (Fix for Angular peer conflicts)
+      # Fix Angular peer conflicts
       # ─────────────────────────────────
       - name: Install Dependencies
         run: npm ci --legacy-peer-deps
 
 
       # ─────────────────────────────────
-      # STEP 4 — Build Angular
+      # STEP 4 — Build Angular Project
       # ─────────────────────────────────
       - name: Build Angular
         run: npx ng build --configuration production
@@ -50,9 +46,12 @@ jobs:
 
       # ─────────────────────────────────
       # STEP 5 — Generate Source Checksum
+      # Safe for files with spaces
       # ─────────────────────────────────
       - name: Generate Source Checksum
         run: |
+          echo "Generating source checksum..."
+
           find . -type f \
             ! -path './.git/*' \
             ! -path './.github/*' \
@@ -60,7 +59,7 @@ jobs:
             ! -path './dist/*' \
             ! -name 'source_checksum.txt' \
             ! -name 'build_checksum.txt' \
-            | sort | xargs sha256sum > source_checksum.txt
+            -print0 | sort -z | xargs -0 sha256sum > source_checksum.txt
 
           echo "Source checksum generated"
           wc -l source_checksum.txt
@@ -68,7 +67,7 @@ jobs:
 
       # ─────────────────────────────────
       # STEP 6 — Generate Build Checksum
-      # (Angular dist/<project-name>)
+      # Handles Angular dist/project-name
       # ─────────────────────────────────
       - name: Generate Build Checksum
         run: |
@@ -86,16 +85,16 @@ jobs:
             exit 1
           fi
 
-          echo "Build folder: $BUILD_DIR"
+          echo "Build folder detected: $BUILD_DIR"
 
-          find "$BUILD_DIR" -type f | sort | xargs sha256sum > build_checksum.txt
+          find "$BUILD_DIR" -type f -print0 | sort -z | xargs -0 sha256sum > build_checksum.txt
 
           echo "Build checksum generated"
           wc -l build_checksum.txt
 
 
       # ─────────────────────────────────
-      # STEP 7 — Upload Artifacts
+      # STEP 7 — Upload Escrow Artifacts
       # ─────────────────────────────────
       - name: Upload Escrow Artifacts
         uses: actions/upload-artifact@v4
