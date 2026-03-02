@@ -1,188 +1,377 @@
-name: Kotak_UI
-
+name: KOTAK_UI
+ 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'Other/**'
 
-permissions:
-  contents: write
+  workflow_dispatch:
 
+    inputs:
+
+      project_type:
+
+        description: "Project Type"
+
+        required: true
+
+        default: "react"
+
+        type: choice
+
+        options:
+
+          - angular
+
+          - react
+
+          - nextjs
+
+          - python
+
+          - java
+
+      build_required:
+
+        description: "Level 1 = no build | Level 2 = yes build"
+
+        required: true
+
+        default: "no"
+
+        type: choice
+
+        options:
+
+          - "no"
+
+          - "yes"
+ 
+env:
+
+  BUILD_REQUIRED: ${{ inputs.build_required }}
+
+  PROJECT_TYPE: ${{ inputs.project_type }}
+ 
 jobs:
-  build-deploy:
-    runs-on: [self-hosted, Windows]
 
+  escrow:
+
+    runs-on: ubuntu-latest
+ 
     steps:
-      - name: Checkout Source
+ 
+      # ─────────────────────────────────
+
+      # DEBUG — Always print inputs first
+
+      # ─────────────────────────────────
+
+      - name: Print Inputs
+
+        run: |
+
+          echo "=============================="
+
+          echo "BUILD_REQUIRED : $BUILD_REQUIRED"
+
+          echo "PROJECT_TYPE   : $PROJECT_TYPE"
+
+          echo "=============================="
+ 
+      # ─────────────────────────────────
+
+      # STEP 1 — Checkout
+
+      # ─────────────────────────────────
+
+      - name: Checkout Code
+
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+ 
+      # ─────────────────────────────────
 
-      - name: Create Source Code Checksum (exclude Other)
-        shell: powershell
-        run: |
-          Write-Host "Creating source code checksum..."
+      # STEP 2 — Source Checksum
 
-          $checksumFile = "Other\SourceCode_Checksum.sha256"
+      # Runs for BOTH Level 1 and Level 2
 
-          if (!(Test-Path "Other")) {
-              New-Item -Path "Other" -ItemType Directory | Out-Null
-          }
+      # ─────────────────────────────────
 
-          $files = Get-ChildItem -Path . -Recurse -File |
-            Where-Object {
-              $_.FullName -notmatch "\\(Other|node_modules|dist|bin|obj|packages|\.vscode|\.git|\.vs)\\"
-            }
+      -  name: Generate Source Checksum
 
-          $hashes = foreach ($file in $files) {
-              $hash = Get-FileHash -Path $file.FullName -Algorithm SHA256
-              $relativePath = $file.FullName.Substring((Get-Location).Path.Length + 1)
-              "$($hash.Hash)  $relativePath"
-          }
+         run: |
 
-          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-          $writer = New-Object System.IO.StreamWriter($checksumFile, $false, $utf8NoBom)
+          find . -type f \
 
-          foreach ($line in $hashes) {
-              $writer.WriteLine($line)
-          }
+            ! -path './.git/*' \
 
-          $writer.Close()
+            ! -path './.github/*' \
 
-          Write-Host "Source code checksum saved to: $checksumFile"
+            ! -path './.vscode/*' \
 
-      - name: Commit and push checksum
-        shell: powershell
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+            ! -path './node_modules/*' \
 
-          git add Other\SourceCode_Checksum.sha256
+            ! -path './.next/*' \
 
-          if (git diff --cached --quiet) {
-              Write-Host "No checksum changes detected"
-          } else {
-              git commit -m "Update source code checksum"
-              git push origin main
-          }
+            ! -path './dist/*' \
+
+            ! -path './build/*' \
+
+            ! -path './target/*' \
+
+            ! -path './other/*' \
+
+            ! -name '.gitignore' \
+
+            ! -name 'source_checksum.txt' \
+
+            ! -name 'build_checksum.txt' \
+
+            | sort | xargs sha256sum > source_checksum.txt
+
+          echo "--- Source Checksum ---"
+
+          cat source_checksum.txt
+
+          echo "Total files: $(wc -l < source_checksum.txt)"
+ 
+ 
           
-      - name: Setup Node.js 
+ 
+      # ─────────────────────────────────
+
+      # STEP 3 — Gate: Skip if Level 1
+
+      # This single step controls all build steps below
+
+      # ─────────────────────────────────
+
+      - name: Check Build Level
+
+        id: level_check
+
+        run: |
+
+          if [ "$BUILD_REQUIRED" = "yes" ]; then
+
+            echo "LEVEL=2" >> $GITHUB_OUTPUT
+
+            echo "RUN_BUILD=true" >> $GITHUB_OUTPUT
+
+          else
+
+            echo "LEVEL=1" >> $GITHUB_OUTPUT
+
+            echo "RUN_BUILD=false" >> $GITHUB_OUTPUT
+
+          fi
+
+          echo "Level set to: $BUILD_REQUIRED"
+ 
+      # ─────────────────────────────────
+
+      # STEP 4 — Node Setup
+
+      # Only Level 2 + node project types
+
+      # ─────────────────────────────────
+
+      - name: Setup Node
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && (env.PROJECT_TYPE == 'angular' || env.PROJECT_TYPE == 'react' || env.PROJECT_TYPE == 'nextjs')
+
         uses: actions/setup-node@v4
+
         with:
-          node-version: 16
-        
-      - name: Cache Node_Modules
-        uses: actions/cache@v4
+
+          node-version: "20"
+ 
+      - name: Install Node Dependencies
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && (env.PROJECT_TYPE == 'angular' || env.PROJECT_TYPE == 'react' || env.PROJECT_TYPE == 'nextjs')
+
+        run: npm ci
+ 
+      # ─────────────────────────────────
+
+      # STEP 5 — Build per project type
+
+      # ─────────────────────────────────
+
+      - name: Build Angular
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'angular'
+
+        run: npm run build -- --configuration production
+ 
+      - name: Build React
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'react'
+
+        run: npm run build
+ 
+      - name: Build Next.js
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'nextjs'
+
+        run: npm run build
+ 
+      - name: Setup Python
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'python'
+
+        uses: actions/setup-python@v5
+
         with:
-          path: node_modules
-          key: Windows-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            Windows-node-
 
-      - name: Install Dependencies
-        run: npm ci --force
+          python-version: "3.11"
+ 
+      - name: Build Python
 
-      - name: Build Angular App
-        # run: npx ng build --prod
-        run: npx ng build --configuration production --aot=true --optimization=true 
-        # For Server Base Href
-        # --base-href="/AvanseUI/"
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'python'
 
-      - name: Zip Build Artifact
-        shell: powershell
         run: |
-          $timestamp = Get-Date -Format "yyyyMMdd_HHmm"
-          $zipName = "Build_$timestamp.zip"
-          Compress-Archive -Path "dist/*" -DestinationPath $zipName -Force
-          Write-Host "Created: $zipName"
 
-      - name: Deploy to IIS with Rollback
-        shell: powershell
+          pip install -r requirements.txt
+
+          echo "Python build complete"
+ 
+      - name: Setup Java
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'java'
+
+        uses: actions/setup-java@v4
+
+        with:
+
+          java-version: "17"
+
+          distribution: "temurin"
+ 
+      - name: Build Java
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'java'
+
+        run: mvn clean package -DskipTests
+ 
+      # ─────────────────────────────────
+
+      # STEP 6 — Build Checksum
+
+      # Only runs if Level 2
+
+      # ─────────────────────────────────
+
+      - name: Generate Build Checksum
+
+        if: steps.level_check.outputs.RUN_BUILD == 'true'
+
         run: |
-          Import-Module WebAdministration
-          
-          # *******************************Things To be chagne For Server*******************************
-          $sitePath = 'C:\inetpub\wwwroot\Escrow'
-          $appPool = 'EscrowTesting'
-          
-          # Backup path
-          $backupRoot = 'A:\DeploymentBackup\KotakUI_Test'
-          $backup = Join-Path $backupRoot ("KotakUITest-backup-" + (Get-Date -Format 'yyyyMMdd_HHmm'))
 
-          # Ensure backup directory exists
-          if (-not (Test-Path $backupRoot)) {
-              New-Item -Path $backupRoot -ItemType Directory -Force | Out-Null
-          }
+          echo "Generating BUILD checksum..."
 
-          # Get latest artifact
-          $artifact = Get-ChildItem -Filter 'Build_*.zip' |
-                      Sort-Object LastWriteTime -Descending |
-                      Select-Object -First 1
+          BUILD_DIR=""
 
-          if (-not $artifact) {
-            Write-Error 'Build artifact not found!'
+          if   [ -d "dist"   ]; then BUILD_DIR="dist"
+
+          elif [ -d "build"  ]; then BUILD_DIR="build"
+
+          elif [ -d ".next"  ]; then BUILD_DIR=".next"
+
+          elif [ -d "target" ]; then BUILD_DIR="target"
+
+          fi
+ 
+          if [ -n "$BUILD_DIR" ]; then
+
+            echo "Build output found in: $BUILD_DIR"
+
+            find "$BUILD_DIR" -type f | sort | xargs sha256sum > build_checksum.txt
+
+            echo "--- Build Checksum ---"
+
+            cat build_checksum.txt
+
+          else
+
+            echo "ERROR: No build output directory found (dist/build/.next/target)"
+
             exit 1
-          }
 
-          Write-Host "Artifact found: $($artifact.FullName)"
+          fi
+ 
+      # ─────────────────────────────────
 
-          try {
+      # STEP 7 — Placeholder for Level 1
 
-              # BACKUP
-              if (Test-Path $sitePath) {
-                  Write-Host "Creating backup at: $backup"
-                  Copy-Item -Path $sitePath -Destination $backup -Recurse -Force
-              } else {
-                  New-Item -Path $sitePath -ItemType Directory | Out-Null
-              }
+      # Ensures upload never fails
 
-              # DEPLOYMENT
-              Write-Host "Stopping App Pool: $appPool"
-              Stop-WebAppPool -Name $appPool
+      # ─────────────────────────────────
 
-              Write-Host 'Clearing old files...'
-              Remove-Item "$sitePath\*" -Recurse -Force -ErrorAction SilentlyContinue
+      - name: Create Build Checksum Placeholder
 
-              Write-Host 'Extracting new deployment...'
-              Expand-Archive -Path $artifact.FullName -DestinationPath $sitePath -Force
+        if: steps.level_check.outputs.RUN_BUILD == 'false'
 
-              Write-Host "Restarting App Pool: $appPool"
-              Start-WebAppPool -Name $appPool
+        run: |
 
-              Write-Host 'Deployment completed, running smoke test...'
+          echo "level-1-only-no-build-performed-run-${{ github.run_id }}" > build_checksum.txt
 
-              # *******************************Things To be chagne For Server*******************************
-              # SMOKE TEST
-              $url = 'http://escrow/'
+          echo "Placeholder created for Level 1"
+ 
+      # ─────────────────────────────────
 
-              Start-Sleep -Seconds 5
+      # STEP 8 — Final Summary
 
-              $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 15
+      # ─────────────────────────────────
 
-              if ($response.StatusCode -ne 200) {
-                  throw "Smoke test failed (HTTP $($response.StatusCode))"
-              }
+      - name: Escrow Summary
 
-              Write-Host 'Smoke test passed!'
+        run: |
 
-          } catch {
-          
-              Write-Host 'Deployment failed. Restoring backup...'
-              Stop-WebAppPool -Name $appPool -ErrorAction SilentlyContinue
+          echo "============================================"
 
-              if (Test-Path $backup) {
-                  Remove-Item "$sitePath\*" -Recurse -Force -ErrorAction SilentlyContinue
-                  Copy-Item -Path $backup -Destination $sitePath -Recurse -Force
-                  Write-Host 'Backup restored successfully.'
-              } else {
-                  Write-Error 'Backup folder missing — cannot restore!'
-              }
+          echo "  ESCROW BUILD COMPLETE"
 
-              Start-WebAppPool -Name $appPool -ErrorAction SilentlyContinue
+          echo "============================================"
 
-              Write-Error 'Deployment aborted and rollback completed.'
-              exit 1
-          } 
+          echo "  Level         : ${{ steps.level_check.outputs.LEVEL }}"
 
+          echo "  Project Type  : $PROJECT_TYPE"
+
+          echo "  Run ID        : ${{ github.run_id }}"
+
+          echo "  Commit SHA    : ${{ github.sha }}"
+
+          echo "--------------------------------------------"
+
+          echo "SOURCE CHECKSUM:"
+
+          cat source_checksum.txt
+
+          echo "--------------------------------------------"
+
+          echo "BUILD CHECKSUM:"
+
+          cat build_checksum.txt
+
+          echo "============================================"
+ 
+      # ─────────────────────────────────
+
+      # STEP 9 — Upload Artifacts
+
+      # ─────────────────────────────────
+
+      - name: Upload Escrow Artifacts
+
+        uses: actions/upload-artifact@v4
+
+        with:
+
+          name: escrow-${{ github.run_id }}
+
+          path: |
+
+            source_checksum.txt
+
+            build_checksum.txt
+
+          retention-days: 30
+ 
