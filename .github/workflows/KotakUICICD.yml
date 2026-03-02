@@ -1,377 +1,48 @@
 name: KOTAK_UI
- 
-on:
 
+on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
-    inputs:
-
-      project_type:
-
-        description: "Project Type"
-
-        required: true
-
-        default: "react"
-
-        type: choice
-
-        options:
-
-          - angular
-
-          - react
-
-          - nextjs
-
-          - python
-
-          - java
-
-      build_required:
-
-        description: "Level 1 = no build | Level 2 = yes build"
-
-        required: true
-
-        default: "no"
-
-        type: choice
-
-        options:
-
-          - "no"
-
-          - "yes"
- 
 env:
+  BUILD_REQUIRED: "yes"
+  PROJECT_TYPE: "angular"
 
-  BUILD_REQUIRED: ${{ inputs.build_required }}
-
-  PROJECT_TYPE: ${{ inputs.project_type }}
- 
 jobs:
-
   escrow:
-
     runs-on: ubuntu-latest
- 
+
     steps:
- 
-      # ─────────────────────────────────
-
-      # DEBUG — Always print inputs first
-
-      # ─────────────────────────────────
-
-      - name: Print Inputs
-
-        run: |
-
-          echo "=============================="
-
-          echo "BUILD_REQUIRED : $BUILD_REQUIRED"
-
-          echo "PROJECT_TYPE   : $PROJECT_TYPE"
-
-          echo "=============================="
- 
-      # ─────────────────────────────────
-
-      # STEP 1 — Checkout
-
-      # ─────────────────────────────────
 
       - name: Checkout Code
-
         uses: actions/checkout@v4
- 
-      # ─────────────────────────────────
-
-      # STEP 2 — Source Checksum
-
-      # Runs for BOTH Level 1 and Level 2
-
-      # ─────────────────────────────────
-
-      -  name: Generate Source Checksum
-
-         run: |
-
-          find . -type f \
-
-            ! -path './.git/*' \
-
-            ! -path './.github/*' \
-
-            ! -path './.vscode/*' \
-
-            ! -path './node_modules/*' \
-
-            ! -path './.next/*' \
-
-            ! -path './dist/*' \
-
-            ! -path './build/*' \
-
-            ! -path './target/*' \
-
-            ! -path './other/*' \
-
-            ! -name '.gitignore' \
-
-            ! -name 'source_checksum.txt' \
-
-            ! -name 'build_checksum.txt' \
-
-            | sort | xargs sha256sum > source_checksum.txt
-
-          echo "--- Source Checksum ---"
-
-          cat source_checksum.txt
-
-          echo "Total files: $(wc -l < source_checksum.txt)"
- 
- 
-          
- 
-      # ─────────────────────────────────
-
-      # STEP 3 — Gate: Skip if Level 1
-
-      # This single step controls all build steps below
-
-      # ─────────────────────────────────
-
-      - name: Check Build Level
-
-        id: level_check
-
-        run: |
-
-          if [ "$BUILD_REQUIRED" = "yes" ]; then
-
-            echo "LEVEL=2" >> $GITHUB_OUTPUT
-
-            echo "RUN_BUILD=true" >> $GITHUB_OUTPUT
-
-          else
-
-            echo "LEVEL=1" >> $GITHUB_OUTPUT
-
-            echo "RUN_BUILD=false" >> $GITHUB_OUTPUT
-
-          fi
-
-          echo "Level set to: $BUILD_REQUIRED"
- 
-      # ─────────────────────────────────
-
-      # STEP 4 — Node Setup
-
-      # Only Level 2 + node project types
-
-      # ─────────────────────────────────
 
       - name: Setup Node
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && (env.PROJECT_TYPE == 'angular' || env.PROJECT_TYPE == 'react' || env.PROJECT_TYPE == 'nextjs')
-
         uses: actions/setup-node@v4
-
         with:
-
           node-version: "20"
- 
-      - name: Install Node Dependencies
 
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && (env.PROJECT_TYPE == 'angular' || env.PROJECT_TYPE == 'react' || env.PROJECT_TYPE == 'nextjs')
-
+      - name: Install Dependencies
         run: npm ci
- 
-      # ─────────────────────────────────
-
-      # STEP 5 — Build per project type
-
-      # ─────────────────────────────────
 
       - name: Build Angular
+        run: npx ng build --configuration production
 
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'angular'
-
-        run: npm run build -- --configuration production
- 
-      - name: Build React
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'react'
-
-        run: npm run build
- 
-      - name: Build Next.js
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'nextjs'
-
-        run: npm run build
- 
-      - name: Setup Python
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'python'
-
-        uses: actions/setup-python@v5
-
-        with:
-
-          python-version: "3.11"
- 
-      - name: Build Python
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'python'
-
+      - name: Generate Source Checksum
         run: |
-
-          pip install -r requirements.txt
-
-          echo "Python build complete"
- 
-      - name: Setup Java
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'java'
-
-        uses: actions/setup-java@v4
-
-        with:
-
-          java-version: "17"
-
-          distribution: "temurin"
- 
-      - name: Build Java
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true' && env.PROJECT_TYPE == 'java'
-
-        run: mvn clean package -DskipTests
- 
-      # ─────────────────────────────────
-
-      # STEP 6 — Build Checksum
-
-      # Only runs if Level 2
-
-      # ─────────────────────────────────
+          find . -type f ! -path './.git/*' | sort | xargs sha256sum > source_checksum.txt
 
       - name: Generate Build Checksum
-
-        if: steps.level_check.outputs.RUN_BUILD == 'true'
-
         run: |
-
-          echo "Generating BUILD checksum..."
-
-          BUILD_DIR=""
-
-          if   [ -d "dist"   ]; then BUILD_DIR="dist"
-
-          elif [ -d "build"  ]; then BUILD_DIR="build"
-
-          elif [ -d ".next"  ]; then BUILD_DIR=".next"
-
-          elif [ -d "target" ]; then BUILD_DIR="target"
-
-          fi
- 
-          if [ -n "$BUILD_DIR" ]; then
-
-            echo "Build output found in: $BUILD_DIR"
-
-            find "$BUILD_DIR" -type f | sort | xargs sha256sum > build_checksum.txt
-
-            echo "--- Build Checksum ---"
-
-            cat build_checksum.txt
-
-          else
-
-            echo "ERROR: No build output directory found (dist/build/.next/target)"
-
-            exit 1
-
-          fi
- 
-      # ─────────────────────────────────
-
-      # STEP 7 — Placeholder for Level 1
-
-      # Ensures upload never fails
-
-      # ─────────────────────────────────
-
-      - name: Create Build Checksum Placeholder
-
-        if: steps.level_check.outputs.RUN_BUILD == 'false'
-
-        run: |
-
-          echo "level-1-only-no-build-performed-run-${{ github.run_id }}" > build_checksum.txt
-
-          echo "Placeholder created for Level 1"
- 
-      # ─────────────────────────────────
-
-      # STEP 8 — Final Summary
-
-      # ─────────────────────────────────
-
-      - name: Escrow Summary
-
-        run: |
-
-          echo "============================================"
-
-          echo "  ESCROW BUILD COMPLETE"
-
-          echo "============================================"
-
-          echo "  Level         : ${{ steps.level_check.outputs.LEVEL }}"
-
-          echo "  Project Type  : $PROJECT_TYPE"
-
-          echo "  Run ID        : ${{ github.run_id }}"
-
-          echo "  Commit SHA    : ${{ github.sha }}"
-
-          echo "--------------------------------------------"
-
-          echo "SOURCE CHECKSUM:"
-
-          cat source_checksum.txt
-
-          echo "--------------------------------------------"
-
-          echo "BUILD CHECKSUM:"
-
-          cat build_checksum.txt
-
-          echo "============================================"
- 
-      # ─────────────────────────────────
-
-      # STEP 9 — Upload Artifacts
-
-      # ─────────────────────────────────
+          BUILD_DIR=$(find dist -mindepth 1 -maxdepth 1 -type d | head -n 1)
+          find "$BUILD_DIR" -type f | sort | xargs sha256sum > build_checksum.txt
 
       - name: Upload Escrow Artifacts
-
         uses: actions/upload-artifact@v4
-
         with:
-
           name: escrow-${{ github.run_id }}
-
           path: |
-
             source_checksum.txt
-
             build_checksum.txt
-
-          retention-days: 30
- 
